@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+    Checkstyle configuration based on our rule set in confluence
+ -->
+
+<module name="Checker">
+    <property name="charset" value="UTF-8"/>
+
+    <property name="severity" value="warning"/>
+
+    <property name="fileExtensions" value="java, properties, xml"/>
+    <!-- Excludes all 'module-info.java' files              -->
+    <!-- See https://checkstyle.org/config_filefilters.html -->
+    <module name="BeforeExecutionExclusionFileFilter">
+        <property name="fileNamePattern" value="module\-info\.java$"/>
+    </module>
+
+    <!-- Avoid lines longer then 120 characters https://checkstyle.sourceforge.io/config_sizes.html#LineLength -->
+    <module name="LineLength">
+        <property name="max" value="120"/>
+    </module>
+
+    <module name="TreeWalker">
+        <!-- Checks for whitespace                               -->
+        <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+        <module name="EmptyForInitializerPad"/>
+
+        <!-- Avoid Star-Imports https://checkstyle.sourceforge.io/config_imports.html#AvoidStarImport -->
+        <module name="AvoidStarImport">
+            <property name="excludes" value="java.io,java.net,java.lang.Math,org.junit.jupiter.api.Assertions"/>
+        </module>
+
+        <module name="ConstantName">
+            <property name="format"
+                      value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
+        </module>
+
+        <!--detects unnecessary ; -->
+        <module name="EmptyStatement"/>
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
+        <!--module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/-->
+        <module name="UnnecessarySemicolonInEnumeration"/>
+        <module name="UnnecessarySemicolonInTryWithResources"/>
+
+        <module name="Indentation">
+            <property name="basicOffset" value="4"/>
+            <property name="braceAdjustment" value="0"/>
+            <property name="throwsIndent" value="4"/>
+            <property name="arrayInitIndent" value="4"/>
+            <property name="lineWrappingIndentation" value="4"/>
+            <property name="forceStrictCondition" value="false"/>
+        </module>
+
+        <!-- { } needed -->
+        <module name="NeedBraces"/>
+
+        <!-- if_(x)_{ -->
+        <module name="WhitespaceAround"/>
+
+        <module name="UnusedImports"/>
+
+        <module name="InvalidJavadocPosition"/>
+
+        <module name="MissingJavadocMethod">
+            <property name="ignoreMethodNamesRegex" value="^(get|set|is).*$"/>
+            <property name="minLineCount" value="1"/>
+            <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF"/>
+            <property name="allowedAnnotations" value="Test, Override"/>
+        </module>
+
+        <!--    <JavaDoc>
+                Class... -->
+        <module name="JavadocType">
+            <property name="allowedAnnotations" value="Test"/>
+        </module>
+
+        <module name="JavadocBlockTagLocation"/>
+
+        <module name="JavadocMethod"/>
+
+        <module name="JavadocStyle"/>
+
+        <module name="SummaryJavadocCheck"/>
+
+        <module name="RegexpSinglelineJava">
+            <!-- . matches any character, so we need to
+                 escape it and use \. to match dots. -->
+            <property name="format" value="^(\s)*\* @.*\.(\s)*$"/>
+            <property name="ignoreComments" value="false"/>
+            <!-- property name="illegalPattern" value="true"/ -->
+        </module>
+
+        <module name="RegexpSinglelineJava">
+            <!-- finds lines that only contain the @param/author/return and no more -->
+            <!-- . matches any character, so we need to
+                 escape it and use \. to match dots. -->
+            <property name="format" value="^(\s)*\* @(\s)*(\w)*(\s)*$"/>
+            <property name="ignoreComments" value="false"/>
+            <!-- property name="illegalPattern" value="true"/ -->
+        </module>
+
+        <module name="RegexpSinglelineJava">
+            <!-- finds lines that only contain the @param name and no more -->
+            <!-- . matches any character, so we need to
+                 escape it and use \. to match dots. -->
+            <property name="format" value="^(\s)*\* @param(\s)*(\w)*(\s)*$"/>
+            <property name="ignoreComments" value="false"/>
+            <!-- property name="illegalPattern" value="true"/ -->
+        </module>
+
+        <module name="RegexpSinglelineJava">
+            <!-- forbids System.out.print -->
+            <!-- . matches any character, so we need to
+                 escape it and use \. to match dots. -->
+            <property name="format" value="System.out.print"/>
+            <property name="ignoreComments" value="true"/>
+            <!-- property name="illegalPattern" value="true"/ -->
+        </module>
+
+        <module name="RegexpSinglelineJava">
+            <!-- forbids System.out.print -->
+            <!-- . matches any character, so we need to
+                 escape it and use \. to match dots. -->
+            <property name="format" value="LOG\(\).is[A-Za-z]*Enabled"/>
+            <property name="ignoreComments" value="true"/>
+            <!-- property name="illegalPattern" value="true"/ -->
+        </module>
+
+        <module name="SuppressionCommentFilter">
+        </module>
+    </module>
+</module>
