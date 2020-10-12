@@ -7,7 +7,7 @@ class HelloWorldTest {
 
     @Test
     void isDummy() {
-        assertTrue(toTest.isDummy());
+        assertFalse(toTest.isDummy());
     }
 
     @Test
