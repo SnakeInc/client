@@ -1,6 +1,6 @@
 image: maven:latest
 
-java:
+test:
   stage: test
   script:
     - mvn verify
@@ -10,3 +10,12 @@ java:
       junit:
         - target/surefire-reports/TEST-*.xml
         - target/failsafe-reports/TEST-*.xml
+
+checkstyle:
+  stage: checkstyle
+  script:
+    - mvn checkstyle:checkstyle
+  artifacts:
+    when: always
+    reports:
+      -target/checkstyle-result.xml
