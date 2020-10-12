@@ -12,5 +12,4 @@ public class HelloWorld {
         log.debug("hello world");
     }
 
-
 }
