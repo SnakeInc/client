@@ -12,10 +12,6 @@ test:
         - target/failsafe-reports/TEST-*.xml
 
 checkstyle:
-  stage: checkstyle
+  stage: test
   script:
-    - mvn checkstyle:checkstyle
-  artifacts:
-    when: always
-    reports:
-      -target/checkstyle-result.xml
+    - mvn checkstyle:check
