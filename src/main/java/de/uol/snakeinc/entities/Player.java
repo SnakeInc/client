@@ -71,7 +71,7 @@ public class Player {
                 res.setSpeed(this.getSpeed());
                 break;
             case SPEED_UP:
-                if(this.getSpeed() > 9) {
+                if (this.getSpeed() > 9) {
                     return null;
                 }
                 res = get();
@@ -79,7 +79,7 @@ public class Player {
                 res.setDirection(this.getDirection());
                 break;
             case SLOW_DOWN:
-                if(this.getSpeed() < 2) {
+                if (this.getSpeed() < 2) {
                     return null;
                 }
                 res = get();

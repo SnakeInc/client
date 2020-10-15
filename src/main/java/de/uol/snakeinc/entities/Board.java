@@ -164,9 +164,9 @@ public class Board {
         @Override
         public int compareTo(IntTriple o) {
             int compare = Integer.compare(x, o.x);
-            if(compare == 0) {
+            if (compare == 0) {
                 compare = Integer.compare(y, o.y);
-                if(compare == 0) {
+                if (compare == 0) {
                     compare = Integer.compare(id, o.id);
                 }
             }
@@ -178,7 +178,7 @@ public class Board {
         if (this.isFree(x, y)) {
             list.add(new IntTriple(x, y, id));
         } else {
-            if(x >= 0 && x < cells.length && y >= 0 && y < cells.length) {
+            if (x >= 0 && x < cells.length && y >= 0 && y < cells.length) {
                 list.add(new IntTriple(x,y, -1));
             }
             player.setActive(false);
@@ -273,11 +273,11 @@ public class Board {
         Collections.sort(newCells);
         var newCellsIt = newCells.iterator();
         IntTriple last = newCellsIt.next();
-        if(newCellsIt.hasNext()) {
+        if (newCellsIt.hasNext()) {
             IntTriple next = newCellsIt.next();
             if (last.x == next.x && last.y == next.y) {
                 if (last.id  > 0) {
-                   res.getPlayer(last.id).setActive(false);
+                    res.getPlayer(last.id).setActive(false);
                 }
                 if (next.id  > 0) {
                     res.getPlayer(next.id).setActive(false);
