@@ -1,6 +1,5 @@
 package de.uol.snakeinc.entities;
 
-import com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck;
 
 public enum Direction {
 
