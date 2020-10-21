@@ -5,5 +5,6 @@ public enum PlayerMove {
     TURN_RIGHT,
     SLOW_DOWN,
     SPEED_UP,
-    CHANGE_NOTHING
+    CHANGE_NOTHING,
+    INVALID
 }
