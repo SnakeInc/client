@@ -1,11 +1,11 @@
 package de.uol.snakeinc.entities;
 
+import lombok.CustomLog;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 
 import java.util.Arrays;
 
-@Log4j2
+@CustomLog
 public class Board {
 
 

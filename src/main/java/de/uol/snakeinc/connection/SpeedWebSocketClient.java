@@ -1,12 +1,12 @@
 package de.uol.snakeinc.connection;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.CustomLog;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 
-@Log4j2
+@CustomLog
 public class SpeedWebSocketClient extends WebSocketClient {
 
     private ConnectionThread thread;
