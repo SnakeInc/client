@@ -5,6 +5,10 @@ import lombok.extern.log4j.Log4j2;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * Thread handling Connection to Websocket.
+ * @author Sebastian Diers
+ */
 @Log4j2
 public class ConnectionThread extends Thread {
 
@@ -44,5 +48,13 @@ public class ConnectionThread extends Thread {
 
     public void callBack() {
         this.callback = true;
+    }
+
+    /**
+     * Stop connection with socket.
+     */
+    public void stopConnection() {
+        this.running = false;
+        this.webSocket.close();
     }
 }
