@@ -1,6 +1,6 @@
 package de.uol.snakeinc.connection;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.CustomLog;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,7 +9,7 @@ import java.net.URISyntaxException;
  * Thread handling Connection to Websocket.
  * @author Sebastian Diers
  */
-@Log4j2
+@CustomLog
 public class ConnectionThread extends Thread {
 
     private SpeedWebSocketClient webSocket;

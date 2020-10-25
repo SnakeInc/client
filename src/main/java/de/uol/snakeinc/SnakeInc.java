@@ -1,7 +1,9 @@
 package de.uol.snakeinc;
 
 import de.uol.snakeinc.connection.ConnectionThread;
+import lombok.CustomLog;
 
+@CustomLog
 public class SnakeInc {
 
     /**

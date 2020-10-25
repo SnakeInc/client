@@ -1,14 +1,14 @@
 package de.uol.snakeinc.entities;
 
+import lombok.CustomLog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
-@Log4j2
+@CustomLog
 public class Board {
 
     @Getter
