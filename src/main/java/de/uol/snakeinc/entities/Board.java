@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.CustomLog;
 import lombok.EqualsAndHashCode;
+import io.vavr.Tuple2;
+import lombok.CustomLog;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -25,6 +27,9 @@ public class Board {
     private Player players[];
     @Getter
     private int us;
+
+    private int lastTurn = -1; // no turn is ever -1
+    private CoordinateBag lastCoordinates = null; //  for memoized lazy getCoordinateBag;
 
     public Board(int width, int height, Player[] players, int us) {
         this.width = width;
@@ -121,5 +126,21 @@ public class Board {
         board.setCells(cells);
 
         return board;
+    }
+
+    public boolean isOnBoard(int x, int y) {
+        return (-1 < x && x < width && -1 < y && y < height);
+    }
+
+    public boolean isOnBoard(Tuple2<Integer, Integer> tuple) {
+        return isOnBoard(tuple._1, tuple._2);
+    }
+
+    public CoordinateBag getCoordinateBag() {
+        if (lastTurn != turn || lastCoordinates == null) {
+            lastCoordinates = new CoordinateBag(this);
+            lastTurn = turn;
+        }
+        return lastCoordinates;
     }
 }
