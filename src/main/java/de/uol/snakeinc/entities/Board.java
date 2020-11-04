@@ -1,8 +1,8 @@
 package de.uol.snakeinc.entities;
 
-import lombok.CustomLog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import lombok.CustomLog;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -103,6 +103,7 @@ public class Board {
     public static Board parseFromJson(JsonObject json, HashMap<Integer, Player> players) {
         int width = json.get("width").getAsInt();
         int height = json.get("height").getAsInt();
+        int us = json.get("you").getAsInt();
 
         Player[] playersArray = new Player[players.size()];
         int count = 0;
@@ -116,7 +117,7 @@ public class Board {
         log.debug(json.get("cells").toString());
         int[][] cells = gson.fromJson(json.get("cells").toString(), int[][].class);
 
-        Board board = new Board(width, height, playersArray);
+        Board board = new Board(width, height, playersArray, us);
         board.setCells(cells);
 
         return board;
