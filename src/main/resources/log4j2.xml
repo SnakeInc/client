@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
+
+    <CustomLevels>
+        <CustomLevel name="AI" intLevel="1"/>
+    </CustomLevels>
+
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
+
+        <Routing name="Ai">
+            <Routes pattern="$${marker:}">
+                <Route>
+                    <File
+                            fileName="ailogs/${marker:}.log"
+                            name="appender-${marker:}">
+                        <PatternLayout>
+                            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+                        </PatternLayout>
+                    </File>
+                </Route>
+            </Routes>
+        </Routing>
+
     </Appenders>
     <Loggers>
         <Root level="DEBUG">
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Console" level="debug"/>
+            <AppenderRef ref="Ai" level="AI"/>
         </Root>
     </Loggers>
 </Configuration>

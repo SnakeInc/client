@@ -1,17 +1,20 @@
 package de.uol.snakeinc.entities;
 
+import lombok.CustomLog;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
-@Log4j2 @EqualsAndHashCode
+@EqualsAndHashCode
+@CustomLog
 public class Board {
 
-
     @Getter
-    int width;
+    private int width;
     @Getter
     private int height;
     @Getter
@@ -37,10 +40,10 @@ public class Board {
         }
 
         for (Player player : players) {
-            if (player == null) {
-                continue;
+            if (player.getX() >= 0 && player.getX() < width &&
+                player.getY() >= 0 && player.getY() < height) {
+                cells[player.getX()][player.getY()] = player.getId();
             }
-            cells[player.getX()][player.getY()] = player.getId();
         }
     }
 
@@ -73,5 +76,49 @@ public class Board {
             return false;
         }
         return cells[x][y] == 0;
+    }
+
+    public void setCells(int[][] cells) {
+        if (cells.length == height && cells[0].length == width) {
+            this.cells = cells;
+        } else {
+            log.error("setCells can only be used with same dimensions - Dimensions given: " +
+                cells.length + "/" + cells[0].length + "- start parsing - performance may be impact");
+            int finalCells[][] = new int[width][height];
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    finalCells[y][x] = cells[y][x];
+                }
+            }
+            this.cells = finalCells;
+        }
+    }
+
+    /**
+     * Parse board based on json-format.
+     * @param json json from websocket
+     * @param players parsed players
+     * @return parsed board
+     */
+    public static Board parseFromJson(JsonObject json, HashMap<Integer, Player> players) {
+        int width = json.get("width").getAsInt();
+        int height = json.get("height").getAsInt();
+
+        Player[] playersArray = new Player[players.size()];
+        int count = 0;
+        for (Integer position : players.keySet()) {
+            playersArray[count] = players.get(position);
+            count++;
+        }
+
+        Gson gson = new Gson();
+
+        log.debug(json.get("cells").toString());
+        int[][] cells = gson.fromJson(json.get("cells").toString(), int[][].class);
+
+        Board board = new Board(width, height, playersArray);
+        board.setCells(cells);
+
+        return board;
     }
 }
