@@ -6,7 +6,7 @@ import de.uol.snakeinc.entities.Player;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Getter
 @AllArgsConstructor
@@ -14,6 +14,6 @@ public class ActionPlayerCoordinates {
 
     Action action;
     Player player;
-    List<Coordinates> coordinates;
+    ArrayList<Coordinates.Tuple> coordinates;
     
 }

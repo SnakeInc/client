@@ -68,20 +68,16 @@ public class Coordinates implements Comparable<Coordinates> {
         return tuple;
     }
 
-    @EqualsAndHashCode
-
     public class Tuple implements Comparable<Tuple> {
 
         private Tuple() {
 
         }
 
-        @EqualsAndHashCode.Include
         int getX() {
             return x;
         }
 
-        @EqualsAndHashCode.Include
         int getY() {
             return y;
         }
@@ -110,6 +106,20 @@ public class Coordinates implements Comparable<Coordinates> {
 
         public boolean equals(int x, int y) {
             return this.getX() == x && this.getY() == y;
+        }
+
+        @Override
+        public int hashCode() {
+            return 103 * x + y;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Tuple) {
+                var that = (Tuple) obj;
+                return that.getX() == this.getX() && that.getY() == this.getY();
+            }
+            return false;
         }
     }
 

@@ -2,17 +2,19 @@ package de.uol.snakeinc.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import de.uol.snakeinc.possibleMoves.ActionPlayerCoordinates;
+import de.uol.snakeinc.possibleMoves.CombinationTree;
+import de.uol.snakeinc.possibleMoves.IntSet;
+import de.uol.snakeinc.possibleMoves.PlayerMap;
 import io.vavr.Tuple2;
 import lombok.CustomLog;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @EqualsAndHashCode
 @CustomLog
@@ -25,7 +27,7 @@ public class Board {
     @Getter
     private int turn;
     @Getter
-    private HashMap<Integer, Player> players;
+    private PlayerMap players;
     @Getter
     private int us;
 
@@ -37,7 +39,7 @@ public class Board {
     public Board(int width, int height, Player[] players, int us) {
         this.width = width;
         this.height = height;
-        this.players = new HashMap<>(players.length - 1);
+        this.players = new PlayerMap(players);
         this.turn = 1;
         this.us = us;
 
@@ -46,6 +48,7 @@ public class Board {
         }
 
         var start = Arrays.stream(players)
+            .filter(Objects::nonNull)
             .filter(player -> player.getX() >= 0 && player.getX() < width
                 && player.getY() >= 0 && player.getY() < height)
             .map(player -> new Coordinates(player.getX(), player.getY(), player.getId(), turn).getTuple());
@@ -62,29 +65,32 @@ public class Board {
         this.map = new MapCoordinateBag(board.map);
     }
 
-    public Board(Board board, Iterator<ActionPlayerCoordinates> iterator, int depth) {
+    public Board(Board board, CombinationTree.CombinationIterator iterator, int depth) {
         this.width = board.width;
         this.height = board.height;
         this.turn = board.turn + 1;
-        this.players = new HashMap<>();
+        this.players = new PlayerMap(board.players.length);
         this.weight = board.weight;
 
         this.map = new MapCoordinateBag(board.map);
-        var apcs = new ArrayList<ActionPlayerCoordinates>(depth);
+        var dead = IntSet.ofSize(players.length);
+        var current = new HashSet<Coordinates.Tuple>();
         while (iterator.hasNext()) {
-            apcs.add(iterator.next());
+            var apc = iterator.next();
+            //for (var coordinates : apc.getCoordinates()) {               //        -\
+            //    map.addInternal(dead, current, coordinates);             //         /
+            //}                                                            //         \
+            var coordinates = apc.getCoordinates(); //          > not sure what is faster
+            for (int i = 0; i < coordinates.size(); i++) {                 //         /
+                map.addInternal(dead, current, coordinates.get(i));        //         \
+            }                                                              //        -/
+            if (apc.getPlayer().isActive()) {
+                players.put(apc.getPlayer().getId(), apc.getPlayer());
+            }
         }
-        var dead = map.add(apcs.stream()
-            .flatMap(apc -> apc.getCoordinates().stream())
-            .filter(this::isOnBoard)
-            .map(Coordinates::getTuple));
-
-        for (var apc : apcs) {
-            var player = apc.getPlayer();
-            if (player.isActive() && !dead.contains(player.getId())) {
-                players.put(player.getId(), player);
-            } else {
-                weight++;
+        for (int i = 0; i < players.length; i++) {
+            if (players.containsKey(i) && dead.contains(i)) {
+                players.remove(i);
             }
         }
     }

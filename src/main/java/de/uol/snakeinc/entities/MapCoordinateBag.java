@@ -1,11 +1,11 @@
 package de.uol.snakeinc.entities;
 
+import de.uol.snakeinc.possibleMoves.IntSet;
 import io.vavr.collection.HashSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Stream;
 
 public class MapCoordinateBag {
@@ -32,25 +32,25 @@ public class MapCoordinateBag {
         this.map = HashSet.ofAll(start);
     }
 
-    public Set<Integer> add(Iterable<Coordinates.Tuple> toadd) {
-        var dead = new TreeSet<Integer>();
-        var curr = new TreeSet<Coordinates.Tuple>();
-        for (var coord : toadd) {
-            addInternal(dead, curr, coord);
-        }
-        this.map = this.map.addAll(curr);
-        return dead;
-    }
+    //public Set<Integer> add(Iterable<Coordinates.Tuple> toadd) {
+    //    var dead = new TreeSet<Integer>();
+    //    var curr = new TreeSet<Coordinates.Tuple>();
+    //    for (var coord : toadd) {
+    //        addInternal(dead, curr, coord);
+    //    }
+    //    this.map = this.map.addAll(curr);
+    //    return dead;
+    //}
+    //
+    //public Set<Integer> add(Stream<Coordinates.Tuple> toadd) {
+    //    var dead = new TreeSet<Integer>();
+    //    var curr = new TreeSet<Coordinates.Tuple>();
+    //    toadd.forEach(coord -> addInternal(dead, curr, coord));
+    //    this.map = this.map.addAll(curr);
+    //    return dead;
+    //}
 
-    public Set<Integer> add(Stream<Coordinates.Tuple> toadd) {
-        var dead = new TreeSet<Integer>();
-        var curr = new TreeSet<Coordinates.Tuple>();
-        toadd.forEach(coord -> addInternal(dead, curr, coord));
-        this.map = this.map.addAll(curr);
-        return dead;
-    }
-
-    private void addInternal(TreeSet<Integer> dead, TreeSet<Coordinates.Tuple> curr, Coordinates.Tuple coord) {
+    public void addInternal(IntSet dead, Set<Coordinates.Tuple> curr, Coordinates.Tuple coord) {
         if (map.contains(coord)) {
             dead.add(coord.getPlayer());
         } else {

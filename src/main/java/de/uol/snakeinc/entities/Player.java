@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -89,7 +88,7 @@ public class Player {
         return players;
     }
 
-    public List<ActionPlayerCoordinates> getPossibleMoves(Board board) {
+    public ArrayList<ActionPlayerCoordinates> getPossibleMoves(Board board) {
         var res = new ArrayList<ActionPlayerCoordinates>(5);
         Direction dir;
         int speed;
@@ -105,7 +104,7 @@ public class Player {
                 case SLOW_DOWN:
                     if (this.speed == 1) {
                         var apc = new ActionPlayerCoordinates(Action.SLOW_DOWN, new Player(this, false),
-                            new LinkedList<>());
+                            new ArrayList<>(0));
                         res.add(apc);
                         continue;
                     }
@@ -116,7 +115,7 @@ public class Player {
                     if (this.speed == 10) {
 
                         var apc = new ActionPlayerCoordinates(Action.SPEED_UP, new Player(this, false),
-                            new LinkedList<>());
+                            new ArrayList<>(0));
                         res.add(apc);
                         continue;
                     }
@@ -130,7 +129,7 @@ public class Player {
                 default:
                     throw new IllegalStateException("Unexpected value: " + action);
             }
-            var ls = new ArrayList<Coordinates>(speed);
+            var ls = new ArrayList<Coordinates.Tuple>(speed);
             Player player;
             int newOrdinate;
             boolean active;
@@ -140,7 +139,7 @@ public class Player {
                     active = board.isOnBoard(newOrdinate, y);
                     player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
                     for (; speed <= 1; speed--) {
-                        ls.add(new Coordinates(x - speed, y, turn, id));
+                        ls.add(new Coordinates(x - speed, y, turn, id).getTuple());
                     }
                     break;
                 case RIGHT:
@@ -148,7 +147,7 @@ public class Player {
                     active = board.isOnBoard(newOrdinate, y);
                     player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
                     for (; speed <= 1; speed--) {
-                        ls.add(new Coordinates(x + speed, y, turn, id));
+                        ls.add(new Coordinates(x + speed, y, turn, id).getTuple());
                     }
                     break;
                 case DOWN:
@@ -156,7 +155,7 @@ public class Player {
                     active = board.isOnBoard(x, newOrdinate);
                     player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
                     for (; speed <= 1; speed--) {
-                        ls.add(new Coordinates(x, y - speed, turn, id));
+                        ls.add(new Coordinates(x, y - speed, turn, id).getTuple());
                     }
                     break;
                 case UP:
@@ -164,7 +163,7 @@ public class Player {
                     active = board.isOnBoard(x, newOrdinate);
                     player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
                     for (; speed <= 1; speed--) {
-                        ls.add(new Coordinates(x, y + speed, turn, id));
+                        ls.add(new Coordinates(x, y + speed, turn, id).getTuple());
                     }
                     break;
                 default:

@@ -4,7 +4,6 @@ import lombok.CustomLog;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,18 +18,20 @@ public class CombinationTree {
     public CombinationTree() {
     }
 
-    public void add(List<ActionPlayerCoordinates> toAdd) {
+    public void add(ArrayList<ActionPlayerCoordinates> toAdd) {
         if (depth == 0) {
-            for (var apc : toAdd) {
-                starts.add(new CombinationNode(apc, null));
+            for (int i = 0; i < toAdd.size(); i++) {
+                starts.add(new CombinationNode(toAdd.get(i), null));
             }
         } else {
             var old = starts;
             starts = new ArrayList<>(old.size() * 5);
-            for (var node : old) {
-                for (var apc : toAdd) {
-                    starts.add(new CombinationNode(apc, node));
+            int oldIt = 0, toAddIt = 0;
+            for (; oldIt < old.size(); oldIt++) {
+                for (; toAddIt < toAdd.size(); toAddIt++) {
+                    starts.add(new CombinationNode(toAdd.get(toAddIt), old.get(oldIt)));
                 }
+                toAddIt = 0;
             }
         }
         depth++;
@@ -60,20 +61,24 @@ public class CombinationTree {
 
     }
 
-    public class CombinationIterator implements Iterator<ActionPlayerCoordinates> {
+    public class CombinationIterator {
 
+        private final CombinationNode head;
         private CombinationNode current;
 
         CombinationIterator(CombinationNode node) {
+            this.head = node;
             this.current = node;
         }
 
-        @Override
+        public void reset() {
+            this.current = head;
+        }
+
         public boolean hasNext() {
             return current != null;
         }
 
-        @Override
         public ActionPlayerCoordinates next() {
             var res = current.entry;
             current = current.parent;
