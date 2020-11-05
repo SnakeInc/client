@@ -1,20 +1,17 @@
 package de.uol.snakeinc.entities;
 
+import de.uol.snakeinc.possibleMoves.CombinationTree;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 @Log4j2
 public abstract class PossibleMoves {
@@ -335,80 +332,4 @@ public abstract class PossibleMoves {
             .map(combination -> actOnMoves(combination, board));
     }
 
-
-    static private class CombinationTree {
-        List<CombinationNode> starts;
-        int depth = 0;
-
-        CombinationTree() { }
-
-        public void add(EntryStream<PlayerMove, Player> toAdd) {
-            if (depth == 0) {
-                starts = toAdd.map(entry -> new CombinationNode(entry, null)).toImmutableList();
-            } else {
-                starts = toAdd
-                    .map(Function.identity())
-                    .cross(starts)
-                    .mapKeyValue(CombinationNode::new)
-                    .toList();
-            }
-            depth ++;
-        }
-
-        public StreamEx<Iterator<Map.Entry<PlayerMove, Player>>> getCombinationsStreamEx() {
-            try {
-                return StreamEx.of(starts).parallel().map(CombinationNode::toIterator);
-            } catch (NullPointerException nep) {
-                log.debug(nep);
-                throw nep;
-            }
-        }
-
-        private class CombinationNode {
-            volatile Map.Entry<PlayerMove, Player> entry;
-            volatile CombinationNode parent;
-
-            CombinationNode(Map.Entry<PlayerMove, Player> entry, CombinationNode node) {
-                this.entry = entry;
-                this.parent = node;
-            }
-
-            CombinationIterator toIterator() {
-                return new CombinationIterator(this);
-            }
-
-        }
-
-        private class CombinationIterator implements Iterator<Map.Entry<PlayerMove, Player>> {
-            private volatile CombinationNode current;
-
-            CombinationIterator(CombinationNode node) {
-                this.current = node;
-            }
-
-            @Override
-            public boolean hasNext() {
-                return current != null;
-            }
-
-            @Override
-            public Map.Entry<PlayerMove, Player> next() {
-                @NonNull
-                var res = current.entry;
-                try {
-                    current = current.parent;
-                } catch (Exception exception) {
-                    log.debug("exception in 393");
-                    log.debug(exception);
-                    throw exception;
-                }
-                return res;
-            }
-
-            @Override
-            protected Object clone() throws CloneNotSupportedException {
-                return new CombinationIterator(current);
-            }
-        }
-    }
 }

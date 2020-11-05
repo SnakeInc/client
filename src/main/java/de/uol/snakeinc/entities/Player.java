@@ -1,14 +1,15 @@
 package de.uol.snakeinc.entities;
 
-import lombok.EqualsAndHashCode;
-import lombok.CustomLog;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import de.uol.snakeinc.possibleMoves.ActionPlayerCoordinates;
+import lombok.CustomLog;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +41,6 @@ public class Player {
     private Player()
     { }
 
-
     public Player(int id, int x, int y, Direction direction, int speed, boolean active, String name) {
         this.id = id;
         this.x = x;
@@ -49,6 +49,16 @@ public class Player {
         this.speed = speed;
         this.active = active;
         this.name = name;
+    }
+
+    public Player(Player player, boolean active) {
+        this.id = player.id;
+        this.x = player.x;
+        this.y = player.y;
+        this.direction = player.direction;
+        this.speed = player.speed;
+        this.active = active;
+        this.name = player.name;
     }
 
     /**
@@ -77,5 +87,91 @@ public class Player {
             players.add(new Player(id, x, y, direction, speed, active, name));
         }
         return players;
+    }
+
+    public List<ActionPlayerCoordinates> getPossibleMoves(Board board) {
+        var res = new ArrayList<ActionPlayerCoordinates>(5);
+        Direction dir;
+        int speed;
+        int turn = board.getTurn();
+
+        for (Action action : Action.values()) {
+            switch (action) {
+                case TURN_LEFT:
+                case TURN_RIGHT:
+                    dir = direction.change(action);
+                    speed = this.speed;
+                    break;
+                case SLOW_DOWN:
+                    if (this.speed == 1) {
+                        var apc = new ActionPlayerCoordinates(Action.SLOW_DOWN, new Player(this, false),
+                            new LinkedList<>());
+                        res.add(apc);
+                        continue;
+                    }
+                    speed = this.speed - 1;
+                    dir = this.direction;
+                    break;
+                case SPEED_UP:
+                    if (this.speed == 10) {
+
+                        var apc = new ActionPlayerCoordinates(Action.SPEED_UP, new Player(this, false),
+                            new LinkedList<>());
+                        res.add(apc);
+                        continue;
+                    }
+                    speed = this.speed + 1;
+                    dir = this.direction;
+                    break;
+                case CHANGE_NOTHING:
+                    speed = this.speed;
+                    dir = this.direction;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + action);
+            }
+            var ls = new ArrayList<Coordinates>(speed);
+            Player player;
+            int newOrdinate;
+            boolean active;
+            switch (dir) {
+                case LEFT:
+                    newOrdinate = x - speed;
+                    active = board.isOnBoard(newOrdinate, y);
+                    player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
+                    for (; speed <= 1; speed--) {
+                        ls.add(new Coordinates(x - speed, y, turn, id));
+                    }
+                    break;
+                case RIGHT:
+                    newOrdinate = x + speed;
+                    active = board.isOnBoard(newOrdinate, y);
+                    player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
+                    for (; speed <= 1; speed--) {
+                        ls.add(new Coordinates(x + speed, y, turn, id));
+                    }
+                    break;
+                case DOWN:
+                    newOrdinate = y - speed;
+                    active = board.isOnBoard(x, newOrdinate);
+                    player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
+                    for (; speed <= 1; speed--) {
+                        ls.add(new Coordinates(x, y - speed, turn, id));
+                    }
+                    break;
+                case UP:
+                    newOrdinate = y + speed;
+                    active = board.isOnBoard(x, newOrdinate);
+                    player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
+                    for (; speed <= 1; speed--) {
+                        ls.add(new Coordinates(x, y + speed, turn, id));
+                    }
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + dir);
+            }
+            res.add(new ActionPlayerCoordinates(action, player, ls));
+        }
+        return res;
     }
 }

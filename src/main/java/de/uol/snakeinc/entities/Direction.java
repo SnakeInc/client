@@ -6,15 +6,14 @@ public enum Direction {
     UP,
     DOWN,
     LEFT,
-    RIGHT,
-    INVALID;
+    RIGHT;
 
     /**
      * Changes the direction according to the given move.
      * @param move the move
      * @return the new Direction, stays the same if the move doesn't change the direction
      */
-    public Direction change(PlayerMove move) {
+    public Direction change(Action move) {
         switch (move) {
             case TURN_RIGHT:
                 switch (this) {
@@ -40,9 +39,7 @@ public enum Direction {
                         return DOWN;
                 }
                 break;
-            default:
-                return this;
         }
-        return INVALID;
+        return this;
     }
 }

@@ -1,25 +1,31 @@
 package de.uol.snakeinc.entities;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Comparator;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode
 public class Coordinates implements Comparable<Coordinates> {
 
-    private int x;
-    private int y;
-    private int turn;
-    private int player;
+    private final int x;
+    private final int y;
+    private final int turn;
+    private final int player;
+    @EqualsAndHashCode.Exclude
+    private Tuple tuple = new Tuple();
+
+    public Coordinates cross() {
+        return new Coordinates(this.x, this.y, this.turn, -1);
+    }
 
     @Override
     public int compareTo(@NonNull Coordinates that) {
-        int comp = Integer.compare(this.x, that.y);
+        int comp = Integer.compare(this.x, that.x);
         if (comp != 0) {
             return comp;
         }
@@ -56,6 +62,55 @@ public class Coordinates implements Comparable<Coordinates> {
             .thenComparingInt(Coordinates::getPlayer)
             .thenComparingInt(Coordinates::getX)
             .thenComparingInt(Coordinates::getY);
+    }
+
+    public Tuple getTuple() {
+        return tuple;
+    }
+
+    @EqualsAndHashCode
+
+    public class Tuple implements Comparable<Tuple> {
+
+        private Tuple() {
+
+        }
+
+        @EqualsAndHashCode.Include
+        int getX() {
+            return x;
+        }
+
+        @EqualsAndHashCode.Include
+        int getY() {
+            return y;
+        }
+
+        int getPlayer() {
+            return player;
+        }
+
+        int getTurn() {
+            return turn;
+        }
+
+        Coordinates getCoordinates() {
+            return Coordinates.this;
+        }
+
+        @Override
+        public int compareTo(@NonNull Tuple that) {
+            int comp = Integer.compare(x, that.getY());
+            if (comp != 0) {
+                return comp;
+            }
+            comp = Integer.compare(y, that.getY());
+            return comp;
+        }
+
+        public boolean equals(int x, int y) {
+            return this.getX() == x && this.getY() == y;
+        }
     }
 
 }

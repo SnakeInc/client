@@ -2,14 +2,17 @@ package de.uol.snakeinc.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import lombok.CustomLog;
-import lombok.EqualsAndHashCode;
+import de.uol.snakeinc.possibleMoves.ActionPlayerCoordinates;
 import io.vavr.Tuple2;
 import lombok.CustomLog;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 @EqualsAndHashCode
 @CustomLog
@@ -20,36 +23,34 @@ public class Board {
     @Getter
     private int height;
     @Getter
-    private int cells[][];
-    @Getter
     private int turn;
     @Getter
-    private Player players[];
+    private HashMap<Integer, Player> players;
     @Getter
     private int us;
 
-    private int lastTurn = -1; // no turn is ever -1
-    private CoordinateBag lastCoordinates = null; //  for memoized lazy getCoordinateBag;
+    @Getter
+    private MapCoordinateBag map; //
+
+    private int weight = 1;
 
     public Board(int width, int height, Player[] players, int us) {
         this.width = width;
         this.height = height;
-        this.players = players;
+        this.players = new HashMap<>(players.length - 1);
         this.turn = 1;
         this.us = us;
 
-        cells = new int[width][height];
-        for (int it = 0; it < width; it++) {
-            int[] row = cells[it];
-            Arrays.fill(row, 0);
+        for (int i = 1; i < players.length; i++) {
+            this.players.put(i, players[i]);
         }
 
-        for (Player player : players) {
-            if (player.getX() >= 0 && player.getX() < width &&
-                player.getY() >= 0 && player.getY() < height) {
-                cells[player.getX()][player.getY()] = player.getId();
-            }
-        }
+        var start = Arrays.stream(players)
+            .filter(player -> player.getX() >= 0 && player.getX() < width
+                && player.getY() >= 0 && player.getY() < height)
+            .map(player -> new Coordinates(player.getX(), player.getY(), player.getId(), turn).getTuple());
+        this.map = new MapCoordinateBag(start);
+
     }
 
     public Board(Board board) {
@@ -58,9 +59,33 @@ public class Board {
         this.players = board.getPlayers();
         this.turn = board.turn + 1;
 
-        this.cells = new int[board.getCells().length][];
-        for (int it = 0; it < width; it++) {
-            this.cells[it] = Arrays.copyOf(board.getCells()[it], board.getCells()[it].length);
+        this.map = new MapCoordinateBag(board.map);
+    }
+
+    public Board(Board board, Iterator<ActionPlayerCoordinates> iterator, int depth) {
+        this.width = board.width;
+        this.height = board.height;
+        this.turn = board.turn + 1;
+        this.players = new HashMap<>();
+        this.weight = board.weight;
+
+        this.map = new MapCoordinateBag(board.map);
+        var apcs = new ArrayList<ActionPlayerCoordinates>(depth);
+        while (iterator.hasNext()) {
+            apcs.add(iterator.next());
+        }
+        var dead = map.add(apcs.stream()
+            .flatMap(apc -> apc.getCoordinates().stream())
+            .filter(this::isOnBoard)
+            .map(Coordinates::getTuple));
+
+        for (var apc : apcs) {
+            var player = apc.getPlayer();
+            if (player.isActive() && !dead.contains(player.getId())) {
+                players.put(player.getId(), player);
+            } else {
+                weight++;
+            }
         }
     }
 
@@ -69,7 +94,7 @@ public class Board {
     }
 
     public Player getPlayer(int id) {
-        return players[id];
+        return players.get(id);
     }
 
     public Player getOurPlayer() {
@@ -77,31 +102,20 @@ public class Board {
     }
 
     public boolean isFree(int x, int y) {
-        if (x < 0 || y < 0 || x >= cells.length || y >= cells.length ) {
-            return false;
-        }
-        return cells[x][y] == 0;
+        return map.isFree(x, y) && isOnBoard(x, y);
     }
 
     public void setCells(int[][] cells) {
-        if (cells.length == height && cells[0].length == width) {
-            this.cells = cells;
-        } else {
-            log.error("setCells can only be used with same dimensions - Dimensions given: " +
-                cells.length + "/" + cells[0].length + "- start parsing - performance may be impact");
-            int finalCells[][] = new int[width][height];
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    finalCells[y][x] = cells[y][x];
-                }
-            }
-            this.cells = finalCells;
-        }
+        this.map = new MapCoordinateBag(cells, turn);
+    }
+
+    public boolean test(List<Coordinates> coordinates) {
+        return map.test(coordinates);
     }
 
     /**
      * Parse board based on json-format.
-     * @param json json from websocket
+     * @param json    json from websocket
      * @param players parsed players
      * @return parsed board
      */
@@ -136,11 +150,8 @@ public class Board {
         return isOnBoard(tuple._1, tuple._2);
     }
 
-    public CoordinateBag getCoordinateBag() {
-        if (lastTurn != turn || lastCoordinates == null) {
-            lastCoordinates = new CoordinateBag(this);
-            lastTurn = turn;
-        }
-        return lastCoordinates;
+    public boolean isOnBoard(Coordinates coordinates) {
+        return isOnBoard(coordinates.getX(), coordinates.getY());
     }
+
 }
