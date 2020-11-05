@@ -25,8 +25,8 @@ public class PossibleMovesCalculator {
         var combinations = new CombinationTree();
         var players = from.getPlayers();
         for (int i = 0; i < players.length; i++) {
-            if (players.containsKey(i)) {
-                combinations.add(players.get(i).getPossibleMoves(from));
+            if (players[i] != null) {
+                combinations.add(players[i].getPossibleMoves(from));
             }
         }
         return combinations.getCombinations().stream()

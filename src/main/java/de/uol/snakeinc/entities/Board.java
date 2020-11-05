@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import de.uol.snakeinc.possibleMoves.CombinationTree;
 import de.uol.snakeinc.possibleMoves.IntSet;
-import de.uol.snakeinc.possibleMoves.PlayerMap;
 import io.vavr.Tuple2;
 import lombok.CustomLog;
 import lombok.EqualsAndHashCode;
@@ -27,7 +26,7 @@ public class Board {
     @Getter
     private int turn;
     @Getter
-    private PlayerMap players;
+    private Player[] players;
     @Getter
     private int us;
 
@@ -39,13 +38,9 @@ public class Board {
     public Board(int width, int height, Player[] players, int us) {
         this.width = width;
         this.height = height;
-        this.players = new PlayerMap(players);
+        this.players = players;
         this.turn = 1;
         this.us = us;
-
-        for (int i = 1; i < players.length; i++) {
-            this.players.put(i, players[i]);
-        }
 
         var start = Arrays.stream(players)
             .filter(Objects::nonNull)
@@ -69,7 +64,7 @@ public class Board {
         this.width = board.width;
         this.height = board.height;
         this.turn = board.turn + 1;
-        this.players = new PlayerMap(board.players.length);
+        this.players = new Player[board.players.length];
         this.weight = board.weight;
 
         this.map = new MapCoordinateBag(board.map);
@@ -85,12 +80,12 @@ public class Board {
                 map.addInternal(dead, current, coordinates.get(i));        //         \
             }                                                              //        -/
             if (apc.getPlayer().isActive()) {
-                players.put(apc.getPlayer().getId(), apc.getPlayer());
+                players[apc.getPlayer().getId()] = apc.getPlayer();
             }
         }
         for (int i = 0; i < players.length; i++) {
-            if (players.containsKey(i) && dead.contains(i)) {
-                players.remove(i);
+            if (players[i] == null && dead.contains(i)) {
+                players[i] = null;
             }
         }
     }
@@ -100,7 +95,7 @@ public class Board {
     }
 
     public Player getPlayer(int id) {
-        return players.get(id);
+        return players[id];
     }
 
     public Player getOurPlayer() {
