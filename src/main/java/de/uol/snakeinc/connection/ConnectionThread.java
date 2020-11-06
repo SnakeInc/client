@@ -2,8 +2,12 @@ package de.uol.snakeinc.connection;
 
 import lombok.CustomLog;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Thread handling Connection to Websocket.
@@ -20,7 +24,8 @@ public class ConnectionThread extends Thread {
     public ConnectionThread(String apiKey) {
         this.running = true;
         try {
-            url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
+            //wss://msoll.de/spe_ed?key=
+            url = new URI("wss://tuwel.de:555/?key=" + apiKey);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -31,7 +36,19 @@ public class ConnectionThread extends Thread {
         while (running) {
             callback = false;
             webSocket = new SpeedWebSocketClient(this, url);
-            webSocket.connect();
+            SSLContext sslContext = null;
+            try {
+                sslContext = SSLContext.getInstance("TLS");
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            try {
+                sslContext.init( null, null, null );
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
+            SSLSocketFactory factory = sslContext.getSocketFactory();
+            webSocket.setSocketFactory(factory);
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
