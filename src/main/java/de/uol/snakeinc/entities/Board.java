@@ -20,19 +20,20 @@ import java.util.Objects;
 public class Board {
 
     @Getter
-    private int width;
+    private final int width;
     @Getter
-    private int height;
+    private final int height;
     @Getter
     private int turn;
     @Getter
-    private Player[] players;
+    private final Player[] players;
     @Getter
     private int us;
 
     @Getter
     private MapCoordinateBag map; //
 
+    @Getter
     private int weight = 1;
 
     public Board(int width, int height, Player[] players, int us) {
@@ -60,7 +61,14 @@ public class Board {
         this.map = new MapCoordinateBag(board.map);
     }
 
-    public Board(Board board, CombinationTree.CombinationIterator iterator, int depth) {
+    public Board(int numOfPlayers, int with, int hight, int us) {
+        this.width = with;
+        this.height = hight;
+        this.players = new Player[numOfPlayers];
+        this.us = us;
+    }
+
+    public Board(Board board, CombinationTree.CombinationIterator iterator) {
         this.width = board.width;
         this.height = board.height;
         this.turn = board.turn + 1;
@@ -84,10 +92,46 @@ public class Board {
             }
         }
         for (int i = 0; i < players.length; i++) {
-            if (players[i] == null && dead.contains(i)) {
+            if (players[i] != null && dead.contains(i)) {
                 players[i] = null;
             }
         }
+    }
+
+    public Board recycle(MapCoordinateBag map, int weight, CombinationTree.CombinationIterator iterator) {
+        this.weight = weight;
+        this.map = map;
+        var dead = IntSet.ofSize(players.length);
+        var current = new HashSet<Coordinates.Tuple>();
+        while (iterator.hasNext()) {
+            var apc = iterator.next();
+            //for (var coordinates : apc.getCoordinates()) {               //
+            //    map.addInternal(dead, current, coordinates);             //
+            //}                                                            //
+            var coordinates = apc.getCoordinates(); //
+            var size = coordinates.size();                             //          > not sure what is faster
+            for (int i = 0; i < size; i++) {                 //
+                map.addInternal(dead, current, coordinates.get(i));        //
+            }                                                              //
+            if (apc.getPlayer().isActive()) {
+                players[apc.getPlayer().getId()] = apc.getPlayer();
+            }
+        }
+        for (int i = 0; i < players.length; i++) {
+            if (players[i] != null && dead.contains(i)) {
+                players[i] = null;
+            }
+        }
+        return this;
+    }
+
+    public void dispose() {
+        this.map = null;
+        Arrays.fill(players, null);
+    }
+
+    public void mapDispose() {
+        map = null;
     }
 
     public boolean isJumpTurn() {
