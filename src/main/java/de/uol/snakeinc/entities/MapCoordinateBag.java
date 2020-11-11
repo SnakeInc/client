@@ -1,57 +1,84 @@
 package de.uol.snakeinc.entities;
 
+import de.uol.snakeinc.possibleMoves.CombinationTree;
 import de.uol.snakeinc.possibleMoves.IntSet;
-import io.vavr.collection.HashSet;
+import de.uol.snakeinc.possibleMoves.PlayerMap;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Stream;
 
 public class MapCoordinateBag {
 
-    private HashSet<Coordinates.Tuple> map;
+    private MapCoordinateBag parent;
+    private HashMap<Coordinates.Tuple, Coordinates.Tuple> map;
 
     public MapCoordinateBag(int[][] map, int turn) {
-        var list = new ArrayList<Coordinates.Tuple>(map.length * map.length / 2); //assumes map is halfway full
+        this.map = new HashMap<Coordinates.Tuple, Coordinates.Tuple>(map.length * map.length / 2); //assumes map is halfway full
         for (int xdex = 0; xdex < map.length; xdex++) {
             for (int ydex = 0; ydex < map[0].length; ydex++) {
                 if (map[xdex][ydex] != 0) {
-                    list.add(new Coordinates(xdex, ydex, map[xdex][ydex], turn).getTuple());
+                    var tuple = new Coordinates(xdex, ydex, map[xdex][ydex], turn).getTuple();
+                    this.map.put(tuple, tuple);
                 }
             }
         }
-        this.map = HashSet.ofAll(list);
+        this.parent = null;
     }
 
     public MapCoordinateBag(MapCoordinateBag parent) {
-        this.map = parent.map;
+        this.parent = parent;
+    }
+
+    public MapCoordinateBag(MapCoordinateBag parent, HashMap map) {
+        this.parent = parent;
+        this.map = map;
     }
 
     public MapCoordinateBag(Stream<Coordinates.Tuple> start) {
-        this.map = HashSet.ofAll(start);
+        this.map = new HashMap<>();
+        start.forEach(t -> map.put(t, t));
     }
 
-    //public Set<Integer> add(Iterable<Coordinates.Tuple> toadd) {
-    //    var dead = new TreeSet<Integer>();
-    //    var curr = new TreeSet<Coordinates.Tuple>();
-    //    for (var coord : toadd) {
-    //        addInternal(dead, curr, coord);
-    //    }
-    //    this.map = this.map.addAll(curr);
-    //    return dead;
-    //}
-    //
-    //public Set<Integer> add(Stream<Coordinates.Tuple> toadd) {
-    //    var dead = new TreeSet<Integer>();
-    //    var curr = new TreeSet<Coordinates.Tuple>();
-    //    toadd.forEach(coord -> addInternal(dead, curr, coord));
-    //    this.map = this.map.addAll(curr);
-    //    return dead;
-    //}
+    public MapCoordinateBag addInternalAll(IntSet dead, CombinationTree.CombinationIterator iterator, PlayerMap players) {
+        HashMap<Coordinates.Tuple, Coordinates.Tuple> current = new HashMap<>((players.length - 1) * 10);
+        while (iterator.hasNext()) {
+            var apc = iterator.next();
+            var player = apc.getPlayer();
+            if (!player.isActive()) {
+                dead.add(player.getId());
+            }
+            var coordinates = apc.getCoordinates();
+            for (int i = 0; i < coordinates.size(); i++) {
+                var coordinate = coordinates.get(i);
+                if (this.contains(coordinate)) {
+                    dead.add(coordinate.getPlayer());
+                } else {
+                    if (current.containsKey(coordinate)) {
+                        int dying = current.get(coordinate).getPlayer();
+                        if (dying != -1) {
+                            dead.add(dying);
+                            players.remove(dying);
+                            //current.remove(coordinate);
+                            var newTuple = coordinate.getCoordinates().cross().getTuple();
+                            current.put(newTuple, newTuple);
+                        }
+                        dead.add(coordinate.getPlayer());
+                    } else {
+                        current.put(coordinate, coordinate);
+                    }
+                }
+            }
+            if (!dead.contains(player.getId())) {
+                players.put(player);
+            }
+        }
+        return new MapCoordinateBag(this, map);
+    }
 
     public void addInternal(IntSet dead, Set<Coordinates.Tuple> curr, Coordinates.Tuple coord) {
-        if (map.contains(coord)) {
+        if (parent.contains(coord)) {
             dead.add(coord.getPlayer());
         } else {
             if (curr.contains(coord)) {
@@ -68,13 +95,17 @@ public class MapCoordinateBag {
         }
     }
 
-    public boolean isFree(int x, int y) {
-        return map.find(tuple -> tuple.equals(x, y)).isEmpty();
-    }
+    //public boolean isFree(int x, int y) {
+    //    return map.find(tuple -> tuple.equals(x, y)).isEmpty();
+    //}
 
     public boolean test(Collection<Coordinates> coordinates) {
         return coordinates.stream()
             .map(Coordinates::getTuple)
-            .anyMatch(map::contains);
+            .anyMatch(this::contains);
+    }
+
+    public boolean contains(Coordinates.Tuple tuple) {
+        return map.containsKey(tuple) || (parent != null && parent.contains(tuple));
     }
 }

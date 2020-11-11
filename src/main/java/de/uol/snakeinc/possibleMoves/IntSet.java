@@ -13,6 +13,8 @@ public interface IntSet {
 
     void remove(int Int);
 
+    void clear();
+
     static IntSet ofSize(int size) {
         if (size < 32) {
             return new SmallIntegerSet();
@@ -68,6 +70,11 @@ public interface IntSet {
             }
 
             int number;
+        }
+
+        @Override
+        public void clear() {
+            set = 0;
         }
 
         public boolean isEmpty() {
@@ -358,6 +365,11 @@ public interface IntSet {
         }
 
         @Override
+        public void clear() {
+            set.clear();
+        }
+
+        @Override
         public boolean isEmpty() {
             return set.isEmpty();
         }
@@ -384,6 +396,11 @@ public interface IntSet {
 
         public IntBitSet(int size) {
             set = new BitSet(size);
+            set.clear();
+        }
+
+        @Override
+        public void clear() {
             set.clear();
         }
 

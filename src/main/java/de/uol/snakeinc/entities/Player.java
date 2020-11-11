@@ -221,33 +221,33 @@ public class Player {
             switch (dir) {
                 case LEFT:
                     newOrdinate = x - speed;
-                    active = -1 < newOrdinate && newOrdinate > width;
+                    active = -1 < newOrdinate && newOrdinate < width;
                     player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
-                    for (; speed <= 1; speed--) {
+                    for (; speed > 1; speed--) {
                         ls.add(new Coordinates(x - speed, y, turn, id).getTuple());
                     }
                     break;
                 case RIGHT:
                     newOrdinate = x + speed;
-                    active = -1 < newOrdinate && newOrdinate > width;
+                    active = -1 < newOrdinate && newOrdinate < width;
                     player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
-                    for (; speed <= 1; speed--) {
+                    for (; speed > 1; speed--) {
                         ls.add(new Coordinates(x + speed, y, turn, id).getTuple());
                     }
                     break;
                 case DOWN:
                     newOrdinate = y - speed;
-                    active = -1 < newOrdinate && newOrdinate > height;
+                    active = -1 < newOrdinate && newOrdinate < height;
                     player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
-                    for (; speed <= 1; speed--) {
+                    for (; speed > 1; speed--) {
                         ls.add(new Coordinates(x, y - speed, turn, id).getTuple());
                     }
                     break;
                 case UP:
                     newOrdinate = y + speed;
-                    active = -1 < newOrdinate && newOrdinate > height;
+                    active = -1 < newOrdinate && newOrdinate < height;
                     player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
-                    for (; speed <= 1; speed--) {
+                    for (; speed > 1; speed--) {
                         ls.add(new Coordinates(x, y + speed, turn, id).getTuple());
                     }
                     break;

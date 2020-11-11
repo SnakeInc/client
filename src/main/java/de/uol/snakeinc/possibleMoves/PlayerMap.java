@@ -61,6 +61,15 @@ public class PlayerMap implements Iterable<Player> {
         }
     }
 
+    public Player put(Player value) {
+        try {
+            players[value.getId()] = value;
+            return value;
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            return null;
+        }
+    }
+
     public Player remove(int key) {
         try {
             var res = players[key];
@@ -119,6 +128,16 @@ public class PlayerMap implements Iterable<Player> {
                 continue;
             } else {
                 action.accept(players[i]);
+            }
+        }
+    }
+
+    public void addToCombinationTree(CombinationTree tree, int height, int with, int turn) {
+        for (int i = 0; i < players.length; i++) {
+            if (players[i] == null) {
+                continue;
+            } else {
+                tree.add(players[i].getPossibleMoves(turn, height, with));
             }
         }
     }

@@ -177,7 +177,7 @@ public class PossibleMovesCalculator {
             new Player(4, 30, 30, Direction.UP, 5, true, "4"),
         };
 
-        var board = new Board(40, 40, players, 1);
+        var board = new Board(40, 40, players, 2);
         var calc = new PossibleMovesCalculator(board);
 
         AtomicInteger i = new AtomicInteger(0);
@@ -186,20 +186,20 @@ public class PossibleMovesCalculator {
         //var end = System.currentTimeMillis();
         //log.debug("Time elapsed: " + (end - start) + "ms");
         //log.debug(count);
-        //var start = System.currentTimeMillis();
-        //var stats1 = calc.calculateBoardsParallel(board)
-        //    .flatMap(calc::calculateBoards)
-        //    .flatMap(calc::calculateBoards)
-        //    .map(Stats::new)
-        //    .reduce(new Stats(0, 0, 0, 0, 0, 0), Stats::add);
-        //var end = System.currentTimeMillis();
-        //log.debug("Time elapsed: " + (end - start) + "ms");
-        //log.debug(stats1);
         var start = System.currentTimeMillis();
-        var stats2 = calc.calculateBoardsParallel(calc.base)
-            .map(PossibleMovesCalculator::stats2inlined)
+        var stats1 = calc.calculateBoardsParallel(board)
+            .flatMap(calc::calculateBoards)
+            .flatMap(calc::calculateBoards)
+            .map(Stats::new)
             .reduce(new Stats(0, 0, 0, 0, 0, 0), Stats::add);
         var end = System.currentTimeMillis();
+        log.debug("Time elapsed: " + (end - start) + "ms");
+        log.debug(stats1);
+        start = System.currentTimeMillis();
+        var stats2 = calc.calculateBoardsParallel(calc.base)
+            .map(PossibleMovesCalculator::stats2)
+            .reduce(new Stats(0, 0, 0, 0, 0, 0), Stats::add);
+        end = System.currentTimeMillis();
         log.debug("Time elapsed: " + (end - start) + "ms");
         log.debug(stats2);
         start = System.currentTimeMillis();

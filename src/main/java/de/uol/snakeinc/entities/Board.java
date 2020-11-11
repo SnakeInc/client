@@ -146,9 +146,9 @@ public class Board {
         return getPlayer(us);
     }
 
-    public boolean isFree(int x, int y) {
-        return map.isFree(x, y) && isOnBoard(x, y);
-    }
+    //public boolean isFree(int x, int y) {
+    //    return map.isFree(x, y) && isOnBoard(x, y);
+    //}
 
     public void setCells(int[][] cells) {
         this.map = new MapCoordinateBag(cells, turn);
