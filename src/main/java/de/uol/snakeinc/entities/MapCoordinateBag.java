@@ -74,7 +74,7 @@ public class MapCoordinateBag {
                 players.put(player);
             }
         }
-        return new MapCoordinateBag(this, map);
+        return new MapCoordinateBag(this, current);
     }
 
     public void addInternal(IntSet dead, Set<Coordinates.Tuple> curr, Coordinates.Tuple coord) {
