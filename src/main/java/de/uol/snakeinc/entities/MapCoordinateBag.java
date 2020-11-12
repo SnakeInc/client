@@ -3,7 +3,6 @@ package de.uol.snakeinc.entities;
 import de.uol.snakeinc.possibleMoves.CombinationTree;
 import de.uol.snakeinc.possibleMoves.IntSet;
 import de.uol.snakeinc.possibleMoves.PlayerMap;
-import lombok.Getter;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,10 +15,6 @@ public class MapCoordinateBag {
     private HashMap<Coordinates.Tuple, Coordinates.Tuple> map;
     private int[] xs;
     private int[] ys;
-    @Getter
-    private static int tru = 0;
-    @Getter
-    private static int fals = 0;
 
     public MapCoordinateBag(int[][] map, int turn) {
         this.map = new HashMap<Coordinates.Tuple, Coordinates.Tuple>(map.length * map.length / 2); //assumes map is halfway full
@@ -131,13 +126,7 @@ public class MapCoordinateBag {
     }
 
     public boolean contains(Coordinates.Tuple tuple) {
-        var res = this.xs[tuple.getX()] > 0 && this.ys[tuple.getY()] > 0
+        return this.xs[tuple.getX()] > 0 && this.ys[tuple.getY()] > 0
             && ((map.containsKey(tuple)) || (parent != null && parent.contains(tuple)));
-        if (res) {
-            tru++;
-        } else {
-            fals++;
-        }
-        return res;
     }
 }

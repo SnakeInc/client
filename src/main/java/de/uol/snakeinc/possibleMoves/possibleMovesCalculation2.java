@@ -178,7 +178,6 @@ public class possibleMovesCalculation2 {
         var end = System.currentTimeMillis();
         log.debug("Time elapsed: " + (end - start) + "ms");
         log.debug(stats1);
-        log.debug("true: " + MapCoordinateBag.getTru() + " vs false: " + MapCoordinateBag.getFals());
 
     }
 
