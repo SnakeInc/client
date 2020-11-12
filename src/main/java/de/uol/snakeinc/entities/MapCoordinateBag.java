@@ -3,6 +3,7 @@ package de.uol.snakeinc.entities;
 import de.uol.snakeinc.possibleMoves.CombinationTree;
 import de.uol.snakeinc.possibleMoves.IntSet;
 import de.uol.snakeinc.possibleMoves.PlayerMap;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,14 +14,24 @@ public class MapCoordinateBag {
 
     private MapCoordinateBag parent;
     private HashMap<Coordinates.Tuple, Coordinates.Tuple> map;
+    private int[] xs;
+    private int[] ys;
+    @Getter
+    private static int tru = 0;
+    @Getter
+    private static int fals = 0;
 
     public MapCoordinateBag(int[][] map, int turn) {
         this.map = new HashMap<Coordinates.Tuple, Coordinates.Tuple>(map.length * map.length / 2); //assumes map is halfway full
+        this.xs = new int[map.length]; // initialized with zero
+        this.ys = new int[map[0].length];
         for (int xdex = 0; xdex < map.length; xdex++) {
             for (int ydex = 0; ydex < map[0].length; ydex++) {
                 if (map[xdex][ydex] != 0) {
                     var tuple = new Coordinates(xdex, ydex, map[xdex][ydex], turn).getTuple();
                     this.map.put(tuple, tuple);
+                    xs[xdex]++;
+                    ys[ydex]++;
                 }
             }
         }
@@ -31,18 +42,30 @@ public class MapCoordinateBag {
         this.parent = parent;
     }
 
-    public MapCoordinateBag(MapCoordinateBag parent, HashMap map) {
+    public MapCoordinateBag(MapCoordinateBag parent, HashMap map, int[] xs, int[] ys) {
         this.parent = parent;
         this.map = map;
+        this.xs = xs;
+        this.ys = ys;
     }
 
-    public MapCoordinateBag(Stream<Coordinates.Tuple> start) {
+    public MapCoordinateBag(Stream<Coordinates.Tuple> start, int x, int y) {
         this.map = new HashMap<>();
-        start.forEach(t -> map.put(t, t));
+        this.parent = null;
+        this.xs = new int[x];
+        this.ys = new int[y];
+
+        start.forEach(t -> {
+            map.put(t, t);
+            xs[t.getX()]++;
+            ys[t.getY()]++;
+        });
     }
 
     public MapCoordinateBag addInternalAll(IntSet dead, CombinationTree.CombinationIterator iterator, PlayerMap players) {
-        HashMap<Coordinates.Tuple, Coordinates.Tuple> current = new HashMap<>((players.length - 1) * 10);
+        HashMap<Coordinates.Tuple, Coordinates.Tuple> current = new HashMap<>(((players.length - 1) * 40) / 30);
+        int[] ys = this.ys.clone();
+        int[] xs = this.xs.clone();
         while (iterator.hasNext()) {
             var apc = iterator.next();
             var player = apc.getPlayer();
@@ -67,6 +90,8 @@ public class MapCoordinateBag {
                         dead.add(coordinate.getPlayer());
                     } else {
                         current.put(coordinate, coordinate);
+                        ys[coordinate.getY()]++;
+                        xs[coordinate.getX()]++;
                     }
                 }
             }
@@ -74,7 +99,7 @@ public class MapCoordinateBag {
                 players.put(player);
             }
         }
-        return new MapCoordinateBag(this, current);
+        return new MapCoordinateBag(this, current, xs, ys);
     }
 
     public void addInternal(IntSet dead, Set<Coordinates.Tuple> curr, Coordinates.Tuple coord) {
@@ -106,6 +131,13 @@ public class MapCoordinateBag {
     }
 
     public boolean contains(Coordinates.Tuple tuple) {
-        return map.containsKey(tuple) || (parent != null && parent.contains(tuple));
+        var res = this.xs[tuple.getX()] > 0 && this.ys[tuple.getY()] > 0
+            && ((map.containsKey(tuple)) || (parent != null && parent.contains(tuple)));
+        if (res) {
+            tru++;
+        } else {
+            fals++;
+        }
+        return res;
     }
 }

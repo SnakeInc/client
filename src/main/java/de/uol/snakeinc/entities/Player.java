@@ -232,7 +232,7 @@ public class Player {
                     break;
                 case RIGHT:
                     newOrdinate = x + speed;
-                    active = width > newOrdinate;
+                    active = width >= newOrdinate;
                     player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
                     if (!active) {
                         newOrdinate = width - 1;
@@ -254,7 +254,7 @@ public class Player {
                     break;
                 case UP:
                     newOrdinate = y + speed;
-                    active = -1 < newOrdinate;
+                    active = newOrdinate >= height;
                     player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
                     if (!active) {
                         newOrdinate = height - 1;

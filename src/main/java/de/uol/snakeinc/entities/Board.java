@@ -48,7 +48,7 @@ public class Board {
             .filter(player -> player.getX() >= 0 && player.getX() < width
                 && player.getY() >= 0 && player.getY() < height)
             .map(player -> new Coordinates(player.getX(), player.getY(), player.getId(), turn).getTuple());
-        this.map = new MapCoordinateBag(start);
+        this.map = new MapCoordinateBag(start, width, height);
 
     }
 

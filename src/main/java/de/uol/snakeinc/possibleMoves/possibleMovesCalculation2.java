@@ -178,37 +178,7 @@ public class possibleMovesCalculation2 {
         var end = System.currentTimeMillis();
         log.debug("Time elapsed: " + (end - start) + "ms");
         log.debug(stats1);
-
-        //start = System.currentTimeMillis();
-        //var stats2 = linearStats3(board);
-        //end = System.currentTimeMillis();
-        //log.debug("Time elapsed: " + (end - start) + "ms");
-        //log.debug(stats2);
-        //
-        //start = System.currentTimeMillis();
-        //var stats3 = linearStats3(board);
-        //end = System.currentTimeMillis();
-        //log.debug("Time elapsed: " + (end - start) + "ms");
-        //log.debug(stats3);
-        //log.debug("culling");
-        //
-        //start = System.currentTimeMillis();
-        //var stats4 = linearStats3withCulling(board);
-        //end = System.currentTimeMillis();
-        //log.debug("Time elapsed: " + (end - start) + "ms");
-        //log.debug(stats4);
-        //
-        //start = System.currentTimeMillis();
-        //var stats5 = linearStats3withCulling(board);
-        //end = System.currentTimeMillis();
-        //log.debug("Time elapsed: " + (end - start) + "ms");
-        //log.debug(stats5);
-        //
-        //start = System.currentTimeMillis();
-        //var stats6 = linearStats3withCulling(board);
-        //end = System.currentTimeMillis();
-        //log.debug("Time elapsed: " + (end - start) + "ms");
-        //log.debug(stats6);
+        log.debug("true: " + MapCoordinateBag.getTru() + " vs false: " + MapCoordinateBag.getFals());
 
     }
 
