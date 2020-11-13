@@ -22,7 +22,7 @@ public class possibleMovesCalculation2 {
         int turn = from.getTurn();
 
         CombinationTree combinationTree1 = new CombinationTree();
-        players.addToCombinationTree(combinationTree1, height, width, turn);
+        players.addToCombinationTree(combinationTree1, height, width, turn, from.getMap());
         var combs1 = combinationTree1.getRawCombinations();
         for (var combination1 : combs1) {
             MapCoordinateBag map1 = from.getMap().addInternalAll(dead, combination1.toIterator(), players1);
@@ -37,7 +37,7 @@ public class possibleMovesCalculation2 {
             dead.clear();
 
             CombinationTree combinationTree2 = new CombinationTree();
-            players1.addToCombinationTree(combinationTree2, height, width, turn + 1);
+            players1.addToCombinationTree(combinationTree2, height, width, turn + 1, map1);
             players1.clear();
             var combs2 = combinationTree2.getRawCombinations();
             for (var combination2 : combs2) {
@@ -53,7 +53,7 @@ public class possibleMovesCalculation2 {
                 dead.clear();
 
                 CombinationTree combinationTree3 = new CombinationTree();
-                players1.addToCombinationTree(combinationTree3, height, width, turn + 2);
+                players1.addToCombinationTree(combinationTree3, height, width, turn + 2, map2);
                 players1.clear();
                 var combs3 = combinationTree3.getRawCombinations();
                 for (var combination3 : combs3) {
@@ -69,7 +69,7 @@ public class possibleMovesCalculation2 {
                     dead.clear();
 
                     CombinationTree combinationTree4 = new CombinationTree();
-                    players1.addToCombinationTree(combinationTree4, height, width, turn + 3);
+                    players1.addToCombinationTree(combinationTree4, height, width, turn + 3, map3);
                     players1.clear();
                     var combs4 = combinationTree4.getRawCombinations();
                     for (var combination4 : combs4) {

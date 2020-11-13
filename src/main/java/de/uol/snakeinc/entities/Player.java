@@ -174,7 +174,7 @@ public class Player {
         return res;
     }
 
-    public ArrayList<ActionPlayerCoordinates> getPossibleMoves(int turn, int height, int width) {
+    public ArrayList<ActionPlayerCoordinates> getPossibleMoves(int turn, int height, int width, MapCoordinateBag map) {
         var res = new ArrayList<ActionPlayerCoordinates>(5);
         Direction dir;
         int speed;
@@ -227,7 +227,12 @@ public class Player {
                         newOrdinate = 0;
                     }
                     for (; newOrdinate < x; newOrdinate++) {
-                        ls.add(new Coordinates(newOrdinate, y, turn, id).getTuple());
+                        var tuple = new Coordinates(newOrdinate, y, turn, id).getTuple();
+                        if (!map.contains(tuple)) {
+                            ls.add(new Coordinates(newOrdinate, y, turn, id).getTuple());
+                        } else {
+                            player.setActive(false);
+                        }
                     }
                     break;
                 case RIGHT:
@@ -238,7 +243,12 @@ public class Player {
                         newOrdinate = width - 1;
                     }
                     for (; newOrdinate > x; newOrdinate--) {
-                        ls.add(new Coordinates(newOrdinate, y, turn, id).getTuple());
+                        var tuple = new Coordinates(newOrdinate, y, turn, id).getTuple();
+                        if (!map.contains(tuple)) {
+                            ls.add(tuple);
+                        } else {
+                            player.setActive(false);
+                        }
                     }
                     break;
                 case DOWN:
@@ -249,7 +259,12 @@ public class Player {
                         newOrdinate = 0;
                     }
                     for (; newOrdinate < y; newOrdinate++) {
-                        ls.add(new Coordinates(x, newOrdinate, turn, id).getTuple());
+                        var tuple = new Coordinates(x, newOrdinate, turn, id).getTuple();
+                        if (!map.contains(tuple)) {
+                            ls.add(tuple);
+                        } else {
+                            player.setActive(false);
+                        }
                     }
                     break;
                 case UP:
@@ -260,7 +275,12 @@ public class Player {
                         newOrdinate = height - 1;
                     }
                     for (; newOrdinate > y; newOrdinate--) {
-                        ls.add(new Coordinates(x, newOrdinate, turn, id).getTuple());
+                        var tuple = new Coordinates(x, newOrdinate, turn, id).getTuple();
+                        if (!map.contains(tuple)) {
+                            ls.add(tuple);
+                        } else {
+                            player.setActive(false);
+                        }
                     }
                     break;
                 default:

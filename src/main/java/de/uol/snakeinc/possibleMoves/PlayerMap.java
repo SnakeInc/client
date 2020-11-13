@@ -1,5 +1,6 @@
 package de.uol.snakeinc.possibleMoves;
 
+import de.uol.snakeinc.entities.MapCoordinateBag;
 import de.uol.snakeinc.entities.Player;
 import lombok.Getter;
 
@@ -132,12 +133,12 @@ public class PlayerMap implements Iterable<Player> {
         }
     }
 
-    public void addToCombinationTree(CombinationTree tree, int height, int with, int turn) {
+    public void addToCombinationTree(CombinationTree tree, int height, int with, int turn, MapCoordinateBag map) {
         for (int i = 0; i < players.length; i++) {
             if (players[i] == null) {
                 continue;
             } else {
-                tree.add(players[i].getPossibleMoves(turn, height, with));
+                tree.add(players[i].getPossibleMoves(turn, height, with, map));
             }
         }
     }

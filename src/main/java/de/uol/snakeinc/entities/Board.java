@@ -2,8 +2,6 @@ package de.uol.snakeinc.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import de.uol.snakeinc.possibleMoves.CombinationTree;
-import de.uol.snakeinc.possibleMoves.IntSet;
 import io.vavr.Tuple2;
 import lombok.CustomLog;
 import lombok.EqualsAndHashCode;
@@ -11,7 +9,6 @@ import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,63 +63,6 @@ public class Board {
         this.height = hight;
         this.players = new Player[numOfPlayers];
         this.us = us;
-    }
-
-    public Board(Board board, CombinationTree.CombinationIterator iterator) {
-        this.width = board.width;
-        this.height = board.height;
-        this.turn = board.turn + 1;
-        this.players = new Player[board.players.length];
-        this.weight = board.weight;
-
-        this.map = new MapCoordinateBag(board.map);
-        var dead = IntSet.ofSize(players.length);
-        var current = new HashSet<Coordinates.Tuple>();
-        while (iterator.hasNext()) {
-            var apc = iterator.next();
-            //for (var coordinates : apc.getCoordinates()) {               //        -\
-            //    map.addInternal(dead, current, coordinates);             //         /
-            //}                                                            //         \
-            var coordinates = apc.getCoordinates(); //          > not sure what is faster
-            for (int i = 0; i < coordinates.size(); i++) {                 //         /
-                map.addInternal(dead, current, coordinates.get(i));        //         \
-            }                                                              //        -/
-            if (apc.getPlayer().isActive()) {
-                players[apc.getPlayer().getId()] = apc.getPlayer();
-            }
-        }
-        for (int i = 0; i < players.length; i++) {
-            if (players[i] != null && dead.contains(i)) {
-                players[i] = null;
-            }
-        }
-    }
-
-    public Board recycle(MapCoordinateBag map, int weight, CombinationTree.CombinationIterator iterator) {
-        this.weight = weight;
-        this.map = map;
-        var dead = IntSet.ofSize(players.length);
-        var current = new HashSet<Coordinates.Tuple>();
-        while (iterator.hasNext()) {
-            var apc = iterator.next();
-            //for (var coordinates : apc.getCoordinates()) {               //
-            //    map.addInternal(dead, current, coordinates);             //
-            //}                                                            //
-            var coordinates = apc.getCoordinates(); //
-            var size = coordinates.size();                             //          > not sure what is faster
-            for (int i = 0; i < size; i++) {                 //
-                map.addInternal(dead, current, coordinates.get(i));        //
-            }                                                              //
-            if (apc.getPlayer().isActive()) {
-                players[apc.getPlayer().getId()] = apc.getPlayer();
-            }
-        }
-        for (int i = 0; i < players.length; i++) {
-            if (players[i] != null && dead.contains(i)) {
-                players[i] = null;
-            }
-        }
-        return this;
     }
 
     public void dispose() {
