@@ -61,25 +61,30 @@ public class possibleMovesCalculation2 {
                     updateStats(res.deaths3, dead);
                     res.overall3++;
 
-                    if (dead.contains(us)) {
-                        players1.clear();
-                        dead.clear();
-                        continue;
-                    }
                     dead.clear();
 
                     CombinationTree combinationTree4 = new CombinationTree();
                     players1.addToCombinationTree(combinationTree4, height, width, turn + 3, map3);
                     players1.clear();
-                    var combs4 = combinationTree4.getRawCombinations();
-                    for (var combination4 : combs4) {
-                        MapCoordinateBag map4 = map3.addInternalAll(dead, combination4.toIterator(), players1);
-                        updateStats(res.deaths4, dead);
-                        res.overall4++;
-
-                        players1.clear();
-                        dead.clear();
-                    }
+                    //if (dead.contains(us)) {
+                    //    players1.clear();
+                    //    dead.clear();
+                    //    continue;
+                    //}
+                    //dead.clear();
+                    //
+                    //CombinationTree combinationTree4 = new CombinationTree();
+                    //players1.addToCombinationTree(combinationTree4, height, width, turn + 3, map3);
+                    //players1.clear();
+                    //var combs4 = combinationTree4.getRawCombinations();
+                    //for (var combination4 : combs4) {
+                    //    MapCoordinateBag map4 = map3.addInternalAll(dead, combination4.toIterator(), players1);
+                    //    updateStats(res.deaths4, dead);
+                    //    res.overall4++;
+                    //
+                    //    players1.clear();
+                    //    dead.clear();
+                    //}
                 }
             }
         }
@@ -120,18 +125,18 @@ public class possibleMovesCalculation2 {
         public int[] deaths3;
         public int overall3;
 
-        public int[] deaths4;
-        public int overall4;
+        //public int[] deaths4;
+        //public int overall4;
 
         public Stats3(int length) {
             deaths1 = new int[length];
             deaths2 = new int[length];
             deaths3 = new int[length];
-            deaths4 = new int[length];
+            //deaths4 = new int[length];
             overall1 = 0;
             overall2 = 0;
             overall3 = 0;
-            overall4 = 0;
+            //overall4 = 0;
         }
     }
 
