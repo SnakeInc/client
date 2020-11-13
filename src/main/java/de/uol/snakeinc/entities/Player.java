@@ -88,93 +88,8 @@ public class Player {
         return players;
     }
 
-    public ArrayList<ActionPlayerCoordinates> getPossibleMoves(Board board) {
-        var res = new ArrayList<ActionPlayerCoordinates>(5);
-        Direction dir;
-        int speed;
-        int turn = board.getTurn();
-
-        for (Action action : Action.values()) {
-            switch (action) {
-                case TURN_LEFT:
-                case TURN_RIGHT:
-                    dir = direction.change(action);
-                    speed = this.speed;
-                    break;
-                case SLOW_DOWN:
-                    if (this.speed == 1) {
-                        var apc = new ActionPlayerCoordinates(Action.SLOW_DOWN, new Player(this, false),
-                            new ArrayList<>(0));
-                        res.add(apc);
-                        continue;
-                    }
-                    speed = this.speed - 1;
-                    dir = this.direction;
-                    break;
-                case SPEED_UP:
-                    if (this.speed == 10) {
-
-                        var apc = new ActionPlayerCoordinates(Action.SPEED_UP, new Player(this, false),
-                            new ArrayList<>(0));
-                        res.add(apc);
-                        continue;
-                    }
-                    speed = this.speed + 1;
-                    dir = this.direction;
-                    break;
-                case CHANGE_NOTHING:
-                    speed = this.speed;
-                    dir = this.direction;
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + action);
-            }
-            var ls = new ArrayList<Coordinates.Tuple>(speed);
-            Player player;
-            int newOrdinate;
-            boolean active;
-            switch (dir) {
-                case LEFT:
-                    newOrdinate = x - speed;
-                    active = board.isOnBoard(newOrdinate, y);
-                    player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
-                    for (; speed <= 1; speed--) {
-                        ls.add(new Coordinates(x - speed, y, turn, id).getTuple());
-                    }
-                    break;
-                case RIGHT:
-                    newOrdinate = x + speed;
-                    active = board.isOnBoard(newOrdinate, y);
-                    player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
-                    for (; speed <= 1; speed--) {
-                        ls.add(new Coordinates(x + speed, y, turn, id).getTuple());
-                    }
-                    break;
-                case DOWN:
-                    newOrdinate = y - speed;
-                    active = board.isOnBoard(x, newOrdinate);
-                    player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
-                    for (; speed <= 1; speed--) {
-                        ls.add(new Coordinates(x, y - speed, turn, id).getTuple());
-                    }
-                    break;
-                case UP:
-                    newOrdinate = y + speed;
-                    active = board.isOnBoard(x, newOrdinate);
-                    player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
-                    for (; speed <= 1; speed--) {
-                        ls.add(new Coordinates(x, y + speed, turn, id).getTuple());
-                    }
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + dir);
-            }
-            res.add(new ActionPlayerCoordinates(action, player, ls));
-        }
-        return res;
-    }
-
-    public ArrayList<ActionPlayerCoordinates> getPossibleMoves(int turn, int height, int width, MapCoordinateBag map) {
+    public ArrayList<ActionPlayerCoordinates> getPossibleMoves(int height, int width, MapCoordinateBag map) {
+        // TODO jumpturns
         var res = new ArrayList<ActionPlayerCoordinates>(5);
         Direction dir;
         int speed;
@@ -214,7 +129,7 @@ public class Player {
                 default:
                     throw new IllegalStateException("Unexpected value: " + action);
             }
-            var ls = new ArrayList<Coordinates.Tuple>(speed);
+            var ls = new ArrayList<Coordinates>(speed);
             Player player;
             int newOrdinate;
             boolean active;
@@ -227,9 +142,9 @@ public class Player {
                         newOrdinate = 0;
                     }
                     for (; newOrdinate < x; newOrdinate++) {
-                        var tuple = new Coordinates(newOrdinate, y, turn, id).getTuple();
+                        var tuple = new Coordinates(newOrdinate, y, id);
                         if (!map.contains(tuple)) {
-                            ls.add(new Coordinates(newOrdinate, y, turn, id).getTuple());
+                            ls.add(tuple);
                         } else {
                             player.setActive(false);
                         }
@@ -243,7 +158,7 @@ public class Player {
                         newOrdinate = width - 1;
                     }
                     for (; newOrdinate > x; newOrdinate--) {
-                        var tuple = new Coordinates(newOrdinate, y, turn, id).getTuple();
+                        var tuple = new Coordinates(newOrdinate, y, id);
                         if (!map.contains(tuple)) {
                             ls.add(tuple);
                         } else {
@@ -259,7 +174,7 @@ public class Player {
                         newOrdinate = 0;
                     }
                     for (; newOrdinate < y; newOrdinate++) {
-                        var tuple = new Coordinates(x, newOrdinate, turn, id).getTuple();
+                        var tuple = new Coordinates(x, newOrdinate, id);
                         if (!map.contains(tuple)) {
                             ls.add(tuple);
                         } else {
@@ -275,7 +190,7 @@ public class Player {
                         newOrdinate = height - 1;
                     }
                     for (; newOrdinate > y; newOrdinate--) {
-                        var tuple = new Coordinates(x, newOrdinate, turn, id).getTuple();
+                        var tuple = new Coordinates(x, newOrdinate, id);
                         if (!map.contains(tuple)) {
                             ls.add(tuple);
                         } else {

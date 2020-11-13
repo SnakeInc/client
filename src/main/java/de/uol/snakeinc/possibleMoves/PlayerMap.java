@@ -133,12 +133,12 @@ public class PlayerMap implements Iterable<Player> {
         }
     }
 
-    public void addToCombinationTree(CombinationTree tree, int height, int with, int turn, MapCoordinateBag map) {
+    public void addToCombinationTree(CombinationTree tree, int height, int width, MapCoordinateBag map) {
         for (int i = 0; i < players.length; i++) {
             if (players[i] == null) {
                 continue;
             } else {
-                tree.add(players[i].getPossibleMoves(turn, height, with, map));
+                tree.add(players[i].getPossibleMoves(height, width, map), players.length, width, height);
             }
         }
     }

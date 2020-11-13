@@ -23,6 +23,20 @@ public interface IntSet {
         }
     }
 
+    static IntSet of(IntSet of) {
+        if (of instanceof SmallIntegerSet) {
+            var res = new SmallIntegerSet();
+            res.set = ((SmallIntegerSet) of).set;
+            return res;
+        } else if (of instanceof LargeIntegerSet) {
+            var res = new LargeIntegerSet();
+            res.set = new HashSet<>(((LargeIntegerSet) of).set);
+            return res;
+        } else {
+            throw new IllegalStateException("wrong IntSet");
+        }
+    }
+
     class SmallIntegerSet implements IntSet {
 
         private SmallIntegerSet() {

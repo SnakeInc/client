@@ -44,7 +44,7 @@ public class Board {
             .filter(Objects::nonNull)
             .filter(player -> player.getX() >= 0 && player.getX() < width
                 && player.getY() >= 0 && player.getY() < height)
-            .map(player -> new Coordinates(player.getX(), player.getY(), player.getId(), turn).getTuple());
+            .map(player -> new Coordinates(player.getX(), player.getY(), player.getId()));
         this.map = new MapCoordinateBag(start, width, height);
 
     }
@@ -65,11 +65,6 @@ public class Board {
         this.us = us;
     }
 
-    public void dispose() {
-        this.map = null;
-        Arrays.fill(players, null);
-    }
-
     public void mapDispose() {
         map = null;
     }
@@ -86,12 +81,8 @@ public class Board {
         return getPlayer(us);
     }
 
-    //public boolean isFree(int x, int y) {
-    //    return map.isFree(x, y) && isOnBoard(x, y);
-    //}
-
     public void setCells(int[][] cells) {
-        this.map = new MapCoordinateBag(cells, turn);
+        this.map = new MapCoordinateBag(cells);
     }
 
     public boolean test(List<Coordinates> coordinates) {

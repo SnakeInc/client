@@ -1,5 +1,10 @@
 package de.uol.snakeinc.util;
 
+import de.uol.snakeinc.entities.Coordinates;
+import de.uol.snakeinc.possibleMoves.IntSet;
+
+import java.util.ArrayList;
+
 public class CoordinateMap {
 
     private int[][] map;
@@ -28,7 +33,7 @@ public class CoordinateMap {
             this.map[x][y] = v;
         } else {
             if (this.map[x] == null) {
-                this.map[x] = new int[y];
+                this.map[x] = new int[this.y];
             } else {
                 this.map[x] = this.map[x].clone();
             }
@@ -37,11 +42,35 @@ public class CoordinateMap {
         }
     }
 
+    public IntSet putAll(ArrayList<Coordinates> coordinates, IntSet res) {
+        for (int i = 0; i < coordinates.size(); i++) {
+            var coordinate = coordinates.get(i);
+            int get = this.get(coordinate.getX(), coordinate.getY());
+            if (get != 0) {
+                res.add(coordinate.getPlayer());
+                if (get > 0) {
+                    res.add(get);
+                }
+            } else {
+                put(coordinate.getX(), coordinate.getY(), coordinate.getPlayer());
+            }
+        }
+        return res;
+    }
+
     public boolean contains(int x, int y) {
         return this.map[x] != null && this.map[x][y] != 0;
     }
 
+    public boolean contains(Coordinates coordinates) {
+        return this.contains(coordinates.getX(), coordinates.getY());
+    }
+
     public int get(int x, int y) {
         return this.map[x] != null ? this.map[x][y] : 0;
+    }
+
+    public int get(Coordinates coordinates) {
+        return this.get(coordinates.getX(), coordinates.getY());
     }
 }

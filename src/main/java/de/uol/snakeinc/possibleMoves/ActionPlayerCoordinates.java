@@ -14,6 +14,6 @@ public class ActionPlayerCoordinates {
 
     Action action;
     Player player;
-    ArrayList<Coordinates.Tuple> coordinates;
+    ArrayList<Coordinates> coordinates;
     
 }

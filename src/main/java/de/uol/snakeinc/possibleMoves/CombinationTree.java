@@ -1,12 +1,12 @@
 package de.uol.snakeinc.possibleMoves;
 
+import de.uol.snakeinc.util.CoordinateMap;
 import lombok.CustomLog;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @CustomLog
 public class CombinationTree {
@@ -18,18 +18,33 @@ public class CombinationTree {
     public CombinationTree() {
     }
 
-    public void add(ArrayList<ActionPlayerCoordinates> toAdd) {
+    public void add(ArrayList<ActionPlayerCoordinates> toAdd, int players, int x, int y) {
         if (depth == 0) {
             for (int i = 0; i < toAdd.size(); i++) {
-                starts.add(new CombinationNode(toAdd.get(i), null));
+                var apc = toAdd.get(i);
+                var dead = IntSet.ofSize(players);
+                var coordinates = new CoordinateMap(x, y);
+                dead = coordinates.putAll(apc.getCoordinates(), dead);
+                if (!apc.getPlayer().isActive()) {
+                    dead.add(apc.getPlayer().getId());
+                }
+                starts.add(new CombinationNode(toAdd.get(i), null, coordinates, dead));
             }
         } else {
             var old = starts;
             starts = new ArrayList<>(old.size() * 5);
             int oldIt = 0, toAddIt = 0;
             for (; oldIt < old.size(); oldIt++) {
+                var oldNode = old.get(oldIt);
                 for (; toAddIt < toAdd.size(); toAddIt++) {
-                    starts.add(new CombinationNode(toAdd.get(toAddIt), old.get(oldIt)));
+                    var apc = toAdd.get(toAddIt);
+                    var dead = IntSet.of(oldNode.dead);
+                    var coordinates = new CoordinateMap(oldNode.coordinates);
+                    dead = coordinates.putAll(toAdd.get(toAddIt).getCoordinates(), dead);
+                    if (!apc.getPlayer().isActive()) {
+                        dead.add(apc.getPlayer().getId());
+                    }
+                    starts.add(new CombinationNode(toAdd.get(toAddIt), oldNode, coordinates, dead));
                 }
                 toAddIt = 0;
             }
@@ -41,22 +56,26 @@ public class CombinationTree {
         return starts.stream().map(CombinationNode::toIterator).collect(Collectors.toList());
     }
 
-    public Stream<CombinationIterator> getCombinationStream() {
-        return starts.stream().map(CombinationNode::toIterator);
-    }
-
     public ArrayList<CombinationNode> getRawCombinations() {
         return starts;
     }
 
     public class CombinationNode {
 
-        volatile ActionPlayerCoordinates entry;
-        volatile CombinationNode parent;
+        @Getter
+        private ActionPlayerCoordinates entry;
+        @Getter
+        private CombinationNode parent;
+        @Getter
+        private CoordinateMap coordinates;
+        @Getter
+        private IntSet dead;
 
-        CombinationNode(ActionPlayerCoordinates entry, CombinationNode node) {
+        CombinationNode(ActionPlayerCoordinates entry, CombinationNode node, CoordinateMap coordinates, IntSet dead) {
             this.entry = entry;
             this.parent = node;
+            this.coordinates = coordinates;
+            this.dead = dead;
         }
 
         public CombinationIterator toIterator() {

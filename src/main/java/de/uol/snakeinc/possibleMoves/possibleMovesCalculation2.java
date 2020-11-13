@@ -15,75 +15,58 @@ public class possibleMovesCalculation2 {
         Stats3 res = new Stats3(length);
         PlayerMap players = new PlayerMap(from.getPlayers());
         PlayerMap players1 = new PlayerMap(length);
-        IntSet dead = IntSet.ofSize(length);
         int us = from.getUs();
         int height = from.getHeight();
         int width = from.getWidth();
-        int turn = from.getTurn();
 
         CombinationTree combinationTree1 = new CombinationTree();
-        players.addToCombinationTree(combinationTree1, height, width, turn, from.getMap());
+        players.addToCombinationTree(combinationTree1, height, width, from.getMap());
         var combs1 = combinationTree1.getRawCombinations();
         for (var combination1 : combs1) {
-            MapCoordinateBag map1 = from.getMap().addInternalAll(dead, combination1.toIterator(), players1);
-            updateStats(res.deaths1, dead);
+            MapCoordinateBag map1 = from.getMap().addInternalAll(combination1, players1, res.deaths1);
             res.overall1++;
 
-            if (dead.contains(us)) {
+            if (!players1.containsKey(us)) {
                 players1.clear();
-                dead.clear();
                 continue;
             }
-            dead.clear();
 
             CombinationTree combinationTree2 = new CombinationTree();
-            players1.addToCombinationTree(combinationTree2, height, width, turn + 1, map1);
+            players1.addToCombinationTree(combinationTree2, height, width, map1);
             players1.clear();
             var combs2 = combinationTree2.getRawCombinations();
             for (var combination2 : combs2) {
-                MapCoordinateBag map2 = map1.addInternalAll(dead, combination2.toIterator(), players1);
-                updateStats(res.deaths2, dead);
+                MapCoordinateBag map2 = map1.addInternalAll(combination2, players1, res.deaths2);
                 res.overall2++;
 
-                if (dead.contains(us)) {
+                if (!players1.containsKey(us)) {
                     players1.clear();
-                    dead.clear();
                     continue;
                 }
-                dead.clear();
 
                 CombinationTree combinationTree3 = new CombinationTree();
-                players1.addToCombinationTree(combinationTree3, height, width, turn + 2, map2);
+                players1.addToCombinationTree(combinationTree3, height, width, map2);
                 players1.clear();
                 var combs3 = combinationTree3.getRawCombinations();
                 for (var combination3 : combs3) {
-                    MapCoordinateBag map3 = map2.addInternalAll(dead, combination3.toIterator(), players1);
-                    updateStats(res.deaths3, dead);
+                    MapCoordinateBag map3 = map2.addInternalAll(combination3, players1, res.deaths3);
                     res.overall3++;
 
-                    dead.clear();
-
-                    CombinationTree combinationTree4 = new CombinationTree();
-                    players1.addToCombinationTree(combinationTree4, height, width, turn + 3, map3);
                     players1.clear();
-                    //if (dead.contains(us)) {
+                    //if (!players1.containsKey(us)) {
                     //    players1.clear();
-                    //    dead.clear();
                     //    continue;
                     //}
-                    //dead.clear();
                     //
                     //CombinationTree combinationTree4 = new CombinationTree();
                     //players1.addToCombinationTree(combinationTree4, height, width, turn + 3, map3);
                     //players1.clear();
                     //var combs4 = combinationTree4.getRawCombinations();
                     //for (var combination4 : combs4) {
-                    //    MapCoordinateBag map4 = map3.addInternalAll(dead, combination4.toIterator(), players1);
-                    //    updateStats(res.deaths4, dead);
+                    //    MapCoordinateBag map4 = map3.addInternalAll(combination4, players1, res.deaths4);
                     //    res.overall4++;
                     //
                     //    players1.clear();
-                    //    dead.clear();
                     //}
                 }
             }
@@ -91,7 +74,7 @@ public class possibleMovesCalculation2 {
         return res;
     }
 
-    private static void updateStats(int[] stats, IntSet dead) {
+    public static void updateStats(int[] stats, IntSet dead) {
         int length = stats.length;
         boolean nobodyDied = true;
         int i = 1;
@@ -125,18 +108,18 @@ public class possibleMovesCalculation2 {
         public int[] deaths3;
         public int overall3;
 
-        //public int[] deaths4;
-        //public int overall4;
+        public int[] deaths4;
+        public int overall4;
 
         public Stats3(int length) {
             deaths1 = new int[length];
             deaths2 = new int[length];
             deaths3 = new int[length];
-            //deaths4 = new int[length];
+            deaths4 = new int[length];
             overall1 = 0;
             overall2 = 0;
             overall3 = 0;
-            //overall4 = 0;
+            overall4 = 0;
         }
     }
 
