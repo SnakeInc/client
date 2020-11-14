@@ -4,6 +4,7 @@ import de.uol.snakeinc.possibleMoves.CombinationTree;
 import de.uol.snakeinc.possibleMoves.PlayerMap;
 import de.uol.snakeinc.possibleMoves.possibleMovesCalculation2;
 import de.uol.snakeinc.util.CoordinateMap;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.stream.Stream;
@@ -11,6 +12,7 @@ import java.util.stream.Stream;
 public class MapCoordinateBag {
 
     private MapCoordinateBag parent;
+    @Getter
     private CoordinateMap map;
 
     public MapCoordinateBag(int[][] map) {
@@ -65,6 +67,6 @@ public class MapCoordinateBag {
     }
 
     public boolean contains(Coordinates coordinates) {
-        return this.map.contains(coordinates) || (parent != null && parent.contains(coordinates));
+        return this.map.contains(coordinates);
     }
 }

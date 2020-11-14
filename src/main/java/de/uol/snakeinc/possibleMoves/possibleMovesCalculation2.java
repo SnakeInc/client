@@ -51,23 +51,22 @@ public class possibleMovesCalculation2 {
                 for (var combination3 : combs3) {
                     MapCoordinateBag map3 = map2.addInternalAll(combination3, players1, res.deaths3);
                     res.overall3++;
+                    
+                    if (!players1.containsKey(us)) {
+                        players1.clear();
+                        continue;
+                    }
 
+                    CombinationTree combinationTree4 = new CombinationTree();
+                    players1.addToCombinationTree(combinationTree4, height, width, map3);
                     players1.clear();
-                    //if (!players1.containsKey(us)) {
-                    //    players1.clear();
-                    //    continue;
-                    //}
-                    //
-                    //CombinationTree combinationTree4 = new CombinationTree();
-                    //players1.addToCombinationTree(combinationTree4, height, width, turn + 3, map3);
-                    //players1.clear();
-                    //var combs4 = combinationTree4.getRawCombinations();
-                    //for (var combination4 : combs4) {
-                    //    MapCoordinateBag map4 = map3.addInternalAll(combination4, players1, res.deaths4);
-                    //    res.overall4++;
-                    //
-                    //    players1.clear();
-                    //}
+                    var combs4 = combinationTree4.getRawCombinations();
+                    for (var combination4 : combs4) {
+                        MapCoordinateBag map4 = map3.addInternalAll(combination4, players1, res.deaths4);
+                        res.overall4++;
+
+                        players1.clear();
+                    }
                 }
             }
         }

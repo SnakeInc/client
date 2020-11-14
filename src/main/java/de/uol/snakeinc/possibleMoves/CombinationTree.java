@@ -18,12 +18,12 @@ public class CombinationTree {
     public CombinationTree() {
     }
 
-    public void add(ArrayList<ActionPlayerCoordinates> toAdd, int players, int x, int y) {
+    public void add(ArrayList<ActionPlayerCoordinates> toAdd, int players, CoordinateMap map) {
         if (depth == 0) {
             for (int i = 0; i < toAdd.size(); i++) {
                 var apc = toAdd.get(i);
                 var dead = IntSet.ofSize(players);
-                var coordinates = new CoordinateMap(x, y);
+                var coordinates = new CoordinateMap(map);
                 dead = coordinates.putAll(apc.getCoordinates(), dead);
                 if (!apc.getPlayer().isActive()) {
                     dead.add(apc.getPlayer().getId());
