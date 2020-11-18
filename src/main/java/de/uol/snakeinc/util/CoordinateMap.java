@@ -28,6 +28,12 @@ public class CoordinateMap {
         this.updated = new boolean[x];
     }
 
+    /**
+     * places the value v at the position (x,y).
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param v the value to be placed
+     */
     public void put(int x, int y, int v) {
         if (updated[x]) {
             this.map[x][y] = v;
@@ -42,6 +48,12 @@ public class CoordinateMap {
         }
     }
 
+    /**
+     * puts all the coordinates in the map, and reports values that collided with each other.
+     * @param coordinates the coordinates to be added
+     * @param res         where the collisions are registered
+     * @return res
+     */
     public IntSet putAll(ArrayList<Coordinates> coordinates, IntSet res) {
         for (int i = 0; i < coordinates.size(); i++) {
             var coordinate = coordinates.get(i);

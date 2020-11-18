@@ -5,8 +5,6 @@ import lombok.CustomLog;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @CustomLog
 public class CombinationTree {
@@ -18,6 +16,12 @@ public class CombinationTree {
     public CombinationTree() {
     }
 
+    /**
+     * Adds a branch for Action Player Coordinate combination, to all existing branches.
+     * @param toAdd   the List of Combinations a player could do
+     * @param players how many players are in the game
+     * @param map     the CoordinateMap of the parent Board, marks all blocked coordinates
+     */
     public void add(ArrayList<ActionPlayerCoordinates> toAdd, int players, CoordinateMap map) {
         if (depth == 0) {
             for (int i = 0; i < toAdd.size(); i++) {
@@ -52,14 +56,13 @@ public class CombinationTree {
         depth++;
     }
 
-    public List<CombinationIterator> getCombinations() {
-        return starts.stream().map(CombinationNode::toIterator).collect(Collectors.toList());
-    }
-
     public ArrayList<CombinationNode> getRawCombinations() {
         return starts;
     }
 
+    /**
+     * A node in the combination Tree. //TODO remove attributes, that aren't needed
+     */
     public class CombinationNode {
 
         @Getter
@@ -84,6 +87,9 @@ public class CombinationTree {
 
     }
 
+    /**
+     * Iterator (like) that iterates through a branch of the Tree from Leaf to root.
+     */
     public class CombinationIterator {
 
         private final CombinationNode head;
@@ -102,6 +108,10 @@ public class CombinationTree {
             return current != null;
         }
 
+        /**
+         * steps on node further.
+         * @return the ActionPlayerCoordinates of the next node
+         */
         public ActionPlayerCoordinates next() {
             var res = current.entry;
             current = current.parent;

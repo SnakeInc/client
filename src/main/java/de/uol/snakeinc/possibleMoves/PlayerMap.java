@@ -29,6 +29,11 @@ public class PlayerMap implements Iterable<Player> {
         this.length = players.length;
     }
 
+    /**
+     * tests whether the map contains a player under the given key.
+     * @param key the key of where to look
+     * @return true if there is a player else false
+     */
     public boolean containsKey(int key) {
         try {
             return players[key] != null;
@@ -37,6 +42,12 @@ public class PlayerMap implements Iterable<Player> {
         }
     }
 
+    /**
+     * tests whether the map contains exactly this player. it assumes that players are saved under with their id as
+     * key.
+     * @param value the player
+     * @return true if there is a player saved under value.id for that player.equals holds true
+     */
     public boolean containsValue(Player value) { // assumes players are stored at their id;
         try {
             return players[value.getId()] != null && players[value.getId()].equals(value);
@@ -45,6 +56,11 @@ public class PlayerMap implements Iterable<Player> {
         }
     }
 
+    /**
+     * gets the player associated with the key.
+     * @param key the key
+     * @return the player if there is one else null
+     */
     public Player get(int key) {
         try {
             return players[key];
@@ -53,6 +69,12 @@ public class PlayerMap implements Iterable<Player> {
         }
     }
 
+    /**
+     * associates the player with the id in the map.
+     * @param key   the key
+     * @param value the player
+     * @return the player if it was successfully placed in the map, else null
+     */
     public Player put(int key, Player value) {
         try {
             players[key] = value;
@@ -62,6 +84,11 @@ public class PlayerMap implements Iterable<Player> {
         }
     }
 
+    /**
+     * places the player under its own id in the map.
+     * @param value the player
+     * @return the playeer if it was successfully placed, else null
+     */
     public Player put(Player value) {
         try {
             players[value.getId()] = value;
@@ -71,6 +98,11 @@ public class PlayerMap implements Iterable<Player> {
         }
     }
 
+    /**
+     * removes the player under the key from the map.
+     * @param key the key
+     * @return the player if there was one under the key, else null
+     */
     public Player remove(int key) {
         try {
             var res = players[key];
@@ -81,10 +113,17 @@ public class PlayerMap implements Iterable<Player> {
         }
     }
 
+    /**
+     * clears the whole map, the map is empty afterwards.
+     */
     public void clear() {
         Arrays.fill(players, null);
     }
 
+    /**
+     * return a set of all keys that have a player value associated with them.
+     * @return the set
+     */
     public Set<Integer> keySet() {
         var res = new HashSet<Integer>();
         for (int i = 0; i < players.length; i++) {
@@ -99,6 +138,10 @@ public class PlayerMap implements Iterable<Player> {
         return Arrays.stream(players).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
+    /**
+     * creates an Iterator that iterates though all players in the map.
+     * @return the iterator
+     */
     public Iterator<Player> iterator() {
         return new Iterator<Player>() {
             int next;
@@ -133,6 +176,13 @@ public class PlayerMap implements Iterable<Player> {
         }
     }
 
+    /**
+     * adds all possible Moves of the players in the map to the CombinationTree.
+     * @param tree   the Tree to add
+     * @param height the height of the map
+     * @param width  the width of the map
+     * @param map    the map
+     */
     public void addToCombinationTree(CombinationTree tree, int height, int width, MapCoordinateBag map) {
         for (int i = 1; i < players.length; i++) {
             if (players[i] == null) {

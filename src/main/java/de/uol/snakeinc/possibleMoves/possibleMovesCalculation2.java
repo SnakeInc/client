@@ -73,6 +73,11 @@ public class possibleMovesCalculation2 {
         return res;
     }
 
+    /**
+     * Updates a stats Array according with the palyers in dead.
+     * @param stats the stats
+     * @param dead  which players are dead
+     */
     public static void updateStats(int[] stats, IntSet dead) {
         int length = stats.length;
         boolean nobodyDied = true;
@@ -122,6 +127,10 @@ public class possibleMovesCalculation2 {
         }
     }
 
+    /**
+     * main.
+     * @param Args args
+     */
     public static void main(String[] Args) {
         var players = new Player[] {null,
             new Player(1, 10, 10, Direction.UP, 5, true, "1"),

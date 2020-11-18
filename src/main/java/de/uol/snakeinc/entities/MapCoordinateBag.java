@@ -43,6 +43,15 @@ public class MapCoordinateBag {
         start.forEach(t -> map.put(t.getX(), t.getY(), t.getPlayer()));
     }
 
+    /**
+     * creates a new MapCoordinateBag where all Players executed the Moves they execute in the branch of the
+     * CombinationTree that node represents. Also constructs a new PlayerMap with all players that survive this Turn,
+     * and reports the stats of the Turn.
+     * @param node    the node representing the player Moves
+     * @param players the PlayerMap that contains the surviving Players
+     * @param stats   the stats to be updated
+     * @return a new MapCoordinate Bag
+     */
     public MapCoordinateBag addInternalAll(CombinationTree.CombinationNode node, PlayerMap players, int[] stats) {
         var current = node.getCoordinates();
         var dead = node.getDead();
@@ -57,13 +66,8 @@ public class MapCoordinateBag {
         return new MapCoordinateBag(this, current);
     }
 
-    //public boolean isFree(int x, int y) {
-    //    return map.find(tuple -> tuple.equals(x, y)).isEmpty();
-    //}
-
     public boolean test(Collection<Coordinates> coordinates) {
-        return coordinates.stream()
-            .anyMatch(this::contains);
+        return coordinates.stream().anyMatch(this::contains);
     }
 
     public boolean contains(Coordinates coordinates) {

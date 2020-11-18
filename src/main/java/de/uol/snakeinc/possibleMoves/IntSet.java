@@ -15,6 +15,11 @@ public interface IntSet {
 
     void clear();
 
+    /**
+     * creates a new IntSet that can at least hold that integers up to size.
+     * @param size the minimal capacity of the new IntSet
+     * @return a new IntSet
+     */
     static IntSet ofSize(int size) {
         if (size < 32) {
             return new SmallIntegerSet();
@@ -23,6 +28,11 @@ public interface IntSet {
         }
     }
 
+    /**
+     * creates a copy of of.
+     * @param of the original
+     * @return a copy of the original
+     */
     static IntSet of(IntSet of) {
         if (of instanceof SmallIntegerSet) {
             var res = new SmallIntegerSet();
