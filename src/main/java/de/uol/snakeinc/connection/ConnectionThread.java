@@ -28,8 +28,8 @@ public class ConnectionThread extends Thread {
         this.running = true;
         this.exportManager = new ExportManager();
         try {
-            //url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
-            url = new URI("wss://tuwel.de:555/spe_ed?key=" + apiKey);
+            url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
+            //url = new URI("wss://tuwel.de:555/spe_ed?key=" + apiKey);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

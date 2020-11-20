@@ -47,6 +47,7 @@ public class MoveIteration {
             }
             log.debug("Action " + option.getAction().toString() + " rewarded: " + option.getReward());
         }
+        log.debug("Taking action " + action.toString());
         return action;
     }
 
@@ -58,7 +59,6 @@ public class MoveIteration {
                 first = true;
             }
             iteration = iteration.generateOptions(first);
-            log.debug("Round " + i);
         }
     }
 

@@ -60,20 +60,23 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
-        List<PlayerOption> enemies = new ArrayList<PlayerOption>();
-        for (int id : this.players.keySet()) {
-            Player player = this.players.get(id);
-            if (player.isActive()) {
-                enemies.add(new PlayerOption(new Position(player.getX(), player.getY(), player.getDirection()), player.getSpeed(), Action.TURN_RIGHT));
+        if (us.isActive()) {
+            List<PlayerOption> enemies = new ArrayList<PlayerOption>();
+            for (int id : this.players.keySet()) {
+                Player player = this.players.get(id);
+                if (player.isActive() && player.getId() != us.getId()) {
+                    enemies.add(new PlayerOption(new Position(player.getX(), player.getY(), player.getDirection()), player.getSpeed(), Action.TURN_RIGHT));
+                }
             }
+            PlayerOption playerOption = new PlayerOption(new Position(us.getX(), us.getY(), us.getDirection()), us.getSpeed(), Action.TURN_RIGHT);
+            System.out.println("Start at x" + playerOption.getPosition().getX() + " z" + playerOption.getPosition().getZ() + " with " + playerOption.getPosition().getDirection().toString());
+
+            MoveIteration moveIteration = new MoveIteration(this.currentBoard.clone(), enemies, playerOption, 8);
+
+
+            // Implement logical working here
+            socket.sendAction(moveIteration.getBestOption());
         }
-        PlayerOption playerOption = new PlayerOption(new Position(us.getX(), us.getY(), us.getDirection()), us.getSpeed(), Action.TURN_RIGHT);
-
-        MoveIteration moveIteration = new MoveIteration(this.currentBoard, enemies, playerOption, 3);
-
-
-        // Implement logical working here
-        socket.sendAction(moveIteration.getBestOption());
     }
 
     public void makeExportReady() {

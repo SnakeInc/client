@@ -90,7 +90,7 @@ public class PlayerOption {
         List<PlayerOption> possibleOptions = new ArrayList<PlayerOption>();
         List<PlayerOption> options = this.getNextOptions();
         for (PlayerOption option : options) {
-            if (this.isPossible(board, this, option)) {
+            if (this.isPossible(board, this, option, basic)) {
                 if (basic) {
                     possibleOptions.add(new PlayerOption(option.getPosition(), option.getSpeed(), option.getAction()));
                 } else {
@@ -106,7 +106,7 @@ public class PlayerOption {
         int[][] cells = board.getCells();
         for (PlayerOption option : options) {
             for (Position position : this.position.getFromCurrentPosition(option.getPosition())) {
-                if (!position.collides(board)) {
+                if (!position.collides(board, option, false)) {
                     cells[position.getZ()][position.getX()] = 1;
                 }
             }
@@ -115,16 +115,22 @@ public class PlayerOption {
         return board;
     }
 
-    private boolean isPossible(Board board, PlayerOption oldOption, PlayerOption newOption) {
+    private boolean isPossible(Board board, PlayerOption oldOption, PlayerOption newOption, boolean basic) {
         // check speed
-        if (newOption.getSpeed() <= 0 && newOption.getSpeed() >= 10) {
+        if (basic) {
+            System.out.println("Option " + newOption.getAction().toString() + " at " + newOption.getPosition().getX() + " " + newOption.getPosition().getZ());
+        }
+        if (newOption.getSpeed() <= 0 || newOption.getSpeed() >= 10) {
+            if (basic) {
+                System.out.println("Action " + newOption.getAction() + " to high/low speed");
+            }
             return false;
         }
 
         // Check board
         List<Position> positions = oldOption.getPosition().getFromCurrentPosition(newOption.getPosition());
         for (Position position : positions) {
-            if (position.collides(board)) {
+            if (position.collides(board, newOption, basic)) {
                 return false;
             }
         }

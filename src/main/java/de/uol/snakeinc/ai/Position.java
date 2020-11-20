@@ -1,5 +1,6 @@
 package de.uol.snakeinc.ai;
 
+import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Board;
 import de.uol.snakeinc.entities.Direction;
 
@@ -69,13 +70,13 @@ public class Position {
 
     public void move(int steps) {
         if (direction == Direction.DOWN) {
-            x = x - steps;
-        } else if (direction == Direction.UP) {
-            x = x + steps;
-        } else if (direction == Direction.RIGHT) {
-            z = z + steps;
-        } else if (direction == Direction.LEFT) {
             z = z - steps;
+        } else if (direction == Direction.UP) {
+            z = z + steps;
+        } else if (direction == Direction.RIGHT) {
+            x = x - steps;
+        } else if (direction == Direction.LEFT) {
+            x = x + steps;
         }
     }
 
@@ -92,7 +93,7 @@ public class Position {
                 zLow = position.z;
                 zHeight = this.z;
             }
-            while (zLow < zHeight) {
+            while (zLow <= zHeight) {
                 if (zLow != this.z) {
                     positions.add(new Position(x, zLow, position.getDirection()));
                 }
@@ -105,7 +106,7 @@ public class Position {
                 xLow = position.x;
                 xHeight = this.x;
             }
-            while (xLow < xHeight) {
+            while (xLow <= xHeight) {
                 if (xLow != this.x) {
                     positions.add(new Position(xLow, z, position.getDirection()));
                 }
@@ -115,10 +116,31 @@ public class Position {
         return positions;
     }
 
-    public boolean collides(Board board) {
-        if (this.x < 0 || this.x >= board.getWidth() ||
-            this.z < 0 || this.z >= board.getHeight() ||
-            board.getCells()[z][x] != 0) {
+    public boolean collides(Board board, PlayerOption option, boolean basic) {
+        if (this.x < 0) {
+            if (basic) {
+                System.out.println("Action " + option.getAction() + " to collides wall x < 0 - " + x + " " + z);
+            }
+            return true;
+        } else if(this.x >= board.getWidth()) {
+            if (basic) {
+                System.out.println("Action " + option.getAction() + " to collides wall x > width " + x + " " + z);
+            }
+            return true;
+        } else if(this.z < 0 ) {
+            if (basic) {
+                System.out.println("Action " + option.getAction() + " to collides wall z < 0 " + x + " " + z);
+            }
+            return true;
+        } else if (this.z >= board.getHeight()) {
+            if (basic) {
+                System.out.println("Action " + option.getAction() + " to collides wall z > height " + x + " " + z);
+            }
+            return true;
+        } else if (!board.isFree(this.x, this.z)) {
+            if (basic) {
+                System.out.println("Action " + option.getAction() + " to collides position " + x + " " + z);
+            }
             return true;
         }
         return false;

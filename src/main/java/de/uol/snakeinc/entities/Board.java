@@ -17,9 +17,9 @@ public class Board {
     private int height;
 
     @Getter
-    private int cells[][];
+    private int[][] cells;
 
-    private Player players[];
+    private Player[] players;
 
     public Board(int width, int height, Player[] players) {
         this.width = width;
@@ -40,12 +40,19 @@ public class Board {
         }
     }
 
+    public Board (int width, int height, Player[] players, int[][] cells) {
+        this.width = width;
+        this.height = height;
+        this.players = players;
+        this.cells = cells;
+    }
+
     public Player getPlayer(int id) {
         return players[id];
     }
 
     public boolean isFree(int x, int y) {
-        return cells[x][y] == 0;
+        return cells[y][x] == 0;
     }
 
     public void setCells(int[][] cells) {
@@ -90,5 +97,9 @@ public class Board {
         board.setCells(cells);
 
         return board;
+    }
+
+    public Board clone() {
+        return new Board(width, height, players, cells);
     }
 }
