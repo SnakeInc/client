@@ -1,5 +1,6 @@
 package de.uol.snakeinc.connection;
 
+import de.uol.snakeinc.export.ExportManager;
 import lombok.CustomLog;
 
 import javax.net.ssl.SSLContext;
@@ -21,11 +22,14 @@ public class ConnectionThread extends Thread {
     private boolean running;
     private boolean callback;
 
+    private ExportManager exportManager;
+
     public ConnectionThread(String apiKey) {
         this.running = true;
+        this.exportManager = new ExportManager();
         try {
             //wss://msoll.de/spe_ed?key=
-            url = new URI("wss://tuwel.de:555/?key=" + apiKey);
+            url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -33,9 +37,10 @@ public class ConnectionThread extends Thread {
 
     @Override
     public void run() {
+        log.debug("Starting Connection-Thread");
         while (running) {
             callback = false;
-            webSocket = new SpeedWebSocketClient(this, url);
+            webSocket = new SpeedWebSocketClient(this, url, exportManager);
             SSLContext sslContext = null;
             try {
                 sslContext = SSLContext.getInstance("TLS");
@@ -49,12 +54,13 @@ public class ConnectionThread extends Thread {
             }
             SSLSocketFactory factory = sslContext.getSocketFactory();
             webSocket.setSocketFactory(factory);
+            webSocket.connect();
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            while (webSocket.isOpen()) {
+            while (webSocket.isOpen() || this.callback == false) {
             }
         }
     }

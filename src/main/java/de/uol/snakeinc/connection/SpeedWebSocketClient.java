@@ -8,7 +8,9 @@ import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Board;
 import de.uol.snakeinc.entities.Game;
 import de.uol.snakeinc.entities.Player;
+import de.uol.snakeinc.export.ExportManager;
 import lombok.CustomLog;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -24,17 +26,23 @@ public class SpeedWebSocketClient extends WebSocketClient {
 
     private ConnectionThread thread;
     private Game game;
+    private String serverId;
 
-    public SpeedWebSocketClient(ConnectionThread thread, URI url) {
+    private ExportManager exportManager;
+
+    public SpeedWebSocketClient(ConnectionThread thread, URI url, ExportManager exportManager) {
         super(url);
         this.thread = thread;
+        this.serverId = DigestUtils.md5Hex(url.getHost().toString()).substring(0, 4);
+
+        this.exportManager = exportManager;
     }
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
         log.info("Connection established");
         this.thread.callBack();
-        this.game = new Game();
+        this.game = new Game(serverId);
     }
 
     @Override
@@ -57,9 +65,21 @@ public class SpeedWebSocketClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String message, boolean remote) {
-        this.thread.callBack();
         log.info("Connection closed: " + message);
+
         // Run Game-Logging
+        if (this.game != null) {
+            try {
+                log.info("Logging game");
+                this.game.makeExportReady();
+                this.exportManager.generateExport(game);
+            } catch (Exception exception) {
+                log.error("Error while logging the game");
+                exception.printStackTrace();
+                this.thread.stopConnection();
+            }
+        }
+        this.thread.callBack();
     }
 
     @Override
