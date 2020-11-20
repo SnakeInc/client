@@ -1,6 +1,7 @@
 package de.uol.snakeinc.util;
 
 import de.uol.snakeinc.entities.Coordinates;
+import de.uol.snakeinc.entities.MapCoordinateBag;
 import de.uol.snakeinc.possibleMoves.IntSet;
 
 import java.util.ArrayList;
@@ -84,5 +85,35 @@ public class CoordinateMap {
 
     public int get(Coordinates coordinates) {
         return this.get(coordinates.getX(), coordinates.getY());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CoordinateMap) {
+            return this.equals(((CoordinateMap) obj).map);
+        } else if (obj instanceof MapCoordinateBag) {
+            return this.equals(((MapCoordinateBag) obj).getMap().map);
+        } else if (obj instanceof int[][]) {
+            var omap = (int[][]) obj;
+            if (omap.length != this.map.length) {
+                return false;
+            } else {
+                for (int i = 0; i < this.map.length; i++) {
+                    if (omap[i] == this.map[i]) { // same array
+                        continue;
+                    } else if (this.map[i].length != omap[i].length) {
+                        return false;
+                    }
+                    for (int j = 0; j < this.map[i].length; j++) {
+                        if (this.map[i][j] != omap[i][j]) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 }
