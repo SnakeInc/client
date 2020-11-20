@@ -20,7 +20,8 @@ public class ConnectionThread extends Thread {
     public ConnectionThread(String apiKey) {
         this.running = true;
         try {
-            url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
+            //url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
+            url = new URI("wss://tuwel.de:555/spe_ed?key=" + apiKey);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

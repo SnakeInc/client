@@ -1,8 +1,13 @@
 package de.uol.snakeinc.entities;
 
+import de.uol.snakeinc.ai.MoveIteration;
+import de.uol.snakeinc.ai.PlayerOption;
+import de.uol.snakeinc.ai.Position;
 import de.uol.snakeinc.connection.SpeedWebSocketClient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Game {
 
@@ -39,7 +44,19 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
+        List<PlayerOption> enemies = new ArrayList<PlayerOption>();
+        for (int id : this.players.keySet()) {
+            Player player = this.players.get(id);
+            if (player.isActive()) {
+                enemies.add(new PlayerOption(new Position(player.getX(), player.getY(), player.getDirection()), player.getSpeed(), Action.TURN_RIGHT));
+            }
+        }
+        PlayerOption playerOption = new PlayerOption(new Position(us.getX(), us.getY(), us.getDirection()), us.getSpeed(), Action.TURN_RIGHT);
+
+        MoveIteration moveIteration = new MoveIteration(this.currentBoard, enemies, playerOption, 3);
+
+
         // Implement logical working here
-        socket.sendAction(Action.SPEED_UP);
+        socket.sendAction(moveIteration.getBestOption());
     }
 }
