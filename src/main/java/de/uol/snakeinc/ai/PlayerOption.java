@@ -117,7 +117,7 @@ public class PlayerOption {
 
     private boolean isPossible(Board board, PlayerOption oldOption, PlayerOption newOption) {
         // check speed
-        if (newOption.speed <= 0 && newOption.speed >= 10) {
+        if (newOption.getSpeed() <= 0 && newOption.getSpeed() >= 10) {
             return false;
         }
 
