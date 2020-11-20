@@ -94,5 +94,6 @@ public class Game {
 
     private String generateGameId(long time) {
         return DigestUtils.md5Hex("" + time).substring(0, 8);
+        socket.sendAction(moveIteration.getBestOption());
     }
 }
