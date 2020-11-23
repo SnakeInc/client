@@ -65,13 +65,13 @@ public class Game {
             for (int id : this.players.keySet()) {
                 Player player = this.players.get(id);
                 if (player.isActive() && player.getId() != us.getId()) {
-                    enemies.add(new PlayerOption(new Position(player.getX(), player.getY(), player.getDirection()), player.getSpeed(), Action.TURN_RIGHT));
+                    enemies.add(new PlayerOption(this.currentBoard.clone(), new Position(player.getX(), player.getY(), player.getDirection()), player.getSpeed(), Action.TURN_RIGHT));
                 }
             }
-            PlayerOption playerOption = new PlayerOption(new Position(us.getX(), us.getY(), us.getDirection()), us.getSpeed(), Action.TURN_RIGHT);
+            PlayerOption playerOption = new PlayerOption(this.currentBoard.clone(), new Position(us.getX(), us.getY(), us.getDirection()), us.getSpeed(), Action.TURN_RIGHT);
             System.out.println("Start at x" + playerOption.getPosition().getX() + " z" + playerOption.getPosition().getZ() + " with " + playerOption.getPosition().getDirection().toString());
 
-            MoveIteration moveIteration = new MoveIteration(this.currentBoard.clone(), enemies, playerOption, 8);
+            MoveIteration moveIteration = new MoveIteration(enemies, playerOption, 3);
 
 
             // Implement logical working here

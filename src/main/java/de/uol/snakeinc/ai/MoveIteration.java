@@ -5,13 +5,13 @@ import de.uol.snakeinc.entities.Board;
 import lombok.CustomLog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @CustomLog
 public class MoveIteration {
 
     private int rounds;
-    private Board board;
 
     private List<PlayerOption> enemies;
 
@@ -19,8 +19,7 @@ public class MoveIteration {
 
     private List<PlayerOption> basicOptions;
 
-    public MoveIteration(Board board, List<PlayerOption> enemies, PlayerOption playerOption, int rounds) {
-        this.board = board;
+    public MoveIteration(List<PlayerOption> enemies, PlayerOption playerOption, int rounds) {
         this.enemies = enemies;
         this.rounds = rounds;
 
@@ -31,21 +30,28 @@ public class MoveIteration {
         this.run();
     }
 
-    public MoveIteration(Board board, List<PlayerOption> enemies, List<PlayerOption> playerOptions) {
-        this.board = board;
+    public MoveIteration(List<PlayerOption> enemies, List<PlayerOption> playerOptions) {
         this.enemies = enemies;
         this.playerOptions = playerOptions;
     }
 
     public Action getBestOption() {
+        HashMap<Action, Integer> rewards = new HashMap<Action, Integer>();
+        for (PlayerOption option : this.basicOptions) {
+            if (rewards.containsKey(option.getAction())) {
+               rewards.put(option.getAction(), rewards.get(option.getAction()) + option.getReward());
+            } else {
+                rewards.put(option.getAction(), option.getReward());
+            }
+        }
         Action action = Action.TURN_RIGHT;
         int reward = 0;
-        for (PlayerOption option : this.basicOptions) {
-            if (option.getReward() > reward) {
-                reward = option.getReward();
-                action = option.getAction();
+        for (Action optionAction : rewards.keySet()) {
+            if (rewards.get(optionAction) > reward) {
+                reward = rewards.get(optionAction);
+                action = optionAction;
             }
-            log.debug("Action " + option.getAction().toString() + " rewarded: " + option.getReward());
+            log.debug("Action " + optionAction.toString() + " rewarded: " + rewards.get(optionAction));
         }
         log.debug("Taking action " + action.toString());
         return action;
@@ -67,12 +73,9 @@ public class MoveIteration {
         for (PlayerOption option : this.enemies) {
             newEnemies.addAll(option.getNextOptions());
         }
-        for (PlayerOption option : newEnemies) {
-            board = option.printOptionsToBoard(board);
-        }
         List<PlayerOption> newPlayerOptions = new ArrayList<PlayerOption>();
         for (PlayerOption option : this.playerOptions) {
-            newPlayerOptions.addAll(option.getPossibleNextOptions(board, first));
+            newPlayerOptions.addAll(option.getPossibleNextOptions(newEnemies, first)); // TODO: give enemies
         }
         if (first) {
             this.basicOptions = newPlayerOptions;
@@ -81,7 +84,7 @@ public class MoveIteration {
             option.reward();
         }
 
-        return new MoveIteration(board, newEnemies, newPlayerOptions);
+        return new MoveIteration(newEnemies, newPlayerOptions);
     }
 
 }

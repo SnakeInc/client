@@ -61,7 +61,7 @@ public class Board {
         } else {
             log.error("setCells can only be used with same dimensions - Dimensions given: " +
                 cells.length + "/" + cells[0].length + "- start parsing - performance may be impact");
-            int finalCells[][] = new int[width][height];
+            int finalCells[][] = new int[height][width];
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     finalCells[y][x] = cells[y][x];
@@ -100,6 +100,12 @@ public class Board {
     }
 
     public Board clone() {
-        return new Board(width, height, players, cells);
+        int localCells[][] = new int[height][width];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                localCells[y][x] = cells[y][x];
+            }
+        }
+        return new Board(width, height, players, localCells);
     }
 }

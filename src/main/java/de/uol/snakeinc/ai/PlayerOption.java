@@ -16,13 +16,17 @@ public class PlayerOption {
     private int reward = 0;
     private PlayerOption parentOption;
 
-    public PlayerOption(Position position, int speed, Action action) {
+    private Board board;
+
+    public PlayerOption(Board board, Position position, int speed, Action action) {
+        this.board = board;
         this.position = position;
         this.speed = speed;
         this.action = action;
     }
 
-    public PlayerOption(Position position, int speed, Action action, PlayerOption parentOption) {
+    public PlayerOption(Board board, Position position, int speed, Action action, PlayerOption parentOption) {
+        this.board = board;
         this.position = position;
 
         this.speed = speed;
@@ -54,51 +58,87 @@ public class PlayerOption {
         return this.action;
     }
 
+    public Board getBoard() {
+        return this.board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
     public List<PlayerOption> getNextOptions() {
         List<PlayerOption> options = new ArrayList<PlayerOption>();
         // Position left
         Position left = this.position.clone();
         left.turnLeft();
         left.move(speed);
-        options.add(new PlayerOption(left, speed, Action.TURN_LEFT, this));
+        Board boardLeft = board.clone();
+        PlayerOption leftOption = new PlayerOption(boardLeft, left, speed, Action.TURN_LEFT, this);
+        this.printOptionToBoard(boardLeft, leftOption);
+        options.add(leftOption);
 
         // Position right
         Position right = this.position.clone();
         right.turnRight();
         right.move(speed);
-        options.add(new PlayerOption(right, speed, Action.TURN_RIGHT, this));
+        Board boardRight = board.clone();
+        PlayerOption rightOption = new PlayerOption(boardRight, right, speed, Action.TURN_RIGHT, this);
+        this.printOptionToBoard(boardRight, rightOption);
+        options.add(rightOption);
 
         // Position do nothing
         Position doNothing = this.position.clone();
         doNothing.move(speed);
-        options.add(new PlayerOption(doNothing, speed, Action.CHANGE_NOTHING, this));
+        Board boardDoNothing = board.clone();
+        PlayerOption doNothingOption = new PlayerOption(boardDoNothing, doNothing, speed, Action.CHANGE_NOTHING, this);
+        this.printOptionToBoard(boardDoNothing, doNothingOption);
+        options.add(doNothingOption);
 
         // Position speed down
         Position speedDown = this.position.clone();
         speedDown.move(speed - 1);
-        options.add(new PlayerOption(speedDown, speed - 1, Action.SLOW_DOWN, this));
+        Board boardSpeedDown = board.clone();
+        PlayerOption speedDownOption = new PlayerOption(boardSpeedDown, speedDown, speed - 1, Action.SLOW_DOWN, this);
+        this.printOptionToBoard(boardSpeedDown, speedDownOption);
+        options.add(speedDownOption);
 
-        // Position speed down
+        // Position speed up
         Position speedUp = this.position.clone();
         speedUp.move(speed + 1);
-        options.add(new PlayerOption(speedUp, speed + 1, Action.SPEED_UP, this));
+        Board boardSpeedUp = board.clone();
+        PlayerOption speedUpOption = new PlayerOption(boardSpeedUp, speedUp, speed + 1, Action.SPEED_UP, this);
+        this.printOptionToBoard(boardSpeedUp, speedUpOption);
+        options.add(speedUpOption);
 
         return options;
     }
 
-    public List<PlayerOption> getPossibleNextOptions(Board board, boolean basic) {
+    public List<PlayerOption> getPossibleNextOptions(List<PlayerOption> enemieOptions, boolean basic) {
         List<PlayerOption> possibleOptions = new ArrayList<PlayerOption>();
         List<PlayerOption> options = this.getNextOptions();
-        for (PlayerOption option : options) {
-            if (this.isPossible(board, this, option, basic)) {
-                if (basic) {
-                    possibleOptions.add(new PlayerOption(option.getPosition(), option.getSpeed(), option.getAction()));
-                } else {
-                    possibleOptions.add(option);
+        for (PlayerOption enemieOption : enemieOptions) {
+            for (PlayerOption option : options) {
+                if (this.isPossible(enemieOption.getBoard(), this, option, basic)) {
+                    if (basic) {
+                        possibleOptions.add(new PlayerOption(enemieOption.getBoard(), option.getPosition(), option.getSpeed(), option.getAction()));
+                    } else {
+                        possibleOptions.add(option);
+                    }
                 }
             }
         }
         return possibleOptions;
+    }
+
+    public Board printOptionToBoard(Board board, PlayerOption option) {
+        int[][] cells = board.getCells();
+        for (Position position : this.position.getFromCurrentPosition(option.getPosition())) {
+            if (!position.collides(board, option)) {
+                cells[position.getZ()][position.getX()] = 1;
+            }
+        }
+        board.setCells(cells);
+        return board;
     }
 
     public Board printOptionsToBoard(Board board) {
@@ -106,7 +146,7 @@ public class PlayerOption {
         int[][] cells = board.getCells();
         for (PlayerOption option : options) {
             for (Position position : this.position.getFromCurrentPosition(option.getPosition())) {
-                if (!position.collides(board, option, false)) {
+                if (!position.collides(board, option)) {
                     cells[position.getZ()][position.getX()] = 1;
                 }
             }
@@ -117,20 +157,14 @@ public class PlayerOption {
 
     private boolean isPossible(Board board, PlayerOption oldOption, PlayerOption newOption, boolean basic) {
         // check speed
-        if (basic) {
-            System.out.println("Option " + newOption.getAction().toString() + " at " + newOption.getPosition().getX() + " " + newOption.getPosition().getZ());
-        }
         if (newOption.getSpeed() <= 0 || newOption.getSpeed() >= 10) {
-            if (basic) {
-                System.out.println("Action " + newOption.getAction() + " to high/low speed");
-            }
             return false;
         }
 
         // Check board
         List<Position> positions = oldOption.getPosition().getFromCurrentPosition(newOption.getPosition());
         for (Position position : positions) {
-            if (position.collides(board, newOption, basic)) {
+            if (position.collides(board, newOption)) {
                 return false;
             }
         }
