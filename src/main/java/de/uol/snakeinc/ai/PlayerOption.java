@@ -42,6 +42,10 @@ public class PlayerOption {
         }
     }
 
+    public boolean hasParent() {
+        return this.parentOption != null;
+    }
+
     public int getReward() {
         return this.reward;
     }
@@ -118,7 +122,7 @@ public class PlayerOption {
         List<PlayerOption> options = this.getNextOptions();
         for (PlayerOption enemieOption : enemieOptions) {
             for (PlayerOption option : options) {
-                if (this.isPossible(enemieOption.getBoard(), this, option, basic)) {
+                if (this.isPossible(enemieOption.getBoard(), this, option)) {
                     if (basic) {
                         possibleOptions.add(new PlayerOption(enemieOption.getBoard(), option.getPosition(), option.getSpeed(), option.getAction()));
                     } else {
@@ -133,7 +137,7 @@ public class PlayerOption {
     public Board printOptionToBoard(Board board, PlayerOption option) {
         int[][] cells = board.getCells();
         for (Position position : this.position.getFromCurrentPosition(option.getPosition())) {
-            if (!position.collides(board, option)) {
+            if (!position.collides(board)) {
                 cells[position.getZ()][position.getX()] = 1;
             }
         }
@@ -141,30 +145,19 @@ public class PlayerOption {
         return board;
     }
 
-    public Board printOptionsToBoard(Board board) {
-        List<PlayerOption> options = this.getNextOptions();
-        int[][] cells = board.getCells();
-        for (PlayerOption option : options) {
-            for (Position position : this.position.getFromCurrentPosition(option.getPosition())) {
-                if (!position.collides(board, option)) {
-                    cells[position.getZ()][position.getX()] = 1;
-                }
-            }
-        }
-        board.setCells(cells);
-        return board;
-    }
-
-    private boolean isPossible(Board board, PlayerOption oldOption, PlayerOption newOption, boolean basic) {
+    private boolean isPossible(Board board, PlayerOption oldOption, PlayerOption newOption) {
         // check speed
         if (newOption.getSpeed() <= 0 || newOption.getSpeed() >= 10) {
+            if (!newOption.hasParent()) {
+                System.out.println(oldOption.getAction() + " speed-problem");
+            }
             return false;
         }
 
         // Check board
         List<Position> positions = oldOption.getPosition().getFromCurrentPosition(newOption.getPosition());
         for (Position position : positions) {
-            if (position.collides(board, newOption)) {
+            if (position.collides(board)) {
                 return false;
             }
         }

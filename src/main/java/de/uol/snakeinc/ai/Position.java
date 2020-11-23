@@ -116,7 +116,7 @@ public class Position {
         return positions;
     }
 
-    public boolean collides(Board board, PlayerOption option) {
+    public boolean collides(Board board) {
         if (this.x < 0) {
             return true;
         } else if(this.x >= board.getWidth()) {

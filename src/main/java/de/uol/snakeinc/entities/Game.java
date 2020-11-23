@@ -69,7 +69,7 @@ public class Game {
                 }
             }
             PlayerOption playerOption = new PlayerOption(this.currentBoard.clone(), new Position(us.getX(), us.getY(), us.getDirection()), us.getSpeed(), Action.TURN_RIGHT);
-            System.out.println("Start at x" + playerOption.getPosition().getX() + " z" + playerOption.getPosition().getZ() + " with " + playerOption.getPosition().getDirection().toString());
+            System.out.println("Start at x" + playerOption.getPosition().getX() + " z" + playerOption.getPosition().getZ() + " with " + playerOption.getPosition().getDirection().toString() + ", we are " + us.getId());
 
             MoveIteration moveIteration = new MoveIteration(enemies, playerOption, 3);
 
