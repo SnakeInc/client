@@ -137,10 +137,10 @@ public class possibleMovesCalculation2 {
      */
     public static void main(String[] Args) {
         var players = new Player[] {null,
-            new Player(1, 10, 10, Direction.UP, 1, true, "1"),
-            new Player(2, 10, 30, Direction.UP, 1, true, "2"),
-            new Player(3, 30, 10, Direction.UP, 1, true, "3"),
-            new Player(4, 30, 30, Direction.UP, 1, true, "4")//,
+            new Player(1, 10, 10, Direction.UP, 2, true, "1"),
+            new Player(2, 10, 30, Direction.RIGHT, 2, true, "2"),
+            new Player(3, 30, 10, Direction.DOWN, 2, true, "3"),
+            new Player(4, 30, 30, Direction.LEFT, 2, true, "4")//,
             //new Player(5, 10, 20, Direction.UP, 5, true, "5"),
             //new Player(6, 30, 20, Direction.UP, 5, true, "6")
         };

@@ -94,6 +94,7 @@ public class Player {
         Direction dir;
         int speed;
 
+        outer:
         for (Action action : Action.values()) {
             switch (action) {
                 case TURN_LEFT:
@@ -103,9 +104,9 @@ public class Player {
                     break;
                 case SLOW_DOWN:
                     if (this.speed == 1) {
-                        var apc = new ActionPlayerCoordinates(Action.SLOW_DOWN, new Player(this, false),
-                            new ArrayList<>(0));
-                        res.add(apc);
+                        //var apc = new ActionPlayerCoordinates(Action.SLOW_DOWN, new Player(this, false),
+                        //    new ArrayList<>(0));
+                        //res.add(apc);
                         continue;
                     }
                     speed = this.speed - 1;
@@ -114,9 +115,9 @@ public class Player {
                 case SPEED_UP:
                     if (this.speed == 10) {
 
-                        var apc = new ActionPlayerCoordinates(Action.SPEED_UP, new Player(this, false),
-                            new ArrayList<>(0));
-                        res.add(apc);
+                        //var apc = new ActionPlayerCoordinates(Action.SPEED_UP, new Player(this, false),
+                        //    new ArrayList<>(0));
+                        //res.add(apc);
                         continue;
                     }
                     speed = this.speed + 1;
@@ -147,6 +148,7 @@ public class Player {
                             ls.add(tuple);
                         } else {
                             player.setActive(false);
+                            continue outer;
                         }
                     }
                     break;
@@ -163,6 +165,7 @@ public class Player {
                             ls.add(tuple);
                         } else {
                             player.setActive(false);
+                            continue outer;
                         }
                     }
                     break;
@@ -179,6 +182,7 @@ public class Player {
                             ls.add(tuple);
                         } else {
                             player.setActive(false);
+                            continue outer;
                         }
                     }
                     break;
@@ -195,6 +199,7 @@ public class Player {
                             ls.add(tuple);
                         } else {
                             player.setActive(false);
+                            continue outer;
                         }
                     }
                     break;
