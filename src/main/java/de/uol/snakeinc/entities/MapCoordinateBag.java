@@ -2,7 +2,6 @@ package de.uol.snakeinc.entities;
 
 import de.uol.snakeinc.possibleMoves.CombinationTree;
 import de.uol.snakeinc.possibleMoves.PlayerMap;
-import de.uol.snakeinc.possibleMoves.possibleMovesCalculation2;
 import de.uol.snakeinc.util.CoordinateMap;
 import lombok.Getter;
 
@@ -11,7 +10,6 @@ import java.util.stream.Stream;
 
 public class MapCoordinateBag {
 
-    private MapCoordinateBag parent;
     @Getter
     private CoordinateMap map;
 
@@ -24,23 +22,24 @@ public class MapCoordinateBag {
                 }
             }
         }
-        this.parent = null;
     }
 
     public MapCoordinateBag(MapCoordinateBag parent) {
-        this.parent = parent;
+        this.map = new CoordinateMap(parent.getMap());
     }
 
     public MapCoordinateBag(MapCoordinateBag parent, CoordinateMap map) {
-        this.parent = parent;
         this.map = map;
     }
 
     public MapCoordinateBag(Stream<Coordinates> start, int x, int y) {
         this.map = new CoordinateMap(x, y);
-        this.parent = null;
 
         start.forEach(t -> map.put(t.getX(), t.getY(), t.getPlayer()));
+    }
+
+    public int[][] getCells() {
+        return map.getCells();
     }
 
     /**
@@ -60,9 +59,10 @@ public class MapCoordinateBag {
             var player = iterator.next().getPlayer();
             if (!dead.contains(player.getId())) {
                 players.put(player);
+            } else {
+                stats[player.getId()]++;
             }
         }
-        possibleMovesCalculation2.updateStats(stats, dead);
         return new MapCoordinateBag(this, current);
     }
 

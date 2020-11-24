@@ -55,8 +55,10 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
-        // Implement logical working here
-        socket.sendAction(Action.SPEED_UP);
+        if (us.isActive()) {
+            var action = MovesCalculation.getAction(currentBoard);
+            socket.sendAction(action);
+        }
     }
 
     public void makeExportReady() {

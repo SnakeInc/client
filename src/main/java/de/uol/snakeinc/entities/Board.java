@@ -85,6 +85,10 @@ public class Board {
         this.map = new MapCoordinateBag(cells);
     }
 
+    public int[][] getCells() {
+        return map.getCells();
+    }
+
     public boolean test(List<Coordinates> coordinates) {
         return map.test(coordinates);
     }

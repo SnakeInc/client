@@ -49,6 +49,16 @@ public class CoordinateMap {
         }
     }
 
+    public int[][] getCells() {
+        for (int i = 0; i < x; i++) {
+            if (map[i] == null) {
+                map[i] = new int[y];
+                updated[i] = true;
+            }
+        }
+        return map;
+    }
+
     /**
      * puts all the coordinates in the map, and reports values that collided with each other.
      * @param coordinates the coordinates to be added

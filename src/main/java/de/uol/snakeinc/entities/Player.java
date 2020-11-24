@@ -152,8 +152,8 @@ public class Player {
                     break;
                 case RIGHT:
                     newOrdinate = x + speed;
-                    active = width >= newOrdinate;
-                    player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
+                    active = width > newOrdinate;
+                    player = new Player(this.id, newOrdinate, y, Direction.RIGHT, speed, active, name);
                     if (!active) {
                         newOrdinate = width - 1;
                     }
@@ -166,10 +166,10 @@ public class Player {
                         }
                     }
                     break;
-                case DOWN:
+                case UP:
                     newOrdinate = y - speed;
                     active = -1 < newOrdinate;
-                    player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
+                    player = new Player(this.id, x, newOrdinate, Direction.UP, speed, active, name);
                     if (!active) {
                         newOrdinate = 0;
                     }
@@ -182,10 +182,10 @@ public class Player {
                         }
                     }
                     break;
-                case UP:
+                case DOWN:
                     newOrdinate = y + speed;
-                    active = newOrdinate >= height;
-                    player = new Player(this.id, x, newOrdinate, Direction.LEFT, speed, active, name);
+                    active = newOrdinate < height;
+                    player = new Player(this.id, x, newOrdinate, Direction.DOWN, speed, active, name);
                     if (!active) {
                         newOrdinate = height - 1;
                     }

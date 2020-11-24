@@ -41,38 +41,37 @@ public class possibleMovesCalculation2 {
                 MapCoordinateBag map2 = map1.addInternalAll(combination2, players1, res.deaths2);
                 res.overall2++;
 
+                if (!players1.containsKey(us)) {
+                    players1.clear();
+                    continue;
+                }
+
+                CombinationTree combinationTree3 = new CombinationTree();
+                players1.addToCombinationTree(combinationTree3, height, width, map2);
                 players1.clear();
-                //if (!players1.containsKey(us)) {
-                //    players1.clear();
-                //    continue;
-                //}
-                //
-                //CombinationTree combinationTree3 = new CombinationTree();
-                //players1.addToCombinationTree(combinationTree3, height, width, map2);
-                //players1.clear();
-                //var combs3 = combinationTree3.getRawCombinations();
-                //for (int ind3 = 0; ind3 < combs3.size(); ind3++) {
-                //    var combination3 = combs3.get(ind3);
-                //    MapCoordinateBag map3 = map2.addInternalAll(combination3, players1, res.deaths3);
-                //    res.overall3++;
-                //
-                //    players1.clear();
-                //    //if (!players1.containsKey(us)) {
-                //    //    players1.clear();
-                //    //    continue;
-                //    //}
-                //    //
-                //    //CombinationTree combinationTree4 = new CombinationTree();
-                //    //players1.addToCombinationTree(combinationTree4, height, width, map3);
-                //    //players1.clear();
-                //    //var combs4 = combinationTree4.getRawCombinations();
-                //    //for (var combination4 : combs4) {
-                //    //    MapCoordinateBag map4 = map3.addInternalAll(combination4, players1, res.deaths4);
-                //    //    res.overall4++;
-                //    //
-                //    //    players1.clear();
-                //    //}
-                //}
+                var combs3 = combinationTree3.getRawCombinations();
+                for (int ind3 = 0; ind3 < combs3.size(); ind3++) {
+                    var combination3 = combs3.get(ind3);
+                    MapCoordinateBag map3 = map2.addInternalAll(combination3, players1, res.deaths3);
+                    res.overall3++;
+
+                    players1.clear();
+                    //if (!players1.containsKey(us)) {
+                    //    players1.clear();
+                    //    continue;
+                    //}
+                    //
+                    //CombinationTree combinationTree4 = new CombinationTree();
+                    //players1.addToCombinationTree(combinationTree4, height, width, map3);
+                    //players1.clear();
+                    //var combs4 = combinationTree4.getRawCombinations();
+                    //for (var combination4 : combs4) {
+                    //    MapCoordinateBag map4 = map3.addInternalAll(combination4, players1, res.deaths4);
+                    //    res.overall4++;
+                    //
+                    //    players1.clear();
+                    //}
+                }
             }
         }
         return res;
@@ -138,12 +137,12 @@ public class possibleMovesCalculation2 {
      */
     public static void main(String[] Args) {
         var players = new Player[] {null,
-            new Player(1, 10, 10, Direction.UP, 5, true, "1"),
-            new Player(2, 10, 30, Direction.UP, 5, true, "2"),
-            new Player(3, 30, 10, Direction.UP, 5, true, "3"),
-            new Player(4, 30, 30, Direction.UP, 5, true, "4"),
-            new Player(5, 10, 20, Direction.UP, 5, true, "5"),
-            new Player(6, 30, 20, Direction.UP, 5, true, "6")
+            new Player(1, 10, 10, Direction.UP, 1, true, "1"),
+            new Player(2, 10, 30, Direction.UP, 1, true, "2"),
+            new Player(3, 30, 10, Direction.UP, 1, true, "3"),
+            new Player(4, 30, 30, Direction.UP, 1, true, "4")//,
+            //new Player(5, 10, 20, Direction.UP, 5, true, "5"),
+            //new Player(6, 30, 20, Direction.UP, 5, true, "6")
         };
 
         var board = new Board(40, 40, players, 2);

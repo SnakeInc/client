@@ -29,6 +29,16 @@ public class PlayerMap implements Iterable<Player> {
         this.length = players.length;
     }
 
+    public int size() {
+        int res = 0;
+        for (var player : players) {
+            if (player != null) {
+                res++;
+            }
+        }
+        return res;
+    }
+
     /**
      * tests whether the map contains a player under the given key.
      * @param key the key of where to look
