@@ -3,6 +3,7 @@ package de.uol.snakeinc.entities;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.uol.snakeinc.possibleMoves.ActionPlayerCoordinates;
+import de.uol.snakeinc.util.CoordinateMap;
 import lombok.CustomLog;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -89,6 +90,10 @@ public class Player {
     }
 
     public ArrayList<ActionPlayerCoordinates> getPossibleMoves(int height, int width, MapCoordinateBag map) {
+        return getPossibleMoves(height, width, map.getMap());
+    }
+
+    public ArrayList<ActionPlayerCoordinates> getPossibleMoves(int height, int width, CoordinateMap map) {
         // TODO jumpturns
         var res = new ArrayList<ActionPlayerCoordinates>(5);
         Direction dir;

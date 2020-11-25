@@ -29,6 +29,14 @@ public class CoordinateMap {
         this.updated = new boolean[x];
     }
 
+    public CoordinateMap(int[][] map) {
+        this.x = map.length;
+        this.y = map[0].length;
+
+        this.map = map.clone();
+        this.updated = new boolean[x];
+    }
+
     /**
      * places the value v at the position (x,y).
      * @param x x coordinate
