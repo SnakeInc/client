@@ -44,7 +44,7 @@ public class Position {
         return this.direction;
     }
 
-    public void turnLeft() {
+    public void turnRight() {
         if (direction == Direction.DOWN) {
             this.direction = Direction.LEFT;
         } else if (direction == Direction.LEFT) {
@@ -56,7 +56,7 @@ public class Position {
         }
     }
 
-    public void turnRight() {
+    public void turnLeft() {
         if (direction == Direction.DOWN) {
             this.direction = Direction.RIGHT;
         } else if (direction == Direction.RIGHT) {
@@ -74,9 +74,9 @@ public class Position {
         } else if (direction == Direction.UP) {
             z = z - steps;
         } else if (direction == Direction.RIGHT) {
-            x = x - steps;
-        } else if (direction == Direction.LEFT) {
             x = x + steps;
+        } else if (direction == Direction.LEFT) {
+            x = x - steps;
         }
     }
 
