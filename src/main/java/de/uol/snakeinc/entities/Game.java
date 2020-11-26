@@ -8,8 +8,8 @@ import java.util.HashMap;
 public class Game {
 
     private HashMap<Integer, Player> players;
-    private HashMap<Integer, Board> boards;
-    private Board currentBoard;
+    private HashMap<Integer, IntelligentBoard> boards;
+    private IntelligentBoard currentIntelligentBoard;
     private Player us;
 
     private int round = 0;
@@ -19,7 +19,7 @@ public class Game {
     public Game(String serverId) {
         this.gameId = serverId + "_" + generateGameId(System.currentTimeMillis());
         this.players = new HashMap<Integer, Player>();
-        this.boards = new HashMap<Integer, Board>();
+
     }
 
     public HashMap<Integer, Player> getPlayers() {
@@ -34,20 +34,16 @@ public class Game {
         this.us = this.players.get(id);
     }
 
-    public void setCurrentBoard(Board board) {
-        if (this.currentBoard != null) {
-            this.boards.put(round, this.currentBoard);
-        }
-        this.currentBoard = board;
-        this.round++;
+    public void setCurrentIntelligentBoard(IntelligentBoard intelligentBoard) {
+        currentIntelligentBoard = intelligentBoard;
     }
 
-    public Board getCurrentBoard() {
-        return this.currentBoard;
+    public void informIntelligentBoard() {
+        currentIntelligentBoard.update(players);
     }
 
-    public HashMap<Integer, Board> getBoards() {
-        return this.boards;
+    public IntelligentBoard getCurrentIntelligentBoard() {
+        return this.currentIntelligentBoard;
     }
 
     /**
@@ -60,7 +56,7 @@ public class Game {
     }
 
     public void makeExportReady() {
-        this.boards.put(round, this.currentBoard);
+        this.boards.put(round, this.currentIntelligentBoard);
     }
 
     public Player getUs() {

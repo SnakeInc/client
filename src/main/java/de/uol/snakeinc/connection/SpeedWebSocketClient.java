@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.uol.snakeinc.entities.Action;
-import de.uol.snakeinc.entities.Board;
+import de.uol.snakeinc.entities.IntelligentBoard;
 import de.uol.snakeinc.entities.Game;
 import de.uol.snakeinc.entities.Player;
 import de.uol.snakeinc.export.ExportManager;
@@ -54,9 +54,10 @@ public class SpeedWebSocketClient extends WebSocketClient {
             for (Player player : Player.parseFromJson(jsonObject)) {
                 game.addPlayer(player);
             }
-            game.setCurrentBoard(Board.parseFromJson(jsonObject, game.getPlayers()));
+            game.setCurrentIntelligentBoard(IntelligentBoard.initParseFromJson(jsonObject, game.getPlayers()));
             game.setUs(jsonObject.get("you").getAsInt());
             game.runAction(this);
+            game.informIntelligentBoard();
         } catch (Exception exception) {
             exception.printStackTrace();
             this.thread.stopConnection();

@@ -3,7 +3,7 @@ package de.uol.snakeinc.export;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.uol.snakeinc.entities.Board;
+import de.uol.snakeinc.entities.IntelligentBoard;
 import de.uol.snakeinc.entities.Game;
 import de.uol.snakeinc.entities.Player;
 import lombok.CustomLog;
@@ -46,21 +46,21 @@ public class Export {
         objects.add("players", gson.toJsonTree(players));
 
         HashMap<Integer, Integer[][]> boards = new HashMap<Integer, Integer[][]>();
-        HashMap<Integer, Board> dataBoards = game.getBoards();
+        HashMap<Integer, IntelligentBoard> dataBoards = game.getBoards();
         for (Integer position : dataBoards.keySet()) {
-            Board board = dataBoards.get(position);
-            Integer[][] positions = new Integer[board.getHeight()][board.getWidth()];
-            for (int x = 0; x < board.getCells().length; x++) {
-                for (int z = 0; z < board.getCells()[x].length; z++) {
-                    positions[x][z] = Integer.valueOf(board.getCells()[x][z]);
+            IntelligentBoard intelligentBoard = dataBoards.get(position);
+            Integer[][] positions = new Integer[intelligentBoard.getHeight()][intelligentBoard.getWidth()];
+            for (int x = 0; x < intelligentBoard.getCells().length; x++) {
+                for (int z = 0; z < intelligentBoard.getCells()[x].length; z++) {
+                    positions[x][z] = Integer.valueOf(intelligentBoard.getCells()[x][z]);
                 }
             }
             boards.put(position, positions);
         }
         JsonObject mapObjects = new JsonObject();
         JsonElement jsonElement = gson.toJsonTree(boards);
-        mapObjects.addProperty("width", game.getCurrentBoard().getWidth());
-        mapObjects.addProperty("height", game.getCurrentBoard().getHeight());
+        mapObjects.addProperty("width", game.getCurrentIntelligentBoard().getWidth());
+        mapObjects.addProperty("height", game.getCurrentIntelligentBoard().getHeight());
         mapObjects.add("boards", jsonElement);
         objects.add("map", mapObjects);
 
