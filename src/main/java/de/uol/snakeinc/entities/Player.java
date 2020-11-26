@@ -145,7 +145,8 @@ public class Player {
                     active = -1 < newOrdinate;
                     player = new Player(this.id, newOrdinate, y, Direction.LEFT, speed, active, name);
                     if (!active) {
-                        newOrdinate = 0;
+                        //newOrdinate = 0;
+                        continue outer;
                     }
                     for (; newOrdinate < x; newOrdinate++) {
                         var tuple = new Coordinates(newOrdinate, y, id);
@@ -162,7 +163,8 @@ public class Player {
                     active = width > newOrdinate;
                     player = new Player(this.id, newOrdinate, y, Direction.RIGHT, speed, active, name);
                     if (!active) {
-                        newOrdinate = width - 1;
+                        //newOrdinate = width - 1;
+                        continue outer;
                     }
                     for (; newOrdinate > x; newOrdinate--) {
                         var tuple = new Coordinates(newOrdinate, y, id);
@@ -179,7 +181,8 @@ public class Player {
                     active = -1 < newOrdinate;
                     player = new Player(this.id, x, newOrdinate, Direction.UP, speed, active, name);
                     if (!active) {
-                        newOrdinate = 0;
+                        ///newOrdinate = 0;
+                        continue outer;
                     }
                     for (; newOrdinate < y; newOrdinate++) {
                         var tuple = new Coordinates(x, newOrdinate, id);
@@ -196,7 +199,8 @@ public class Player {
                     active = newOrdinate < height;
                     player = new Player(this.id, x, newOrdinate, Direction.DOWN, speed, active, name);
                     if (!active) {
-                        newOrdinate = height - 1;
+                        //newOrdinate = height - 1;
+                        continue outer;
                     }
                     for (; newOrdinate > y; newOrdinate--) {
                         var tuple = new Coordinates(x, newOrdinate, id);

@@ -19,7 +19,7 @@ public class prePruneing {
         PlayerMap players = new PlayerMap(from.getPlayers());
         int us = from.getUs();
         CoordinateMap map = new CoordinateMap(from.getCells());
-        int depth = 4;  //todo sth
+        int depth = 4;
 
         Player we = players.get(us);
         players.remove(us);
@@ -56,46 +56,8 @@ public class prePruneing {
                 playerMoves.add(apcs);
             }
 
-            int indices[] = new int[playerMoves.size()];
+            res = iterateThroughCombinations(playerMoves, newWe, newMap, newPlayers, height, width, depth);
 
-            endless:
-            for (; ; ) {
-                var newnewPlayers = new PlayerMap(newPlayers.getPlayers().clone());
-                for (int i = 0; i < playerMoves.size(); i++) {
-                    var apc_ = playerMoves.get(i).get(indices[i]);
-                    var coords = apc.coordinates;
-                    for (var coord : coords) {
-                        int player = newMap.get(coord);
-                        if (player != 0) {
-                            newnewPlayers.remove(apc_.player.getId());
-                            if (player > 0) {
-                                newnewPlayers.remove(player);
-                            }
-                        } else {
-                            newMap.put(coord.getX(), coord.getY(), coord.getPlayer());
-                        }
-                    }
-                }
-                if (newnewPlayers.size() == 0) {
-                    res += 625 * depth; // extra reward because we've won
-                } else {
-                    res++;
-
-                    //TODO special for zero, we dont need to combine everything then
-
-                    if (depth > 0) {
-                        newnewPlayers.put(newWe);
-                        res += calculateMoves(width, height, newnewPlayers, us, newMap, depth - 1);
-                    }
-                }
-
-                for (int i = indices.length - 1; ++indices[i] == playerMoves.get(i).size(); ) {
-                    indices[i] = 0;
-                    if (--i < 0) {
-                        break endless;
-                    }
-                }
-            }
             log.debug(action.toString() + " " + res);
             if (res > best) {
                 action = apc.action;
@@ -112,7 +74,6 @@ public class prePruneing {
         var ourMoves = we.getPossibleMoves(height, width, map);
         int res = 0;
 
-        outer:
         for (var apc : ourMoves) {
             Player newWe = apc.player;
             var newPlayers = new PlayerMap(players.getPlayers().clone());
@@ -124,7 +85,7 @@ public class prePruneing {
             }
 
             if (players.size() <= 0) {
-                throw new IllegalStateException("should be more than one player");
+                return 625;
             }
 
             ArrayList<ArrayList<ActionPlayerCoordinates>> playerMoves = new ArrayList<ArrayList<ActionPlayerCoordinates>>(players.size());
@@ -139,46 +100,7 @@ public class prePruneing {
                 }
                 playerMoves.add(apcs);
             }
-
-            int indices[] = new int[playerMoves.size()];
-
-            for (; ; ) {
-                var newnewPlayers = new PlayerMap(newPlayers.getPlayers().clone());
-                for (int i = 0; i < playerMoves.size(); i++) {
-                    var apc_ = playerMoves.get(i).get(indices[i]);
-                    var coords = apc.coordinates;
-                    for (var coord : coords) {
-                        int player = newMap.get(coord);
-                        if (player != 0) {
-                            newnewPlayers.remove(apc_.player.getId());
-                            if (player > 0) {
-                                newnewPlayers.remove(player);
-                            }
-                        } else {
-                            newMap.put(coord.getX(), coord.getY(), coord.getPlayer());
-                        }
-                    }
-                }
-                if (newnewPlayers.size() == 0) {
-                    res += 625 * depth; // extra reward because we've won
-                } else {
-                    res++;
-
-                    //TODO special for zero, we dont need to combine everything then  
-
-                    if (depth > 0) {
-                        newnewPlayers.put(newWe);
-                        res += calculateMoves(width, height, newnewPlayers, us, newMap, depth - 1);
-                    }
-                }
-
-                for (int i = indices.length - 1; ++indices[i] == playerMoves.get(i).size(); ) {
-                    indices[i] = 0;
-                    if (--i < 0) {
-                        continue outer;
-                    }
-                }
-            }
+            res += iterateThroughCombinations(playerMoves, newWe, newMap, newPlayers, height, width, depth);
         }
         return res;
     }
@@ -189,10 +111,10 @@ public class prePruneing {
      */
     public static void main(String[] Args) {
         var players = new Player[] {null,
-            new Player(1, 10, 10, Direction.UP, 6, true, "1"),
-            new Player(2, 10, 30, Direction.RIGHT, 6, true, "2"),
-            new Player(3, 30, 10, Direction.DOWN, 6, true, "3"),
-            new Player(4, 30, 30, Direction.LEFT, 6, true, "4")//,
+            new Player(1, 10, 10, Direction.UP, 2, true, "1"),
+            new Player(2, 10, 30, Direction.RIGHT, 2, true, "2"),
+            new Player(3, 30, 10, Direction.DOWN, 2, true, "3"),
+            new Player(4, 30, 30, Direction.LEFT, 2, true, "4")//,
             //new Player(5, 10, 20, Direction.UP, 5, true, "5"),
             //new Player(6, 30, 20, Direction.UP, 5, true, "6")
         };
@@ -205,5 +127,40 @@ public class prePruneing {
         log.debug("Time elapsed: " + (end - start) + "ms");
         log.debug(stats1);
 
+    }
+
+    private static int iterateThroughCombinations(ArrayList<ArrayList<ActionPlayerCoordinates>> moves, Player us, CoordinateMap map, PlayerMap players, int height, int width, int depth) {
+        if (moves.size() == 0) {
+            if (depth == 0) {
+                return 1;
+            }
+            players.put(us);
+            return calculateMoves(width, height, players, us.getId(), map, depth - 1);
+        }
+
+        var lastMoves = moves.get(moves.size() - 1);
+        moves.remove(moves.size() - 1);
+
+        int res = 0;
+
+        for (var apc : lastMoves) {
+            var newMap = new CoordinateMap(map);
+            var newPlayers = new PlayerMap(players.getPlayers().clone());
+            var coordinates = apc.getCoordinates();
+            for (var coordinate : coordinates) {
+                int enemy = map.get(coordinate);
+                if (enemy != 0) {
+                    newPlayers.remove(coordinate.getPlayer());
+                    if (enemy > 0) {
+                        newPlayers.remove(enemy);
+                    }
+                } else {
+                    newMap.put(coordinate.getX(), coordinate.getY(), coordinate.getPlayer());
+                }
+            }
+
+            res += iterateThroughCombinations(moves, us, newMap, newPlayers, height, width, depth);
+        }
+        return res;
     }
 }
