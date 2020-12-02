@@ -1,11 +1,15 @@
 package de.uol.snakeinc.entities;
 
-public class Tupel<X, Y> {
+import lombok.Getter;
 
-    private final X x;
-    private final Y y;
+public class Tupel {
 
-    public Tupel(X x, Y y) {
+    @Getter
+    private final int x;
+    @Getter
+    private final int y;
+
+    public Tupel(int x, int y) {
         this.x = x;
         this.y = y;
     }

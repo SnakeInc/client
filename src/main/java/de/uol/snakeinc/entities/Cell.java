@@ -5,13 +5,17 @@ import lombok.Getter;
 public class Cell {
 
     @Getter
-    private int value;
+    private double value;
 
+    private double actionRisk;
     private Cell prevCell;
     private Cell nextCell;
+    @Getter
+    private int iD;
 
     public Cell() {
         value = 0;
+        actionRisk = 0;
     }
 
     public void isHead(int id, Cell prevCell) {
@@ -28,6 +32,31 @@ public class Cell {
         value = id * 10;
         this.nextCell = nextCell;
         this.prevCell = prevCell;
+    }
+
+    public boolean isDeadly(){
+        return value > 1;
+    }
+
+    public void raiseActionRisk(int depth) {
+        switch (depth) {
+            case 1:
+                actionRisk = actionRisk +1/4;
+            case 2:
+                actionRisk = actionRisk + 1/16;
+            case 3:
+                actionRisk = actionRisk + 1/64;
+        }
+    }
+
+    public double getRisks() {
+        //Not calculated: Speed-Up.
+        //Not calculated: Interinteraktion between players.
+        return value + actionRisk;
+    }
+
+    public void prepareNextPhase() {
+        actionRisk = 0;
     }
 
 

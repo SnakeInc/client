@@ -98,10 +98,17 @@ public class IntelligentBoard {
                         break;
                 }
         }
-        boardAnalyzer.analyze(cells,players);
+        boardAnalyzer.analyze();
     }
 
+    public void prepareNextPhase() {
+        boardAnalyzer.prepareNextPhase();
+    }
 
+    public Action getAction() {
+        MoveCalculation moveCalculation = new MoveCalculation(cells, us);
+        return moveCalculation.calculateBestAction();
+    }
 
     /**
      * Parse board based on json-format.

@@ -1,6 +1,7 @@
 package de.uol.snakeinc.entities;
 
 import de.uol.snakeinc.connection.SpeedWebSocketClient;
+import lombok.Getter;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 public class Game {
 
     private HashMap<Integer, Player> players;
+    @Getter
     private HashMap<Integer, IntelligentBoard> boards;
     private IntelligentBoard currentIntelligentBoard;
     private Player us;
@@ -51,8 +53,8 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
-        // Implement logical working here
-        socket.sendAction(Action.SPEED_UP);
+        socket.sendAction(currentIntelligentBoard.getAction());
+        currentIntelligentBoard.prepareNextPhase();
     }
 
     public void makeExportReady() {

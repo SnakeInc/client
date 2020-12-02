@@ -52,7 +52,7 @@ public class Export {
             Integer[][] positions = new Integer[intelligentBoard.getHeight()][intelligentBoard.getWidth()];
             for (int x = 0; x < intelligentBoard.getCells().length; x++) {
                 for (int z = 0; z < intelligentBoard.getCells()[x].length; z++) {
-                    positions[x][z] = Integer.valueOf(intelligentBoard.getCells()[x][z]);
+                    positions[x][z] = Integer.valueOf(intelligentBoard.getCells()[x][z].getID());
                 }
             }
             boards.put(position, positions);
