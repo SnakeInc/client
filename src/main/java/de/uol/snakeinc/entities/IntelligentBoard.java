@@ -5,8 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -17,9 +15,12 @@ public class IntelligentBoard {
     private int width;
     @Getter
     private int height;
+    @Getter
+    private Player us;
 
-    private Set<Cell> firstNeighbourhood;
-    private Set<Cell> secondNeighbourhood;
+    private BoardAnalyzer boardAnalyzer;
+
+    private Set<Tupel> neighbourCells;
 
 
     @Getter
@@ -27,10 +28,11 @@ public class IntelligentBoard {
 
     private Player players[];
 
-    public IntelligentBoard(int width, int height, Player[] players) {
+    public IntelligentBoard(int width, int height, Player[] players, Player us) {
         this.width = width;
         this.height = height;
         this.players = players;
+        this.us = us;
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -44,6 +46,7 @@ public class IntelligentBoard {
                 cells[player.getX()][player.getY()].isHead(player.getId(), cells[player.getX()][player.getY()]);
             }
         }
+        boardAnalyzer = new BoardAnalyzer(cells, players, us);
     }
 
     public void update(HashMap<Integer, Player> playerHashMap) {
@@ -95,40 +98,9 @@ public class IntelligentBoard {
                         break;
                 }
         }
-        updateNeighbourhoodValues();
+        boardAnalyzer.analyze(cells,players);
     }
 
-
-
-    private void updateFirstNeighbourhood() {
-        firstNeighbourhood.clear();
-        int x;
-        int y;
-        for (int i = 0; i< players.length; i++) {
-            x = players[i].getX();
-            y = players[i].getY();
-            firstNeighbourhood.addAll(Set.of(cells[x][y], cells[x][y-1], cells[x][y+1], cells[x+1][y+1], cells[x+1][y],
-                cells[x+1][y-1], cells[x-1][y], cells[x-1][y+1], cells[x-1][y-1]));
-        }
-    }
-
-    private void updateSecondNeighbourhood() {
-        secondNeighbourhood.clear();
-        int x;
-        int y;
-        for (int i = 0; i< players.length; i++) {
-            x = players[i].getX();
-            y = players[i].getY();
-            secondNeighbourhood.addAll(Set.of(cells[x+2][y],cells[x+2][y-1],cells[x+2][y-2], cells[x+2][y+1], cells[x+2][y+2],
-            cells[x-2][y], cells[x-2][y-1], cells[x-2][y+1], cells[x][y+2], cells[x+1][y+2], cells[x-1][y+2],
-                cells[x][y-2], cells[x+1][y-2], cells[x-1][y-2]));
-        }
-    }
-
-    private void updateNeighbourhoodValues() {
-        updateFirstNeighbourhood();
-        updateSecondNeighbourhood();
-    }
 
 
     /**
@@ -137,7 +109,7 @@ public class IntelligentBoard {
      * @param players parsed players
      * @return parsed board
      */
-    public static IntelligentBoard initParseFromJson(JsonObject json, HashMap<Integer, Player> players) {
+    public static IntelligentBoard initParseFromJson(JsonObject json, HashMap<Integer, Player> players, Player us) {
         int width = json.get("width").getAsInt();
         int height = json.get("height").getAsInt();
 
@@ -153,7 +125,7 @@ public class IntelligentBoard {
         log.debug(json.get("cells").toString());
         int[][] cells = gson.fromJson(json.get("cells").toString(), int[][].class);
 
-        IntelligentBoard intelligentBoard = new IntelligentBoard(width, height, playersArray);
+        IntelligentBoard intelligentBoard = new IntelligentBoard(width, height, playersArray, us);
 
         return intelligentBoard;
     }

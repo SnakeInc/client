@@ -54,8 +54,8 @@ public class SpeedWebSocketClient extends WebSocketClient {
             for (Player player : Player.parseFromJson(jsonObject)) {
                 game.addPlayer(player);
             }
-            game.setCurrentIntelligentBoard(IntelligentBoard.initParseFromJson(jsonObject, game.getPlayers()));
             game.setUs(jsonObject.get("you").getAsInt());
+            game.setCurrentIntelligentBoard(IntelligentBoard.initParseFromJson(jsonObject, game.getPlayers(), game.getUs()));
             game.runAction(this);
             game.informIntelligentBoard();
         } catch (Exception exception) {
