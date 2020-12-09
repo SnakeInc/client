@@ -10,8 +10,8 @@ public class Game {
 
     private HashMap<Integer, Player> players;
     @Getter
-    private HashMap<Integer, IntelligentBoard> boards;
-    private IntelligentBoard currentIntelligentBoard;
+    private HashMap<Integer, EvaluationBoard> boards;
+    private EvaluationBoard EvaluationBoard;
     private Player us;
 
     private int round = 0;
@@ -36,16 +36,16 @@ public class Game {
         this.us = this.players.get(id);
     }
 
-    public void setCurrentIntelligentBoard(IntelligentBoard intelligentBoard) {
-        currentIntelligentBoard = intelligentBoard;
+    public void informIntelligentBoard(EvaluationBoard evaluationBoard) {
+        EvaluationBoard = evaluationBoard;
     }
 
     public void informIntelligentBoard() {
-        currentIntelligentBoard.update(players);
+        EvaluationBoard.update(players);
     }
 
-    public IntelligentBoard getCurrentIntelligentBoard() {
-        return this.currentIntelligentBoard;
+    public EvaluationBoard getEvaluationBoard() {
+        return this.EvaluationBoard;
     }
 
     /**
@@ -53,12 +53,16 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
-        socket.sendAction(currentIntelligentBoard.getAction());
-        currentIntelligentBoard.prepareNextPhase();
+        if(round < 5) {
+            socket.sendAction(EvaluationBoard.startingStrategy());
+        } else {
+        socket.sendAction(EvaluationBoard.getAction());}
+        EvaluationBoard.prepareNextPhase();
+        round++;
     }
 
     public void makeExportReady() {
-        this.boards.put(round, this.currentIntelligentBoard);
+        this.boards.put(round, this.EvaluationBoard);
     }
 
     public Player getUs() {
@@ -66,7 +70,7 @@ public class Game {
     }
 
     public int getRounds() {
-        return this.round + 1;
+        return this.round;
     }
 
     public String getGameId() {

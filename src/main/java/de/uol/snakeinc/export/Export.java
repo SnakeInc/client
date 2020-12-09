@@ -3,7 +3,7 @@ package de.uol.snakeinc.export;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.uol.snakeinc.entities.IntelligentBoard;
+import de.uol.snakeinc.entities.EvaluationBoard;
 import de.uol.snakeinc.entities.Game;
 import de.uol.snakeinc.entities.Player;
 import lombok.CustomLog;
@@ -46,21 +46,21 @@ public class Export {
         objects.add("players", gson.toJsonTree(players));
 
         HashMap<Integer, Integer[][]> boards = new HashMap<Integer, Integer[][]>();
-        HashMap<Integer, IntelligentBoard> dataBoards = game.getBoards();
+        HashMap<Integer, EvaluationBoard> dataBoards = game.getBoards();
         for (Integer position : dataBoards.keySet()) {
-            IntelligentBoard intelligentBoard = dataBoards.get(position);
-            Integer[][] positions = new Integer[intelligentBoard.getHeight()][intelligentBoard.getWidth()];
-            for (int x = 0; x < intelligentBoard.getCells().length; x++) {
-                for (int z = 0; z < intelligentBoard.getCells()[x].length; z++) {
-                    positions[x][z] = Integer.valueOf(intelligentBoard.getCells()[x][z].getID());
+            EvaluationBoard evaluationBoard = dataBoards.get(position);
+            Integer[][] positions = new Integer[evaluationBoard.getHeight()][evaluationBoard.getWidth()];
+            for (int x = 0; x < evaluationBoard.getCells().length; x++) {
+                for (int z = 0; z < evaluationBoard.getCells()[x].length; z++) {
+                    positions[x][z] = Integer.valueOf(evaluationBoard.getCells()[x][z].getID());
                 }
             }
             boards.put(position, positions);
         }
         JsonObject mapObjects = new JsonObject();
         JsonElement jsonElement = gson.toJsonTree(boards);
-        mapObjects.addProperty("width", game.getCurrentIntelligentBoard().getWidth());
-        mapObjects.addProperty("height", game.getCurrentIntelligentBoard().getHeight());
+        mapObjects.addProperty("width", game.getEvaluationBoard().getWidth());
+        mapObjects.addProperty("height", game.getEvaluationBoard().getHeight());
         mapObjects.add("boards", jsonElement);
         objects.add("map", mapObjects);
 

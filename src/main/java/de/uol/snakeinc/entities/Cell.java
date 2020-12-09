@@ -18,17 +18,17 @@ public class Cell {
         actionRisk = 0;
     }
 
-    public void isHead(int id, Cell prevCell) {
-        value = id *10;
-        this.prevCell = prevCell;
+
+    public void setId(int id) {
+        this.iD = id;
     }
 
-    public void isTail(int id, Cell nextCell) {
+    public void enqueue(int id, Cell nextCell) {
         value = id *10;
         this.nextCell = nextCell;
     }
 
-    public void isTail(int id, Cell nextCell, Cell prevCell) {
+    public void enqueue(int id, Cell prevCell, Cell nextCell) {
         value = id * 10;
         this.nextCell = nextCell;
         this.prevCell = prevCell;

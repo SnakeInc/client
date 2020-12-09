@@ -32,6 +32,7 @@ public class BoardAnalyzer {
     }
 
     public void prepareNextPhase() {
+        if (evaluatedCells != null)
         for (Tupel tupel : evaluatedCells) {
             cells[tupel.getX()][tupel.getY()].prepareNextPhase();
         }

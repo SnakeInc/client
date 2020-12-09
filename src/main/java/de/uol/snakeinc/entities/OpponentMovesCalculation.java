@@ -1,8 +1,11 @@
 package de.uol.snakeinc.entities;
 
+import lombok.CustomLog;
+
 import java.util.HashSet;
 import java.util.Set;
 
+@CustomLog
 public class OpponentMovesCalculation {
 
     private Cell[][] cells;
@@ -35,8 +38,9 @@ public class OpponentMovesCalculation {
 
 
     private Set<Tupel> nextDepth(int x, int y, Set<Tupel> evaluated, int depth, int speed) {
+        log.info("Calculating Oppenent moves in depth:" + depth);
 
-        if(depth == 3) {
+        if(depth == 2) {
             return evaluated;
         }
         //Recursive call
@@ -51,7 +55,7 @@ public class OpponentMovesCalculation {
         switch (dir) {
             case UP:
                 for (int j = 0; j < speed; j++) {
-                    if (cells[x][y + j].isDeadly()) {
+                    if (cells[x][y+j]==null || cells[x][y + j].isDeadly()) {
                         break;
                     } else {
                         evaluated.add(new Tupel(x, y));
@@ -61,7 +65,7 @@ public class OpponentMovesCalculation {
                 nextDepth(x, y + speed, evaluated, depth + 1, speed);
             case DOWN:
                 for (int j = 0; j < speed; j++) {
-                    if (cells[x][y - j].isDeadly()) {
+                    if (cells[x][y-j]==null || cells[x][y - j].isDeadly()) {
                         break;
                     } else {
                         evaluated.add(new Tupel(x, y));
@@ -71,7 +75,7 @@ public class OpponentMovesCalculation {
                 nextDepth(x, y - speed, evaluated, depth + 1, speed);
             case RIGHT:
                 for (int j = 0; j < speed; j++) {
-                    if (cells[x + j][y].isDeadly()) {
+                    if (cells[x+j][y]==null ||cells[x + j][y].isDeadly()) {
                         break;
                     } else {
                         evaluated.add(new Tupel(x, y));
@@ -81,7 +85,7 @@ public class OpponentMovesCalculation {
                 nextDepth(x + speed, y, evaluated, depth + 1, speed);
             case LEFT:
                 for (int j = 0; j < speed; j++) {
-                    if (cells[x - j][y].isDeadly()) {
+                    if (cells[x-j][y]==null || cells[x - j][y].isDeadly()) {
                         break;
                     } else {
                         evaluated.add(new Tupel(x, y));
