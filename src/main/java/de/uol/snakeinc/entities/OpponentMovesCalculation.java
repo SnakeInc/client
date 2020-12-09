@@ -38,9 +38,9 @@ public class OpponentMovesCalculation {
 
 
     private Set<Tupel> nextDepth(int x, int y, Set<Tupel> evaluated, int depth, int speed) {
-        log.info("Calculating Oppenent moves in depth:" + depth);
+        log.info("Calculating Opponent moves in depth:" + depth);
 
-        if(depth == 2) {
+        if(depth == 3) {
             return evaluated;
         }
         //Recursive call
@@ -54,8 +54,8 @@ public class OpponentMovesCalculation {
     private void recursiveRiskByDirection(int x, int y, Set<Tupel> evaluated, int depth, int speed, Direction dir) {
         switch (dir) {
             case UP:
-                for (int j = 0; j < speed; j++) {
-                    if (cells[x][y+j]==null || cells[x][y + j].isDeadly()) {
+                for (int j = 1; j < speed + 1; j++) {
+                    if (cells[x][y+j] == null || cells[x][y + j].isDeadly()) {
                         break;
                     } else {
                         evaluated.add(new Tupel(x, y));
@@ -64,7 +64,7 @@ public class OpponentMovesCalculation {
                 }
                 nextDepth(x, y + speed, evaluated, depth + 1, speed);
             case DOWN:
-                for (int j = 0; j < speed; j++) {
+                for (int j = 1; j + 1 < speed; j++) {
                     if (cells[x][y-j]==null || cells[x][y - j].isDeadly()) {
                         break;
                     } else {
@@ -74,7 +74,7 @@ public class OpponentMovesCalculation {
                 }
                 nextDepth(x, y - speed, evaluated, depth + 1, speed);
             case RIGHT:
-                for (int j = 0; j < speed; j++) {
+                for (int j = 1; j + 1 < speed; j++) {
                     if (cells[x+j][y]==null ||cells[x + j][y].isDeadly()) {
                         break;
                     } else {
@@ -84,7 +84,7 @@ public class OpponentMovesCalculation {
                 }
                 nextDepth(x + speed, y, evaluated, depth + 1, speed);
             case LEFT:
-                for (int j = 0; j < speed; j++) {
+                for (int j = 1; j < speed+1; j++) {
                     if (cells[x-j][y]==null || cells[x - j][y].isDeadly()) {
                         break;
                     } else {

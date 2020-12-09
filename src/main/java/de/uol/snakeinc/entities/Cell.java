@@ -8,14 +8,17 @@ public class Cell {
     private double value;
 
     private double actionRisk;
+
+    @Getter
     private Cell prevCell;
+    @Getter
     private Cell nextCell;
     @Getter
     private int iD;
 
     public Cell() {
-        value = 0;
-        actionRisk = 0;
+        value = 1;
+        actionRisk = 1;
     }
 
 
@@ -23,40 +26,38 @@ public class Cell {
         this.iD = id;
     }
 
-    public void enqueue(int id, Cell nextCell) {
-        value = id *10;
+    public void setNextCell(int id, Cell nextCell) {
         this.nextCell = nextCell;
     }
 
-    public void enqueue(int id, Cell prevCell, Cell nextCell) {
-        value = id * 10;
-        this.nextCell = nextCell;
+    public void setPrevCell(int id, Cell prevCell) {
+        value = 10;
         this.prevCell = prevCell;
     }
 
     public boolean isDeadly(){
-        return value > 1;
+        return value >= 10;
     }
 
     public void raiseActionRisk(int depth) {
         switch (depth) {
             case 1:
-                actionRisk = actionRisk +1/4;
+                actionRisk = actionRisk * 5/4;
             case 2:
-                actionRisk = actionRisk + 1/16;
+                actionRisk = actionRisk * 17/16;
             case 3:
-                actionRisk = actionRisk + 1/64;
+                actionRisk = actionRisk * 65/64;
         }
     }
 
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interinteraktion between players.
-        return value + actionRisk;
+        return value * actionRisk;
     }
 
     public void prepareNextPhase() {
-        actionRisk = 0;
+        actionRisk = 1;
     }
 
 

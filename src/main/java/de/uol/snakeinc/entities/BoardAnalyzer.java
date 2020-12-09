@@ -23,7 +23,7 @@ public class BoardAnalyzer {
     public static Boolean inDistance(Player player1, Player player2) {
         int distance;
         distance = Math.abs(player1.getX()-player2.getX()+player1.getY() - player2.getY());
-        if(distance > player1.getSpeed()*3 + player2.getSpeed()*3) {
+        if(distance > player1.getSpeed()*3 + player2.getSpeed()*3 || distance==0) {
             return false;
         } else {
             //TODO: Implement and use pathfinder-algorithm to check if the players can reach each other in max three rounds.

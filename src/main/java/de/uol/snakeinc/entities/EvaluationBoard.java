@@ -51,16 +51,18 @@ public class EvaluationBoard {
         boardAnalyzer = new BoardAnalyzer(cells, players, us);
     }
 
-    public void update(HashMap<Integer, Player> playerHashMap) {
+    public void update(HashMap<Integer, Player> playerHashMap, Player us) {
         log.info("Updating the evaluationBoard!");
+        this.us = us;
         Player[] playersArray = new Player[playerHashMap.size()];
         int count = 0;
         for (Integer position : playerHashMap.keySet()) {
+            if(playerHashMap.get(position).isActive()) {
             playersArray[count] = playerHashMap.get(position);
-            count++;
+            count++;}
         }
         players = playersArray;
-        for (int i=0; i < players.length; i++) {
+        for (int i=0; i < count; i++) {
             int iD = players[i].getId();
             int x = players[i].getX();
             int y = players[i].getY();
@@ -68,36 +70,48 @@ public class EvaluationBoard {
             Cell tmp;
                 switch (players[i].getDirection()) {
                     case UP:
-                        tmp = cells[x][y];
+                        tmp = cells[x][y + speed];
                         for (int j = 0; j< speed; j++) {
-                            cells[x][y + 1 + j].enqueue(iD, cells[x][y + 2 + j], tmp);
-                            tmp = cells[x][y + 1 + j];
+                            tmp.setNextCell(iD, cells[x][y + speed - j -1]);
+                            cells[x][y + speed - j - 1].setPrevCell(iD, tmp);
+                            tmp = cells[x][y + speed - j - 1];
                         }
                         break;
                     case DOWN:
-                        tmp = cells[x][y];
+                        tmp = cells[x][y - speed];
                         for (int j = 0; j< speed; j++) {
-                            cells[x][y - 1 -j].enqueue(iD, cells[x][y- 2 - j],tmp);
-                            tmp = cells[x][y - 1 - j];
+                            tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
+                            cells[x][y - speed + j + 1].setPrevCell(iD, tmp);
+                            tmp = cells[x][y - speed + j + 1];
                         }
                         break;
                     case LEFT:
-                        tmp = cells[x][y];
+                        tmp = cells[x + speed][y];
                         for (int j = 0; j< speed; j++) {
-                            cells[x + 1 + j][y].enqueue(iD, cells[x + 2 + j][y], tmp);
-                            tmp = cells[x + 1 + j][y];
+                            tmp.setNextCell(iD, cells[x + speed - j -1][y]);
+                            cells[x + speed - j - 1][y].setPrevCell(iD, tmp);
+                            tmp = cells[x + speed - j -1][y];
                         }
                         break;
                     case RIGHT:
-                        tmp = cells[x][y];
+                        tmp = cells[x - speed][y];
                         for (int j = 0; j< speed; j++) {
-                            cells[x - 1 - j][y].enqueue(iD, cells[x - 2 - j][y], tmp);
-                            tmp = cells[x - 1 - j][y];
+                            tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
+                            cells[x - speed + j + 1][y].setPrevCell(iD, tmp);
+                            tmp = cells[x - speed + j + 1][y];
                         }
                         break;
                 }
         }
         boardAnalyzer.analyze();
+        String log = "";
+        for (int i = 0; i< cells[1].length; i++) {
+            for (int j=0; j< cells.length; j++) {
+                log = log + cells[i][j].getRisks() + " ";
+            }
+            log = log + "\n";
+        }
+        System.out.println(log);
     }
 
     public void prepareNextPhase() {

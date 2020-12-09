@@ -59,6 +59,7 @@ public class SpeedWebSocketClient extends WebSocketClient {
             if (initialMessage) {
                 initialMessage = false;
                 game.informIntelligentBoard(EvaluationBoard.initParseFromJson(jsonObject, game.getPlayers(), game.getUs())); }
+            else
             game.informIntelligentBoard();
             game.runAction(this);
         } catch (Exception exception) {
@@ -103,5 +104,6 @@ public class SpeedWebSocketClient extends WebSocketClient {
         Gson gson = new Gson();
 
         this.send(gson.toJson(json));
+        log.info(gson.toJson(json));
     }
 }

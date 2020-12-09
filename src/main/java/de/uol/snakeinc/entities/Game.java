@@ -41,7 +41,7 @@ public class Game {
     }
 
     public void informIntelligentBoard() {
-        EvaluationBoard.update(players);
+        EvaluationBoard.update(players, us);
     }
 
     public EvaluationBoard getEvaluationBoard() {
@@ -53,7 +53,7 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
-        if(round < 5) {
+        if(round < 2) {
             socket.sendAction(EvaluationBoard.startingStrategy());
         } else {
         socket.sendAction(EvaluationBoard.getAction());}
