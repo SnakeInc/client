@@ -35,7 +35,7 @@ public class OpponentMovesCalculation {
         Set<Tupel> evaluatedCells = new HashSet<>();
 
         for (int i = 0; i < players.length; i++) {
-            if (BoardAnalyzer.inDistance(us, players[i]) || players[i].isActive()) {
+            if (BoardAnalyzer.inDistance(us, players[i]) && players[i].isActive()) {
                 x = players[i].getX();
                 y = players[i].getY();
                 speed = players[i].getSpeed();
@@ -83,7 +83,7 @@ public class OpponentMovesCalculation {
         switch (dir) {
             case UP:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (y - j < 0 || y-j >= height|| cells[x][y - j].isDeadly()) {
+                    if (y - j < 0 || y - j >= height|| cells[x][y - j].isDeadly()) {
                         abort = true;
                         break;
                     } else {
@@ -147,7 +147,7 @@ public class OpponentMovesCalculation {
                             break;
                         } else {
                             evaluated.add(new Tupel(x, y - j));
-                            cells[x][y + j].raiseActionRisk(depth);
+                            cells[x][y - j].raiseActionRisk(depth);
                         }
                     }
                     if (!abort) {
@@ -159,7 +159,7 @@ public class OpponentMovesCalculation {
                             abort = true;
                             break;
                         } else {
-                            evaluated.add(new Tupel(x, y - j));
+                            evaluated.add(new Tupel(x, y + j));
                             cells[x][y + j].raiseActionRisk(depth);
                         }
                     }
