@@ -31,7 +31,7 @@ public class OpponentMovesCalculation {
         Set<Tupel> evaluatedCells = new HashSet<>();
 
         for (int i = 0; i < players.length; i++) {
-            if (BoardAnalyzer.inDistance(us, players[i])) {
+            if (BoardAnalyzer.inDistance(us, players[i]) || players[i].isActive()) {
                 x = players[i].getX();
                 y = players[i].getY();
                 speed = players[i].getSpeed();
@@ -44,7 +44,6 @@ public class OpponentMovesCalculation {
 
 
     private Set<Tupel> nextDepth(int x, int y, Set<Tupel> evaluated, int depth, int speed, JumpCounter jumpCounter) {
-        log.info("Calculating Opponent moves in depth:" + depth);
 
         if(depth == 3) {
             return evaluated;
@@ -58,7 +57,6 @@ public class OpponentMovesCalculation {
     }
 
     private Set<Tupel> nextDepthWithJumping(int x, int y, Set<Tupel> evaluated, int depth, int speed) {
-        log.info("Calculating Opponent moves with jumping in depth:" + depth);
 
         if(depth == 3) {
             return evaluated;
