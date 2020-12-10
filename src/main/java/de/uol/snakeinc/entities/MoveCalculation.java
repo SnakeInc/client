@@ -9,12 +9,14 @@ public class MoveCalculation {
     private Player us;
     int width;
     int height;
+    BoardAnalyzer boardAnalyzer;
 
-    public MoveCalculation(Cell[][] cells, Player us) {
+    public MoveCalculation(Cell[][] cells, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
         this.us = us;
         this.height= cells[1].length;
         this.width = cells.length;
+        this.boardAnalyzer = boardAnalyzer;
     }
 
     public Action calculateBestAction() {
@@ -24,24 +26,24 @@ public class MoveCalculation {
         double tmp;
         for (Action act : Action.values()) {
             tmp = calculate(act, us.getDirection(), us.getX(), us.getY(), us.getSpeed(), 1);
-            System.out.println(tmp);
+            System.out.println("Actioneval.: " + act + "with: " + tmp);
             if (tmp < bestActionTmp) {
                 bestActionTmp = tmp;
                 bestAction = act;
-                System.out.println("Action: " + bestAction + "result: " + bestActionTmp);
             }
         }
+        System.out.println("BestAction: " + bestAction + "result: " + bestActionTmp);
         return bestAction;
     }
 
     private double calculateAction(Direction dir, int x, int y, int speed, int depth) {
-        if (depth ==3) {
+        if (depth ==6) {
             return 1;
         }
         double bestAction = 100;
         double tmp = 100;
         for (Action act : Action.values()) {
-            tmp = calculate(act, dir, speed, x, y,depth);
+            tmp = calculate(act, dir, x, y, speed,depth);
             if (tmp < bestAction) {
                 bestAction = tmp;
             }
@@ -94,19 +96,17 @@ public class MoveCalculation {
             case LEFT:
                 for (int i = 1; i < speed+1;i++) {
                     if (x-i < 0 || x - i >= width || y < 0 || y >= height) {
-                        log.info("Down");
                         return 10 * depth;
                     } else if (cells[x - i][y].isDeadly()) {
                         return 10 * depth;
                     }
                     result = result * cells[x - i][y].getRisks();
                 }
-                return result * calculateAction(Direction.LEFT,x - speed, y - speed, speed, depth+1);
+                return result * calculateAction(Direction.LEFT,x - speed, y, speed, depth+1);
 
             case RIGHT:
                 for (int i = 1; i<speed+1;i++) {
                     if (x + i < 0 || x + i >= width || y < 0 || y >= height) {
-                        log.info("Right");
                         return 10 * depth;
                     } else if (cells[x + i][y].isDeadly()) {
                         return 10 * depth;
@@ -118,7 +118,6 @@ public class MoveCalculation {
             case DOWN:
                 for (int i = 1; i<speed+1;i++) {
                     if (x < 0 || x >= width || y + i < 0 || y + i >= height) {
-                        log.info("Down");
                         return 10 * depth;
                     } else if (cells[x][y + 1].isDeadly()) {
                         return 10 * depth;
@@ -130,14 +129,13 @@ public class MoveCalculation {
             case UP:
                 for (int i = 1; i<speed+1;i++) {
                     if (x < 0 || x >= width || y-i <0 || y-i >= height) {
-                        log.info("Up");
                         return 10 * depth;
                         } else if (cells[x][y - i].isDeadly()) {
                         return 10 * depth;
                     }
                     result = result * cells[x][y - i].getRisks();
                 }
-                return result * calculateAction(Direction.UP,x, y - speed, speed,  depth+1);
+                return result * calculateAction(Direction.UP, x, y - speed, speed,  depth+1);
         }
         return result;
     }

@@ -24,6 +24,7 @@ public class Cell {
 
     public void setId(int id) {
         this.iD = id;
+        value = 10;
     }
 
     public void setNextCell(int id, Cell nextCell) {
@@ -32,6 +33,10 @@ public class Cell {
 
     public void setPrevCell(int id, Cell prevCell) {
         value = 10;
+        this.prevCell = prevCell;
+    }
+
+    public void setPrevHoleCell(int id, Cell prevCell) {
         this.prevCell = prevCell;
     }
 
@@ -50,15 +55,18 @@ public class Cell {
         }
     }
 
+    public double getValue() {
+        return value;
+    }
+
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interinteraktion between players.
-        return value * actionRisk;
+        return getValue() * actionRisk;
     }
 
     public void prepareNextPhase() {
         actionRisk = 1;
     }
-
 
 }

@@ -68,18 +68,21 @@ public class EvaluationBoard {
             int y = players[i].getY();
             int speed = players[i].getSpeed();
             Cell tmp;
+            if (boardAnalyzer.checkForJumping(players[i])) {
+                updateJumpingPlayer(players[i]);
+            } else {
                 switch (players[i].getDirection()) {
                     case UP:
                         tmp = cells[x][y + speed];
-                        for (int j = 0; j< speed; j++) {
-                            tmp.setNextCell(iD, cells[x][y + speed - j -1]);
+                        for (int j = 0; j < speed; j++) {
+                            tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
                             cells[x][y + speed - j - 1].setPrevCell(iD, tmp);
                             tmp = cells[x][y + speed - j - 1];
                         }
                         break;
                     case DOWN:
                         tmp = cells[x][y - speed];
-                        for (int j = 0; j< speed; j++) {
+                        for (int j = 0; j < speed; j++) {
                             tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
                             cells[x][y - speed + j + 1].setPrevCell(iD, tmp);
                             tmp = cells[x][y - speed + j + 1];
@@ -87,26 +90,27 @@ public class EvaluationBoard {
                         break;
                     case LEFT:
                         tmp = cells[x + speed][y];
-                        for (int j = 0; j< speed; j++) {
-                            tmp.setNextCell(iD, cells[x + speed - j -1][y]);
+                        for (int j = 0; j < speed; j++) {
+                            tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
                             cells[x + speed - j - 1][y].setPrevCell(iD, tmp);
-                            tmp = cells[x + speed - j -1][y];
+                            tmp = cells[x + speed - j - 1][y];
                         }
                         break;
                     case RIGHT:
                         tmp = cells[x - speed][y];
-                        for (int j = 0; j< speed; j++) {
+                        for (int j = 0; j < speed; j++) {
                             tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
                             cells[x - speed + j + 1][y].setPrevCell(iD, tmp);
                             tmp = cells[x - speed + j + 1][y];
                         }
                         break;
                 }
+            }
         }
         boardAnalyzer.analyze();
         String log = "";
-        for (int i = 0; i< cells[1].length; i++) {
-            for (int j=0; j< cells.length; j++) {
+        for (int i = 0; i< cells.length; i++) {
+            for (int j=0; j< cells[1].length; j++) {
                 log = log + cells[i][j].getRisks() + " ";
             }
             log = log + "\n";
@@ -114,12 +118,58 @@ public class EvaluationBoard {
         System.out.println(log);
     }
 
+    private void updateJumpingPlayer (Player player){
+        Cell tmp;
+        int x = player.getX();
+        int y = player.getY();
+        int speed = player.getSpeed();
+        int iD = player.getId();
+        switch (player.getDirection()) {
+            case UP:
+                tmp = cells[x][y + speed];
+                for (int j = 0; j < speed; j++) {
+                    if (j < 2) {
+                        tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
+                        cells[x][y + speed - j - 1].setPrevHoleCell(iD, tmp);
+                        tmp = cells[x][y + speed - j - 1];
+                    } else {
+
+                    }
+                }
+                break;
+            case DOWN:
+                tmp = cells[x][y - speed];
+                for (int j = 0; j < speed; j++) {
+                    tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
+                    cells[x][y - speed + j + 1].setPrevHoleCell(iD, tmp);
+                    tmp = cells[x][y - speed + j + 1];
+                }
+                break;
+            case LEFT:
+                tmp = cells[x + speed][y];
+                for (int j = 0; j < speed; j++) {
+                    tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
+                    cells[x + speed - j - 1][y].setPrevHoleCell(iD, tmp);
+                    tmp = cells[x + speed - j - 1][y];
+                }
+                break;
+            case RIGHT:
+                tmp = cells[x - speed][y];
+                for (int j = 0; j < speed; j++) {
+                    tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
+                    cells[x - speed + j + 1][y].setPrevHoleCell(iD, tmp);
+                    tmp = cells[x - speed + j + 1][y];
+                }
+                break;
+        }
+    }
+
     public void prepareNextPhase() {
         boardAnalyzer.prepareNextPhase();
     }
 
     public Action getAction() {
-        MoveCalculation moveCalculation = new MoveCalculation(cells, us);
+        MoveCalculation moveCalculation = new MoveCalculation(cells, us, boardAnalyzer);
         return moveCalculation.calculateBestAction();
     }
 

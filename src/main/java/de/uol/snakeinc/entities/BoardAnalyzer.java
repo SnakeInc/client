@@ -1,5 +1,7 @@
 package de.uol.snakeinc.entities;
 
+import lombok.Getter;
+
 import java.util.Set;
 
 public class BoardAnalyzer {
@@ -8,15 +10,18 @@ public class BoardAnalyzer {
     private Player[] players;
     private Player us;
     private Set<Tupel> evaluatedCells;
+    @Getter
+    private JumpCounter jumpCounter;
 
     public BoardAnalyzer(Cell[][] cells, Player[] players, Player us) {
         this.cells = cells;
         this.players = players;
         this.us = us;
+        this.jumpCounter = new JumpCounter(players);
     }
 
     public void analyze () {
-        OpponentMovesCalculation calc = new OpponentMovesCalculation(cells, players, us);
+        OpponentMovesCalculation calc = new OpponentMovesCalculation(cells, players, us, this);
         evaluatedCells = calc.evaluate();
     }
 
@@ -29,6 +34,10 @@ public class BoardAnalyzer {
             //TODO: Implement and use pathfinder-algorithm to check if the players can reach each other in max three rounds.
             return true;
         }
+    }
+
+    public boolean checkForJumping(Player player) {
+        return jumpCounter.check(player);
     }
 
     public void prepareNextPhase() {

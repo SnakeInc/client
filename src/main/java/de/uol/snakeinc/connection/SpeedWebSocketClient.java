@@ -44,6 +44,7 @@ public class SpeedWebSocketClient extends WebSocketClient {
         log.info("Connection established");
         this.thread.callBack();
         this.game = new Game(serverId);
+        this.initialMessage = true;
     }
 
     @Override
