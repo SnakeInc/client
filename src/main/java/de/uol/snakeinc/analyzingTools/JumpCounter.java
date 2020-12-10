@@ -28,7 +28,7 @@ public class JumpCounter {
     }
 
     public boolean check(Player player) {
-        int iD = player.getId()-1;
+        int iD = player.getId() - 1;
         if (players[iD].getSpeed() < 3) {
             return false;
         }
@@ -49,7 +49,7 @@ public class JumpCounter {
     }
 
     public boolean check() {
-        int iD = pseudoPlayer.getId();
+        int iD = pseudoPlayer.getId() - 1;
         if (players[iD].getSpeed() < 3) {
             return false;
         }

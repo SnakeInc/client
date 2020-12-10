@@ -16,9 +16,13 @@ public class OpponentMovesCalculation {
     private Player[] players;
     private Player us;
     private BoardAnalyzer boardAnalyzer;
+    private int width;
+    private int height;
 
     public OpponentMovesCalculation(Cell[][] cells, Player[] players, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
+        this.width = cells.length;
+        this.height = cells[1].length;
         this.players = players;
         this.us = us;
         this.boardAnalyzer = boardAnalyzer;
@@ -79,7 +83,7 @@ public class OpponentMovesCalculation {
         switch (dir) {
             case UP:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (cells[x][y - j] == null || cells[x][y - j].isDeadly()) {
+                    if (y - j < 0 || y-j >= height|| cells[x][y - j].isDeadly()) {
                         abort = true;
                         break;
                     } else {
@@ -92,7 +96,7 @@ public class OpponentMovesCalculation {
                 }
             case DOWN:
                 for (int j = 1; j + 1 < speed; j++) {
-                    if (cells[x][y + j] == null || cells[x][y + j].isDeadly()) {
+                    if (y + j < 0 || y + j >= height || cells[x][y + j].isDeadly()) {
                         abort = true;
                         break;
                     } else {
@@ -105,7 +109,7 @@ public class OpponentMovesCalculation {
                 }
             case RIGHT:
                 for (int j = 1; j + 1 < speed; j++) {
-                    if (cells[x + j][y] == null || cells[x + j][y].isDeadly()) {
+                    if (x + j < 0 || x+j >= width|| cells[x + j][y].isDeadly()) {
                         abort = true;
                         break;
                     } else {
@@ -118,7 +122,7 @@ public class OpponentMovesCalculation {
                 }
             case LEFT:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (cells[x - j][y] == null || cells[x - j][y].isDeadly()) {
+                    if (x - j < 0 || x - j >= width || cells[x - j][y].isDeadly()) {
                         abort = true;
                         break;
                     } else {
@@ -138,7 +142,7 @@ public class OpponentMovesCalculation {
             switch (dir) {
                 case UP:
                     for (int j = 1; j < speed + 1; j++) {
-                        if (cells[x][y - j] == null || cells[x][y - j].isDeadly()) {
+                        if (y - j < 0 || y - j >= height || cells[x][y - j].isDeadly()) {
                             abort = true;
                             break;
                         } else {
@@ -151,7 +155,7 @@ public class OpponentMovesCalculation {
                     }
                 case DOWN:
                     for (int j = 1; j + 1 < speed; j++) {
-                        if (cells[x][y + j] == null || cells[x][y + j].isDeadly()) {
+                        if (y + j < 0 || y + j >= height|| cells[x][y + j].isDeadly()) {
                             abort = true;
                             break;
                         } else {
@@ -164,7 +168,7 @@ public class OpponentMovesCalculation {
                     }
                 case RIGHT:
                     for (int j = 1; j + 1 < speed; j++) {
-                        if (cells[x + j][y] == null || cells[x + j][y].isDeadly()) {
+                        if (x + j < 0 || x + j >= width|| cells[x + j][y].isDeadly()) {
                             abort = true;
                             break;
                         } else {
@@ -177,7 +181,7 @@ public class OpponentMovesCalculation {
                     }
                 case LEFT:
                     for (int j = 1; j < speed + 1; j++) {
-                        if (cells[x - j][y] == null || cells[x - j][y].isDeadly()) {
+                        if (x - j < 0 || x - j >= width || cells[x - j][y].isDeadly()) {
                             abort = true;
                             break;
                         } else {

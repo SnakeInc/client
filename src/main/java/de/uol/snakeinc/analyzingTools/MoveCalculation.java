@@ -60,14 +60,14 @@ public class MoveCalculation {
         switch (act) {
             case SPEED_UP:
                 if (speed + 1 > 10) {
-                    return 10 * depth;
+                    return 10 * (6-depth);
                 }
                 return calculateDirection(dir, x, y, speed + 1, depth);
             case CHANGE_NOTHING:
                 return calculateDirection(dir, x, y, speed , depth);
             case SLOW_DOWN:
                 if (speed - 1 == 0) {
-                    return 10 * depth;
+                    return 10 * (6-depth);
                 }
                 return calculateDirection(dir, x, y, speed - 1, depth);
             case TURN_LEFT:
@@ -101,9 +101,9 @@ public class MoveCalculation {
             case LEFT:
                 for (int i = 1; i < speed+1;i++) {
                     if (x-i < 0 || x - i >= width || y < 0 || y >= height) {
-                        return 10 * depth;
+                        return 10 * (6-depth);
                     } else if (cells[x - i][y].isDeadly()) {
-                        return 10 * depth;
+                        return 10 * (6-depth);
                     }
                     result = result * cells[x - i][y].getRisks();
                 }
@@ -112,9 +112,9 @@ public class MoveCalculation {
             case RIGHT:
                 for (int i = 1; i<speed+1;i++) {
                     if (x + i < 0 || x + i >= width || y < 0 || y >= height) {
-                        return 10 * depth;
+                        return 10 * (6-depth);
                     } else if (cells[x + i][y].isDeadly()) {
-                        return 10 * depth;
+                        return 10 * (6-depth);
                     }
                     result = result * cells[x + i][y].getRisks();
                 }
@@ -123,9 +123,9 @@ public class MoveCalculation {
             case DOWN:
                 for (int i = 1; i<speed+1;i++) {
                     if (x < 0 || x >= width || y + i < 0 || y + i >= height) {
-                        return 10 * depth;
+                        return 10 * (6-depth);
                     } else if (cells[x][y + 1].isDeadly()) {
-                        return 10 * depth;
+                        return 10 * (6-depth);
                     }
                     result = result * cells[x][y + i].getRisks();
                 }
@@ -134,9 +134,9 @@ public class MoveCalculation {
             case UP:
                 for (int i = 1; i<speed+1;i++) {
                     if (x < 0 || x >= width || y-i <0 || y-i >= height) {
-                        return 10 * depth;
+                        return 10 * (6-depth);
                         } else if (cells[x][y - i].isDeadly()) {
-                        return 10 * depth;
+                        return 10 * (6-depth);
                     }
                     result = result * cells[x][y - i].getRisks();
                 }
