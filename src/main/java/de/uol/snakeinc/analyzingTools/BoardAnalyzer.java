@@ -1,5 +1,8 @@
-package de.uol.snakeinc.entities;
+package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.entities.Cell;
+import de.uol.snakeinc.entities.Player;
+import de.uol.snakeinc.entities.Tupel;
 import lombok.Getter;
 
 import java.util.Set;

@@ -1,5 +1,7 @@
 package de.uol.snakeinc.entities;
 
+import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
+import de.uol.snakeinc.analyzingTools.MoveCalculation;
 import lombok.CustomLog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

@@ -1,13 +1,16 @@
-package de.uol.snakeinc.entities;
+package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.entities.Player;
 import lombok.CustomLog;
+import lombok.Getter;
 
 @CustomLog
 public class JumpCounter {
 
     Player[] players;
     int[][] speed;
-    Player pseudoPlayer;
+    @Getter
+    private Player pseudoPlayer;
 
     public JumpCounter(Player[] players) {
         this.players = players;

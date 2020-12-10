@@ -1,5 +1,9 @@
-package de.uol.snakeinc.entities;
+package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.entities.Cell;
+import de.uol.snakeinc.entities.Direction;
+import de.uol.snakeinc.entities.Player;
+import de.uol.snakeinc.entities.Tupel;
 import lombok.CustomLog;
 
 import java.util.HashSet;
@@ -87,7 +91,7 @@ public class OpponentMovesCalculation {
                 }
                 if (!abort) {
                     log.info("x" + x + "y" + y + "d " + depth);
-                    nextDepth(x, y + speed, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.pseudoPlayer));
+                    nextDepth(x, y + speed, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
                 }
             case DOWN:
                 for (int j = 1; j + 1 < speed; j++) {
@@ -101,7 +105,7 @@ public class OpponentMovesCalculation {
                 }
                 if (!abort) {
                     log.info("x" + x + "y" + y + "d " + depth);
-                    nextDepth(x, y - speed, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.pseudoPlayer));
+                    nextDepth(x, y - speed, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
                 }
             case RIGHT:
                 for (int j = 1; j + 1 < speed; j++) {
@@ -115,7 +119,7 @@ public class OpponentMovesCalculation {
                 }
                 if (!abort) {
                     log.info("x" + x + "y" + y + "d " + depth);
-                    nextDepth(x + speed, y, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.pseudoPlayer));
+                    nextDepth(x + speed, y, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
                 }
             case LEFT:
                 for (int j = 1; j < speed + 1; j++) {
@@ -129,7 +133,7 @@ public class OpponentMovesCalculation {
                 }
                 if (!abort) {
                     log.info("x" + x + "y" + y + "d " + depth);
-                    nextDepth(x - speed, y, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.pseudoPlayer));
+                    nextDepth(x - speed, y, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
                 }
         }
         }

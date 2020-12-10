@@ -1,5 +1,10 @@
-package de.uol.snakeinc.entities;
+package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
+import de.uol.snakeinc.entities.Action;
+import de.uol.snakeinc.entities.Cell;
+import de.uol.snakeinc.entities.Direction;
+import de.uol.snakeinc.entities.Player;
 import lombok.CustomLog;
 
 @CustomLog
