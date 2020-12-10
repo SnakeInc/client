@@ -59,9 +59,10 @@ public class SpeedWebSocketClient extends WebSocketClient {
             game.setUs(jsonObject.get("you").getAsInt());
             if (initialMessage) {
                 initialMessage = false;
-                game.informIntelligentBoard(EvaluationBoard.initParseFromJson(jsonObject, game.getPlayers(), game.getUs())); }
+                game.informIntelligentBoard(EvaluationBoard.initParseFromJson(jsonObject, game.getPlayers(), game.getUs()), getRawBoard(jsonObject));
+            }
             else
-            game.informIntelligentBoard();
+                game.informIntelligentBoard(getRawBoard(jsonObject));
             game.runAction(this);
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -106,5 +107,12 @@ public class SpeedWebSocketClient extends WebSocketClient {
 
         this.send(gson.toJson(json));
         log.info(gson.toJson(json));
+    }
+
+    private int[][] getRawBoard(JsonObject json) {
+        Gson gson = new Gson();
+
+        log.debug(json.get("cells").toString());
+        return gson.fromJson(json.get("cells").toString(), int[][].class);
     }
 }

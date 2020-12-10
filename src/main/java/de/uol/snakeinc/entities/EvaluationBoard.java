@@ -1,10 +1,9 @@
 package de.uol.snakeinc.entities;
 
+import com.google.gson.JsonObject;
 import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
 import de.uol.snakeinc.analyzingTools.MoveCalculation;
 import lombok.CustomLog;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -196,10 +195,10 @@ public class EvaluationBoard {
             count++;
         }
 
-        Gson gson = new Gson();
+        //Gson gson = new Gson();
 
-        log.debug(json.get("cells").toString());
-        int[][] cells = gson.fromJson(json.get("cells").toString(), int[][].class);
+        //log.debug(json.get("cells").toString());
+        //int[][] cells = gson.fromJson(json.get("cells").toString(), int[][].class);
 
         EvaluationBoard evaluationBoard = new EvaluationBoard(width, height, playersArray, us);
 

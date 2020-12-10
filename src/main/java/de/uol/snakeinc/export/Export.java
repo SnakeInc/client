@@ -3,7 +3,6 @@ package de.uol.snakeinc.export;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.uol.snakeinc.entities.EvaluationBoard;
 import de.uol.snakeinc.entities.Game;
 import de.uol.snakeinc.entities.Player;
 import lombok.CustomLog;
@@ -46,21 +45,21 @@ public class Export {
         objects.add("players", gson.toJsonTree(players));
 
         HashMap<Integer, Integer[][]> boards = new HashMap<Integer, Integer[][]>();
-        HashMap<Integer, EvaluationBoard> dataBoards = game.getBoards();
+        HashMap<Integer, int[][]> dataBoards = game.getBoards();
         for (Integer position : dataBoards.keySet()) {
-            EvaluationBoard evaluationBoard = dataBoards.get(position);
-            Integer[][] positions = new Integer[evaluationBoard.getHeight()][evaluationBoard.getWidth()];
-            for (int x = 0; x < evaluationBoard.getCells().length; x++) {
-                for (int z = 0; z < evaluationBoard.getCells()[x].length; z++) {
-                    positions[x][z] = Integer.valueOf(evaluationBoard.getCells()[x][z].getID());
+            int[][] evaluationBoard = dataBoards.get(position);
+            Integer[][] positions = new Integer[evaluationBoard.length][evaluationBoard[0].length];
+            for (int x = 0; x < evaluationBoard.length; x++) {
+                for (int z = 0; z < evaluationBoard[x].length; z++) {
+                    positions[x][z] = Integer.valueOf(evaluationBoard[x][z]);
                 }
             }
             boards.put(position, positions);
         }
         JsonObject mapObjects = new JsonObject();
         JsonElement jsonElement = gson.toJsonTree(boards);
-        mapObjects.addProperty("width", game.getEvaluationBoard().getWidth());
-        mapObjects.addProperty("height", game.getEvaluationBoard().getHeight());
+        mapObjects.addProperty("width", game.getBoards().get(1).length);
+        mapObjects.addProperty("height", game.getBoards().get(1)[0].length);
         mapObjects.add("boards", jsonElement);
         objects.add("map", mapObjects);
 

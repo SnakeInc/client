@@ -10,7 +10,7 @@ public class Game {
 
     private HashMap<Integer, Player> players;
     @Getter
-    private HashMap<Integer, EvaluationBoard> boards;
+    private HashMap<Integer, int[][]> boards;
     private EvaluationBoard EvaluationBoard;
     private Player us;
 
@@ -21,7 +21,7 @@ public class Game {
     public Game(String serverId) {
         this.gameId = serverId + "_" + generateGameId(System.currentTimeMillis());
         this.players = new HashMap<Integer, Player>();
-
+        this.boards = new HashMap<Integer, int[][]>();
     }
 
     public HashMap<Integer, Player> getPlayers() {
@@ -36,12 +36,16 @@ public class Game {
         this.us = this.players.get(id);
     }
 
-    public void informIntelligentBoard(EvaluationBoard evaluationBoard) {
+    public void informIntelligentBoard(EvaluationBoard evaluationBoard, int[][] rawBoard) {
         EvaluationBoard = evaluationBoard;
+        if (evaluationBoard != null) {
+            this.boards.put(round, rawBoard);
+        }
     }
 
-    public void informIntelligentBoard() {
+    public void informIntelligentBoard(int[][] rawBoard) {
         EvaluationBoard.update(players, us);
+        boards.put(round, rawBoard);
     }
 
     public EvaluationBoard getEvaluationBoard() {
@@ -62,7 +66,8 @@ public class Game {
     }
 
     public void makeExportReady() {
-        this.boards.put(round, this.EvaluationBoard);
+        //this.boards.put(round, this.EvaluationBoard.getCells().);
+        //TODO: This
     }
 
     public Player getUs() {
