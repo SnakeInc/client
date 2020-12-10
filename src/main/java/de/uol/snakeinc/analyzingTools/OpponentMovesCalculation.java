@@ -90,7 +90,6 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    log.info("x" + x + "y" + y + "d " + depth);
                     nextDepth(x, y - speed, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
                 }
             case DOWN:
@@ -104,7 +103,6 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    log.info("x" + x + "y" + y + "d " + depth);
                     nextDepth(x, y + speed, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
                 }
             case RIGHT:
@@ -118,7 +116,6 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    log.info("x" + x + "y" + y + "d " + depth);
                     nextDepth(x + speed, y, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
                 }
             case LEFT:
@@ -132,7 +129,6 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    log.info("x" + x + "y" + y + "d " + depth);
                     nextDepth(x - speed, y, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
                 }
         }

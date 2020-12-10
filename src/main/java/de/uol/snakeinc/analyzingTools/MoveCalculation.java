@@ -42,7 +42,7 @@ public class MoveCalculation {
     }
 
     private double calculateAction(Direction dir, int x, int y, int speed, int depth) {
-        if (depth ==6) {
+        if (depth == 6) {
             return 1;
         }
         double bestAction = 100;
