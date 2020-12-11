@@ -6,6 +6,7 @@ public class Cell {
 
     @Getter
     private double value;
+    private double pseudoValue;
 
     private double actionRisk;
 
@@ -19,6 +20,7 @@ public class Cell {
     public Cell() {
         value = 1;
         actionRisk = 1;
+        pseudoValue = 1;
     }
 
 
@@ -47,11 +49,11 @@ public class Cell {
     public void raiseActionRisk(int depth) {
         switch (depth) {
             case 1:
-                actionRisk = actionRisk * 5/4;
+                actionRisk = actionRisk * 1.25;
             case 2:
-                actionRisk = actionRisk * 17/16;
+                actionRisk = actionRisk * 1.0625;
             case 3:
-                actionRisk = actionRisk * 65/64;
+                actionRisk = actionRisk * 1.015625;
         }
     }
 
@@ -62,11 +64,18 @@ public class Cell {
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interinteraktion between players.
-        return getValue() * actionRisk;
+        return getValue() * actionRisk * pseudoValue;
+    }
+
+    public void clearPseudoValue() {
+        pseudoValue = 1;
+    }
+
+    public void setPseudoValue() {
+        pseudoValue = 10;
     }
 
     public void prepareNextPhase() {
-        actionRisk = 1;
+        this.actionRisk = 1;
     }
-
 }
