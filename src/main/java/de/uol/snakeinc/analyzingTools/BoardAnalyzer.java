@@ -3,10 +3,12 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Player;
 import de.uol.snakeinc.entities.Tupel;
+import lombok.CustomLog;
 import lombok.Getter;
 
 import java.util.Set;
 
+@CustomLog
 public class BoardAnalyzer {
 
     private Cell[][] cells;
@@ -45,6 +47,7 @@ public class BoardAnalyzer {
 
     public void prepareNextPhase() {
         if (evaluatedCells != null) {
+            log.info("Preparing Next Phase");
             for (Tupel tupel : evaluatedCells) {
                 cells[tupel.getX()][tupel.getY()].prepareNextPhase();
             }

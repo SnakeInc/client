@@ -47,30 +47,26 @@ public class OpponentMovesCalculation {
 
 
 
-    private Set<Tupel> nextDepth(int x, int y, Set<Tupel> evaluated, int depth, int speed, JumpCounter jumpCounter) {
+    private void nextDepth(int x, int y, Set<Tupel> evaluated, int depth, int speed, JumpCounter jumpCounter) {
 
-        if(depth == 3) {
-            return evaluated;
+        if(depth <= 3) {
+            //Recursive call
+            recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.UP, jumpCounter);
+            recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.DOWN, jumpCounter);
+            recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.LEFT, jumpCounter);
+            recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.RIGHT, jumpCounter);
         }
-        //Recursive call
-        recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.UP, jumpCounter);
-        recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.DOWN, jumpCounter);
-        recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.LEFT, jumpCounter);
-        recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.RIGHT, jumpCounter);
-        return evaluated;
     }
 
-    private Set<Tupel> nextDepthWithJumping(int x, int y, Set<Tupel> evaluated, int depth, int speed) {
+    private void nextDepthWithJumping(int x, int y, Set<Tupel> evaluated, int depth, int speed) {
 
-        if(depth == 3) {
-            return evaluated;
+        if(depth <= 3) {
+            //Recursive call
+            recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.UP);
+            recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.DOWN);
+            recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.LEFT);
+            recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.RIGHT);
         }
-        //Recursive call
-        recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.UP);
-        recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.DOWN);
-        recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.LEFT);
-        recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.RIGHT);
-        return evaluated;
     }
 
     private void recursiveRiskByDirection(int x, int y, Set<Tupel> evaluated, int depth, int speed, Direction dir, JumpCounter jumpCounter) {
