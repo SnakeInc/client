@@ -137,7 +137,7 @@ public class EvaluationBoard {
             case UP:
                 tmp = cells[x][y + speed];
                 for (int j = 0; j < speed; j++) {
-                    if (j == 1 || j == speed - 1) {
+                    if (j == 0 || j == speed - 1) {
                         tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
                         cells[x][y + speed - j - 1].setPrevCell(iD, tmp);
                         tmp = cells[x][y + speed - j - 1];
@@ -151,7 +151,7 @@ public class EvaluationBoard {
             case DOWN:
                 tmp = cells[x][y - speed];
                 for (int j = 0; j < speed; j++) {
-                    if (j == 1 || j == speed - 1) {
+                    if (j == 0 || j == speed - 1) {
 
                         tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
                         cells[x][y - speed + j + 1].setPrevCell(iD, tmp);
@@ -166,7 +166,7 @@ public class EvaluationBoard {
             case LEFT:
                 tmp = cells[x + speed][y];
                 for (int j = 0; j < speed; j++) {
-                    if (j == 1 || j == speed - 1) {
+                    if (j == 0 || j == speed - 1) {
                         tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
                         cells[x + speed - j - 1][y].setPrevCell(iD, tmp);
                         tmp = cells[x + speed - j - 1][y];
@@ -181,13 +181,14 @@ public class EvaluationBoard {
             case RIGHT:
                 tmp = cells[x - speed][y];
                 for (int j = 0; j < speed; j++) {
-                    if (j == 1 || j == speed - 1) {
-                        tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
-                        cells[x - speed + j + 1][y].setPrevHoleCell(iD, tmp);
-                        tmp = cells[x - speed + j + 1][y];
-                } else {
+                    if (j == 0 || j == speed - 1) {
                         tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
                         cells[x - speed + j + 1][y].setPrevCell(iD, tmp);
+                        tmp = cells[x - speed + j + 1][y];
+
+                } else {
+                        tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
+                        cells[x - speed + j + 1][y].setPrevHoleCell(iD, tmp);
                         tmp = cells[x - speed + j + 1][y];
                     }
                 }

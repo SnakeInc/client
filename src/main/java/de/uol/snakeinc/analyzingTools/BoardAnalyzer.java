@@ -24,9 +24,9 @@ public class BoardAnalyzer {
     }
 
     public void analyze () {
+        round++;
         OpponentMovesCalculation calc = new OpponentMovesCalculation(cells, players, us, this);
         evaluatedCells = calc.evaluate();
-        round++;
     }
 
     public static Boolean inDistance(Player player1, Player player2) {
