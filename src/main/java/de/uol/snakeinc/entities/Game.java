@@ -66,8 +66,14 @@ public class Game {
     }
 
     public void makeExportReady() {
-        //this.boards.put(round, this.EvaluationBoard.getCells().);
-        //TODO: This
+        var cells = this.EvaluationBoard.getCells();
+        var ids = new int[cells.length][cells[0].length];
+        for (int row = 0; row < cells.length; row++) {
+            for (int cell = 0; cell < cells[0].length; cell++) {
+                ids[row][cell] = cells[row][cell].getID();
+            }
+        }
+        this.boards.put(round, ids);
     }
 
     public Player getUs() {
