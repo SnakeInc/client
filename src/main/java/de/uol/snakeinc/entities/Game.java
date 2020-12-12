@@ -65,14 +65,7 @@ public class Game {
         round++;
     }
 
-    public void makeExportReady() {
-        var cells = this.EvaluationBoard.getCells();
-        var ids = new int[cells.length][cells[0].length];
-        for (int row = 0; row < cells.length; row++) {
-            for (int cell = 0; cell < cells[0].length; cell++) {
-                ids[row][cell] = cells[row][cell].getID();
-            }
-        }
+    public void makeExportReady(int[][] ids) {
         this.boards.put(round, ids);
     }
 

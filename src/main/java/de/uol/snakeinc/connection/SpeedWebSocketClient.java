@@ -74,11 +74,14 @@ public class SpeedWebSocketClient extends WebSocketClient {
     public void onClose(int code, String message, boolean remote) {
         log.info("Connection closed: " + message);
 
+        JsonElement jsonTree = JsonParser.parseString(message);
+        JsonObject jsonObject = jsonTree.getAsJsonObject();
+
         // Run Game-Logging
         if (this.game != null) {
             try {
                 log.info("Logging game");
-                this.game.makeExportReady();
+                this.game.makeExportReady(getRawBoard(jsonObject));
                 this.exportManager.generateExport(game);
             } catch (Exception exception) {
                 log.error("Error while logging the game");
