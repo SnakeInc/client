@@ -65,10 +65,6 @@ public class Game {
         round++;
     }
 
-    public void makeExportReady(int[][] ids) {
-        this.boards.put(round, ids);
-    }
-
     public Player getUs() {
         return this.us;
     }

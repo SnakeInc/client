@@ -60,9 +60,9 @@ public class SpeedWebSocketClient extends WebSocketClient {
             if (initialMessage) {
                 initialMessage = false;
                 game.informIntelligentBoard(EvaluationBoard.initParseFromJson(jsonObject, game.getPlayers(), game.getUs()), getRawBoard(jsonObject));
-            }
-            else
+            } else {
                 game.informIntelligentBoard(getRawBoard(jsonObject));
+            }
             game.runAction(this);
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -74,14 +74,10 @@ public class SpeedWebSocketClient extends WebSocketClient {
     public void onClose(int code, String message, boolean remote) {
         log.info("Connection closed: " + message);
 
-        JsonElement jsonTree = JsonParser.parseString(message);
-        JsonObject jsonObject = jsonTree.getAsJsonObject();
-
         // Run Game-Logging
         if (this.game != null) {
             try {
                 log.info("Logging game");
-                this.game.makeExportReady(getRawBoard(jsonObject));
                 this.exportManager.generateExport(game);
             } catch (Exception exception) {
                 log.error("Error while logging the game");

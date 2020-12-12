@@ -66,7 +66,9 @@ public class Export {
         String json = gson.toJson(objects);
 
         try {
-            File file = new File("logs", game.getGameId() + ".json");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = new Date();
+            File file = new File("logs/" + formatter.format(date), game.getGameId() + ".json");
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
                 file.createNewFile();
