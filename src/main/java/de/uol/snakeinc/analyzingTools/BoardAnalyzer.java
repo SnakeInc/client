@@ -14,25 +14,24 @@ public class BoardAnalyzer {
     private Cell[][] cells;
     private Player[] players;
     private Player us;
-    private Set<Tupel> evaluatedCells;
-    @Getter
-    private JumpCounter jumpCounter;
+    private Set<Cell> evaluatedCells;
+    private int round = 0;
 
     public BoardAnalyzer(Cell[][] cells, Player[] players, Player us) {
         this.cells = cells;
         this.players = players;
         this.us = us;
-        this.jumpCounter = new JumpCounter(players);
     }
 
     public void analyze () {
+        round++;
         OpponentMovesCalculation calc = new OpponentMovesCalculation(cells, players, us, this);
         evaluatedCells = calc.evaluate();
     }
 
     public static Boolean inDistance(Player player1, Player player2) {
         int distance;
-        distance = Math.abs(player1.getX()-player2.getX()+player1.getY() - player2.getY());
+        distance = Math.abs(player1.getX()-player2.getX()) + Math.abs(player1.getY() - player2.getY());
         if(distance > player1.getSpeed()*3 + player2.getSpeed()*3 || distance==0) {
             return false;
         } else {
@@ -41,16 +40,17 @@ public class BoardAnalyzer {
         }
     }
 
-    public boolean checkForJumping(Player player) {
-        return jumpCounter.check(player);
+    public boolean checkForJumping(int roundsInFuture) {
+        return round +roundsInFuture % 6 == 0;
     }
 
     public void prepareNextPhase() {
         if (evaluatedCells != null) {
-            log.info("Preparing Next Phase");
-            for (Tupel tupel : evaluatedCells) {
-                cells[tupel.getX()][tupel.getY()].prepareNextPhase();
+            log.info("Preparing Next Phase " + evaluatedCells.size());
+            for (Cell cell : evaluatedCells) {
+                cell.prepareNextPhase();
             }
+            evaluatedCells.clear();
         }
     }
 

@@ -44,7 +44,7 @@ public class Game {
     }
 
     public void informIntelligentBoard(int[][] rawBoard) {
-        EvaluationBoard.update(players, us);
+        EvaluationBoard.update(players, us, round);
         boards.put(round, rawBoard);
     }
 

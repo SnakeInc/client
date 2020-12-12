@@ -18,6 +18,8 @@ public class OpponentMovesCalculation {
     private BoardAnalyzer boardAnalyzer;
     private int width;
     private int height;
+    Set<Cell> evaluatedCells = new HashSet<>();
+
 
     public OpponentMovesCalculation(Cell[][] cells, Player[] players, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
@@ -28,18 +30,16 @@ public class OpponentMovesCalculation {
         this.boardAnalyzer = boardAnalyzer;
     }
 
-    public Set<Tupel> evaluate() {
+    public Set<Cell> evaluate() {
         int x;
         int y;
         int speed;
-        Set<Tupel> evaluatedCells = new HashSet<>();
-
         for (int i = 0; i < players.length; i++) {
             if (BoardAnalyzer.inDistance(us, players[i]) && players[i].isActive()) {
                 x = players[i].getX();
                 y = players[i].getY();
                 speed = players[i].getSpeed();
-                nextDepth(x, y, evaluatedCells, 1, speed, new JumpCounter(boardAnalyzer.getJumpCounter(), players[i]));
+                nextDepth(x, y, 1, speed);
             }
         }
         return evaluatedCells;
@@ -47,146 +47,166 @@ public class OpponentMovesCalculation {
 
 
 
-    private void nextDepth(int x, int y, Set<Tupel> evaluated, int depth, int speed, JumpCounter jumpCounter) {
-
-        if(depth <= 3) {
-            //Recursive call
-            recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.UP, jumpCounter);
-            recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.DOWN, jumpCounter);
-            recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.LEFT, jumpCounter);
-            recursiveRiskByDirection(x, y, evaluated, depth, speed, Direction.RIGHT, jumpCounter);
-        }
-    }
-
-    private void nextDepthWithJumping(int x, int y, Set<Tupel> evaluated, int depth, int speed) {
-
-        if(depth <= 3) {
-            //Recursive call
-            recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.UP);
-            recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.DOWN);
-            recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.LEFT);
-            recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, Direction.RIGHT);
-        }
-    }
-
-    private void recursiveRiskByDirection(int x, int y, Set<Tupel> evaluated, int depth, int speed, Direction dir, JumpCounter jumpCounter) {
-        boolean abort = false;
-        boolean jumping = jumpCounter.check();
-        if (jumping == true) {
-            //In jumping-scenario an other jump is not common.
-            recursiveRiskByDirectionWithJumping(x, y, evaluated, depth, speed, dir);
+    private void nextDepth(int x, int y, int depth, int speed) {
+        if (boardAnalyzer.checkForJumping(depth)) {
+            nextDepthWithJumping(x, y, depth, speed);
         } else {
+            if (depth <= 3) {
+                //Recursive call
+                recursiveRiskByDirection(x, y, depth, speed, Direction.UP);
+                recursiveRiskByDirection(x, y, depth, speed, Direction.DOWN);
+                recursiveRiskByDirection(x, y, depth, speed, Direction.LEFT);
+                recursiveRiskByDirection(x, y, depth, speed, Direction.RIGHT);
+            }
+        }
+    }
+
+    private void nextDepthWithJumping(int x, int y, int depth, int speed) {
+
+        if(depth <= 3) {
+            //Recursive call
+            recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.UP);
+            recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.DOWN);
+            recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.LEFT);
+            recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.RIGHT);
+        }
+    }
+
+    private void recursiveRiskByDirection(int x, int y, int depth, int speed, Direction dir) {
+        boolean abort = false;
         switch (dir) {
             case UP:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (y - j < 0 || y - j >= height|| cells[x][y - j].isDeadly()) {
+                    if (y - j < 0 || y - j >= height) {
+                        abort = true;
+                        break;
+                    } else if (cells[x][y - j].isDeadly()) {
                         abort = true;
                         break;
                     } else {
-                        evaluated.add(new Tupel(x, y - j));
+                        evaluatedCells.add(cells[x][y - j]);
                         cells[x][y - j].raiseActionRisk(depth);
                     }
                 }
                 if (!abort) {
-                    nextDepth(x, y - speed, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
+                    nextDepth(x, y - speed, depth + 1, speed);
                 }
             case DOWN:
-                for (int j = 1; j + 1 < speed; j++) {
-                    if (y + j < 0 || y + j >= height || cells[x][y + j].isDeadly()) {
+                for (int j = 1; j + 1 < speed + 1; j++) {
+                    if (y + j < 0 || y + j >= height) {
+                        abort = true;
+                        break;
+                    } else if (cells[x][y + j].isDeadly()) {
                         abort = true;
                         break;
                     } else {
-                        evaluated.add(new Tupel(x, y + j));
+                        evaluatedCells.add(cells[x][y + j]);
                         cells[x][y + j].raiseActionRisk(depth);
                     }
                 }
                 if (!abort) {
-                    nextDepth(x, y + speed, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
+                    nextDepth(x, y + speed, depth + 1, speed);
                 }
             case RIGHT:
-                for (int j = 1; j + 1 < speed; j++) {
-                    if (x + j < 0 || x+j >= width|| cells[x + j][y].isDeadly()) {
+                for (int j = 1; j + 1 < speed + 1; j++) {
+                    if (x + j < 0 || x + j >= width) {
+                        abort = true;
+                        break;
+                    } else if (cells[x + j][y].isDeadly()) {
                         abort = true;
                         break;
                     } else {
-                        evaluated.add(new Tupel(x + j, y));
+                        evaluatedCells.add(cells[x + j][y]);
                         cells[x + j][y].raiseActionRisk(depth);
                     }
                 }
                 if (!abort) {
-                    nextDepth(x + speed, y, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
+                    nextDepth(x + speed, y, depth + 1, speed);
                 }
             case LEFT:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (x - j < 0 || x - j >= width || cells[x - j][y].isDeadly()) {
+                    if (x - j < 0 || x - j >= width) {
+                        abort = true;
+                        break;
+                    } else if (cells[x - j][y].isDeadly()) {
                         abort = true;
                         break;
                     } else {
-                        evaluated.add(new Tupel(x - j, y));
+                        evaluatedCells.add(cells[x - j][y]);
                         cells[x - j][y].raiseActionRisk(depth);
                     }
                 }
                 if (!abort) {
-                    nextDepth(x - speed, y, evaluated, depth + 1, speed, new JumpCounter(jumpCounter, jumpCounter.getPseudoPlayer()));
+                    nextDepth(x - speed, y, depth + 1, speed);
                 }
         }
-        }
     }
-    private void recursiveRiskByDirectionWithJumping(int x, int y, Set<Tupel> evaluated, int depth, int speed, Direction dir) {
-        //TODO: Implement Jumping Logic
+    private void recursiveRiskByDirectionWithJumping(int x, int y, int depth, int speed, Direction dir) {
         boolean abort = false;
             switch (dir) {
                 case UP:
                     for (int j = 1; j < speed + 1; j++) {
-                        if (y - j < 0 || y - j >= height || cells[x][y - j].isDeadly()) {
+                        if (y - j < 0 || y - j >= height) {
                             abort = true;
                             break;
-                        } else {
-                            evaluated.add(new Tupel(x, y - j));
+                        } else if (cells[x][y - j].isDeadly()) {
+                            abort = true;
+                            break;
+                        } else if (j == 1 || j == speed) {
+                            evaluatedCells.add(cells[x][y - j]);
                             cells[x][y - j].raiseActionRisk(depth);
                         }
                     }
                     if (!abort) {
-                        nextDepthWithJumping(x, y - speed, evaluated, depth + 1, speed);
+                        nextDepth(x, y - speed, depth + 1, speed);
                     }
                 case DOWN:
-                    for (int j = 1; j + 1 < speed; j++) {
-                        if (y + j < 0 || y + j >= height|| cells[x][y + j].isDeadly()) {
+                    for (int j = 1; j + 1 < speed + 1; j++) {
+                        if (y + j < 0 || y + j >= height) {
                             abort = true;
                             break;
-                        } else {
-                            evaluated.add(new Tupel(x, y + j));
+                        } else if (cells[x][y + j].isDeadly()) {
+                            abort = true;
+                            break;
+                        } else if (j == 1 || j == speed) {
+                            evaluatedCells.add(cells[x][y + j]);
                             cells[x][y + j].raiseActionRisk(depth);
                         }
                     }
                     if (!abort) {
-                        nextDepthWithJumping(x, y + speed, evaluated, depth + 1, speed);
+                        nextDepth(x, y + speed, depth + 1, speed);
                     }
                 case RIGHT:
-                    for (int j = 1; j + 1 < speed; j++) {
-                        if (x + j < 0 || x + j >= width|| cells[x + j][y].isDeadly()) {
+                    for (int j = 1; j + 1 < speed + 1; j++) {
+                        if (x + j < 0 || x + j >= width) {
                             abort = true;
                             break;
-                        } else {
-                            evaluated.add(new Tupel(x + j, y));
+                        } else if (cells[x + j][y].isDeadly()) {
+                            abort = true;
+                            break;
+                        } else if (j == 1 || j == speed) {
+                            evaluatedCells.add(cells[x + j][y]);
                             cells[x + j][y].raiseActionRisk(depth);
                         }
                     }
                     if (!abort) {
-                        nextDepthWithJumping(x + speed, y, evaluated, depth + 1, speed);
+                        nextDepth(x + speed, y, depth + 1, speed);
                     }
                 case LEFT:
                     for (int j = 1; j < speed + 1; j++) {
-                        if (x - j < 0 || x - j >= width || cells[x - j][y].isDeadly()) {
+                        if (x - j < 0 || x - j >= width) {
                             abort = true;
                             break;
-                        } else {
-                            evaluated.add(new Tupel(x - j, y));
+                        } else if (cells[x - j][y].isDeadly()) {
+                            abort = true;
+                            break;
+                        } else if (j == 1 || j == speed) {
+                            evaluatedCells.add(cells[x - j][y]);
                             cells[x - j][y].raiseActionRisk(depth);
                         }
                     }
                     if (!abort) {
-                        nextDepthWithJumping(x - speed, y, evaluated, depth + 1, speed);
+                        nextDepth(x - speed, y, depth + 1, speed);
                     }
             }
         }

@@ -2,11 +2,10 @@ package de.uol.snakeinc.entities;
 
 public enum Action {
 
-    CHANGE_NOTHING,
     TURN_LEFT,
+    CHANGE_NOTHING,
     TURN_RIGHT,
+    SPEED_UP,
     SLOW_DOWN,
-    SPEED_UP
-
 
 }

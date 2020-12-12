@@ -18,6 +18,8 @@ public class EvaluationBoard {
     private int height;
     @Getter
     private Player us;
+    @Getter
+    private int round;
 
     private BoardAnalyzer boardAnalyzer;
 
@@ -29,12 +31,13 @@ public class EvaluationBoard {
 
     private Player players[];
 
-    public EvaluationBoard(int width, int height, Player[] players, Player us) {
+    public EvaluationBoard(int width, int height, Player[] players, Player us, int round) {
         log.info("Initializing Board!");
         this.width = width;
         this.height = height;
         this.players = players;
         this.us = us;
+        this.round = round;
 
         cells = new Cell[width][height];
         for (int i = 0; i < width; i++) {
@@ -52,9 +55,10 @@ public class EvaluationBoard {
         boardAnalyzer = new BoardAnalyzer(cells, players, us);
     }
 
-    public void update(HashMap<Integer, Player> playerHashMap, Player us) {
+    public void update(HashMap<Integer, Player> playerHashMap, Player us, int round) {
         log.info("Updating the evaluationBoard!");
         this.us = us;
+        this.round = round;
         Player[] playersArray = new Player[playerHashMap.size()];
         int count = 0;
         for (Integer position : playerHashMap.keySet()) {
@@ -63,13 +67,17 @@ public class EvaluationBoard {
             count++;}
         }
         players = playersArray;
+        int iD;
+        int x;
+        int y;
+        int speed;
         for (int i=0; i < count; i++) {
-            int iD = players[i].getId();
-            int x = players[i].getX();
-            int y = players[i].getY();
-            int speed = players[i].getSpeed();
+            iD = players[i].getId();
+            x = players[i].getX();
+            y = players[i].getY();
+            speed = players[i].getSpeed();
             Cell tmp;
-            if (boardAnalyzer.checkForJumping(players[i])) {
+            if (round % 6 == 0 && speed >= 3) {
                 updateJumpingPlayer(players[i]);
             } else {
                 switch (players[i].getDirection()) {
@@ -129,37 +137,60 @@ public class EvaluationBoard {
             case UP:
                 tmp = cells[x][y + speed];
                 for (int j = 0; j < speed; j++) {
-                    if (j < 2) {
+                    if (j == 0 || j == speed - 1) {
+                        tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
+                        cells[x][y + speed - j - 1].setPrevCell(iD, tmp);
+                        tmp = cells[x][y + speed - j - 1];
+                    } else {
                         tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
                         cells[x][y + speed - j - 1].setPrevHoleCell(iD, tmp);
                         tmp = cells[x][y + speed - j - 1];
-                    } else {
-
                     }
                 }
                 break;
             case DOWN:
                 tmp = cells[x][y - speed];
                 for (int j = 0; j < speed; j++) {
-                    tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
-                    cells[x][y - speed + j + 1].setPrevHoleCell(iD, tmp);
-                    tmp = cells[x][y - speed + j + 1];
+                    if (j == 0 || j == speed - 1) {
+
+                        tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
+                        cells[x][y - speed + j + 1].setPrevCell(iD, tmp);
+                        tmp = cells[x][y - speed + j + 1];
+                    } else {
+                        tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
+                        cells[x][y - speed + j + 1].setPrevHoleCell(iD, tmp);
+                        tmp = cells[x][y - speed + j + 1];
+                    }
                 }
                 break;
             case LEFT:
                 tmp = cells[x + speed][y];
                 for (int j = 0; j < speed; j++) {
-                    tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
-                    cells[x + speed - j - 1][y].setPrevHoleCell(iD, tmp);
-                    tmp = cells[x + speed - j - 1][y];
+                    if (j == 0 || j == speed - 1) {
+                        tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
+                        cells[x + speed - j - 1][y].setPrevCell(iD, tmp);
+                        tmp = cells[x + speed - j - 1][y];
+                    } else {
+                        tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
+                        cells[x + speed - j - 1][y].setPrevHoleCell(iD, tmp);
+                        tmp = cells[x + speed - j - 1][y];
+
+                    }
                 }
                 break;
             case RIGHT:
                 tmp = cells[x - speed][y];
                 for (int j = 0; j < speed; j++) {
-                    tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
-                    cells[x - speed + j + 1][y].setPrevHoleCell(iD, tmp);
-                    tmp = cells[x - speed + j + 1][y];
+                    if (j == 0 || j == speed - 1) {
+                        tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
+                        cells[x - speed + j + 1][y].setPrevCell(iD, tmp);
+                        tmp = cells[x - speed + j + 1][y];
+
+                } else {
+                        tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
+                        cells[x - speed + j + 1][y].setPrevHoleCell(iD, tmp);
+                        tmp = cells[x - speed + j + 1][y];
+                    }
                 }
                 break;
         }
@@ -175,6 +206,7 @@ public class EvaluationBoard {
     }
 
     public Action startingStrategy() {
+        //TODO: Implement this.
         return Action.CHANGE_NOTHING;
     }
 
@@ -200,7 +232,7 @@ public class EvaluationBoard {
         //log.debug(json.get("cells").toString());
         //int[][] cells = gson.fromJson(json.get("cells").toString(), int[][].class);
 
-        EvaluationBoard evaluationBoard = new EvaluationBoard(width, height, playersArray, us);
+        EvaluationBoard evaluationBoard = new EvaluationBoard(width, height, playersArray, us, 0);
 
         return evaluationBoard;
     }
