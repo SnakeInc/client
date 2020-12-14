@@ -34,11 +34,12 @@ public class OpponentMovesCalculation {
         int x;
         int y;
         int speed;
-        for (int i = 0; i < players.length; i++) {
-            if (BoardAnalyzer.inDistance(us, players[i]) && players[i].isActive()) {
-                x = players[i].getX();
-                y = players[i].getY();
-                speed = players[i].getSpeed();
+        for (Player player : players) {
+            if (BoardAnalyzer.inDistance(us, player) && player.isActive()) {
+                log.info("Computing Opponent MOves.");
+                x = player.getX();
+                y = player.getY();
+                speed = player.getSpeed();
                 nextDepth(x, y, 1, speed);
             }
         }

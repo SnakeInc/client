@@ -9,6 +9,11 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * The main class to handle the evaluated cells.
+ * Uses the boardAnalyzer to delegate the valuation of the cells. (f.e. OpponentMovesCalculation and Heuristics)
+ * Calls the MoveCalculation to return the bestAction.
+ */
 @CustomLog
 public class EvaluationBoard {
 
@@ -23,7 +28,6 @@ public class EvaluationBoard {
 
     private BoardAnalyzer boardAnalyzer;
 
-    private Set<Tupel> neighbourCells;
 
 
     @Getter
@@ -55,6 +59,12 @@ public class EvaluationBoard {
         boardAnalyzer = new BoardAnalyzer(cells, players, us);
     }
 
+    /**
+     * Updates the variables and the chosen moves of all players.
+     * @param playerHashMap updated players
+     * @param us us
+     * @param round actual round
+     */
     public void update(HashMap<Integer, Player> playerHashMap, Player us, int round) {
         log.info("Updating the evaluationBoard!");
         this.us = us;
@@ -77,9 +87,12 @@ public class EvaluationBoard {
             y = players[i].getY();
             speed = players[i].getSpeed();
             Cell tmp;
+
+            //Checking for jumping
             if (round % 6 == 0 && speed >= 3) {
                 updateJumpingPlayer(players[i]);
             } else {
+                //Updating Cells without jumping. Implements an iteration-logic vor snakes
                 switch (players[i].getDirection()) {
                     case UP:
                         tmp = cells[x][y + speed];
@@ -127,6 +140,10 @@ public class EvaluationBoard {
         System.out.println(log);
     }
 
+    /**
+     * Updating Cells in jump-cases.
+     * @param player the jumping player
+     */
     private void updateJumpingPlayer (Player player){
         Cell tmp;
         int x = player.getX();
@@ -196,6 +213,9 @@ public class EvaluationBoard {
         }
     }
 
+    /**
+     * Called after an action was chosen.
+     */
     public void prepareNextPhase() {
         boardAnalyzer.prepareNextPhase();
     }

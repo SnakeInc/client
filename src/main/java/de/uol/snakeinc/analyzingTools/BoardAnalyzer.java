@@ -8,6 +8,9 @@ import lombok.Getter;
 
 import java.util.Set;
 
+/**
+ * Class that analyzes board configurations.
+ */
 @CustomLog
 public class BoardAnalyzer {
 
@@ -29,6 +32,12 @@ public class BoardAnalyzer {
         evaluatedCells = calc.evaluate();
     }
 
+    /**
+     * Checks if players are in a defined reachable distance.
+     * @param player1 player 1
+     * @param player2 player 2
+     * @return True - inDistance
+     */
     public static Boolean inDistance(Player player1, Player player2) {
         int distance;
         distance = Math.abs(player1.getX()-player2.getX()) + Math.abs(player1.getY() - player2.getY());
@@ -40,10 +49,18 @@ public class BoardAnalyzer {
         }
     }
 
+    /**
+     * simple method to check if this is a jumping round.
+     * @param roundsInFuture
+     * @return
+     */
     public boolean checkForJumping(int roundsInFuture) {
         return round +roundsInFuture % 6 == 0;
     }
 
+    /**
+     * Prepares the cells for the next phase (f.e. deleting old values)
+     */
     public void prepareNextPhase() {
         if (evaluatedCells != null) {
             log.info("Preparing Next Phase " + evaluatedCells.size());
