@@ -34,7 +34,7 @@ public class SpeedWebSocketClient extends WebSocketClient {
     public SpeedWebSocketClient(ConnectionThread thread, URI url, ExportManager exportManager) {
         super(url);
         this.thread = thread;
-        this.serverId = DigestUtils.md5Hex(url.getHost().toString()).substring(0, 4);
+        this.serverId = DigestUtils.md5Hex(url.getHost()).substring(0, 4);
 
         this.exportManager = exportManager;
     }

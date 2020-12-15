@@ -9,7 +9,7 @@ public class ExportManager {
      * @param game game to export
      */
     public void generateExport(Game game) {
-        Export export = new Export(this, game);
+        Export export = new Export(game);
         export.generateFile();
     }
 

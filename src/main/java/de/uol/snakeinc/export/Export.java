@@ -18,11 +18,9 @@ import java.util.HashMap;
 @CustomLog
 public class Export {
 
-    private ExportManager manager;
     private Game game;
 
-    public Export(ExportManager manager, Game game) {
-        this.manager = manager;
+    public Export(Game game) {
         this.game = game;
     }
 

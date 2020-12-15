@@ -29,15 +29,18 @@ public class Cell {
         value = 10;
     }
 
+    //??? Why id?
     public void setNextCell(int id, Cell nextCell) {
         this.nextCell = nextCell;
     }
 
+    //??? Why id?
     public void setPrevCell(int id, Cell prevCell) {
         value = 10;
         this.prevCell = prevCell;
     }
 
+    //??? Why id?
     public void setPrevHoleCell(int id, Cell prevCell) {
         this.prevCell = prevCell;
     }

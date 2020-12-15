@@ -1,6 +1,5 @@
 package de.uol.snakeinc.analyzingTools;
 
-import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
 import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
@@ -37,7 +36,7 @@ public class MoveCalculation {
             for (Cell cell : pseudoEvaluatedCells) {
                 cell.clearPseudoValue();
             }
-            System.out.println("Actioneval.: " + act + "with: " + tmp);
+            System.out.println("Action eval.: " + act + "with: " + tmp);
             if (tmp < bestActionTmp) {
                 bestActionTmp = tmp;
                 bestAction = act;
@@ -52,7 +51,7 @@ public class MoveCalculation {
             return 1;
         }
         double bestAction = 100;
-        double tmp = 100;
+        double tmp;
         for (Action act : Action.values()) {
             HashSet<Cell> pseudoEvaluatedCellsNextDepth = new HashSet<>();
             tmp = calculate(act, dir, x, y, speed, depth, pseudoEvaluatedCellsNextDepth);
@@ -121,7 +120,7 @@ public class MoveCalculation {
                         cells[x - 1][y].setPseudoValue();
                         pseudEvaluatedCells.add(cells[x - 1][y]);
 
-                        if (x - speed < 0 || x - speed >= width || y < 0 || y >= height) {
+                        if (x - speed < 0 || x - speed >= width || y < 0 /* todo: is always false remove?*/ || y >= height) {
                             return 10 * (6 - depth);
                         } else if (cells[x - speed][y].isDeadly()) {
                             return 10 * (6 - depth);

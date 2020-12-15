@@ -3,7 +3,6 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
-import de.uol.snakeinc.entities.Tupel;
 import lombok.CustomLog;
 
 import java.util.HashSet;
@@ -36,7 +35,7 @@ public class OpponentMovesCalculation {
         int speed;
         for (Player player : players) {
             if (BoardAnalyzer.inDistance(us, player) && player.isActive()) {
-                log.info("Computing Opponent MOves.");
+                log.info("Computing Opponent Moves.");
                 x = player.getX();
                 y = player.getY();
                 speed = player.getSpeed();

@@ -1,16 +1,13 @@
 package de.uol.snakeinc.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-public class Tupel {
+@AllArgsConstructor
+public class Tuple {
 
     @Getter
     private final int x;
     @Getter
     private final int y;
-
-    public Tupel(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
 }

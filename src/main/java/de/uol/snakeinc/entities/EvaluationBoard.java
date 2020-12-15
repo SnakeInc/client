@@ -7,7 +7,6 @@ import lombok.CustomLog;
 import lombok.Getter;
 
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * The main class to handle the evaluated cells.
@@ -31,9 +30,9 @@ public class EvaluationBoard {
 
 
     @Getter
-    private Cell cells[][];
+    private Cell[][] cells;
 
-    private Player players[];
+    private Player[] players;
 
     public EvaluationBoard(int width, int height, Player[] players, Player us, int round) {
         log.info("Initializing Board!");
@@ -130,14 +129,14 @@ public class EvaluationBoard {
             }
         }
         boardAnalyzer.analyze();
-        String log = "";
+        StringBuilder log = new StringBuilder();
         for (int i = 0; i< cells.length; i++) {
             for (int j=0; j< cells[1].length; j++) {
-                log = log + cells[i][j].getRisks() + " ";
+                log.append(cells[i][j].getRisks()).append(" ");
             }
-            log = log + "\n";
+            log.append("\n");
         }
-        System.out.println(log);
+        System.out.println(log.toString());
     }
 
     /**
@@ -252,8 +251,6 @@ public class EvaluationBoard {
         //log.debug(json.get("cells").toString());
         //int[][] cells = gson.fromJson(json.get("cells").toString(), int[][].class);
 
-        EvaluationBoard evaluationBoard = new EvaluationBoard(width, height, playersArray, us, 0);
-
-        return evaluationBoard;
+        return new EvaluationBoard(width, height, playersArray, us, 0);
     }
 }

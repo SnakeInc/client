@@ -61,7 +61,7 @@ public class ConnectionThread extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            while (webSocket.isOpen() || this.callback == false) {
+            while (webSocket.isOpen() || !this.callback) {
             }
         }
     }
