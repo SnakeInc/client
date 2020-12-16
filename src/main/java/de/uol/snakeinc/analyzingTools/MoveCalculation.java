@@ -74,7 +74,7 @@ public class MoveCalculation {
         speed = dirSpeedDepth.speed;
 
         if (speed < 1 || speed > 10) {
-            return 10 * (6 - depth);
+            return deathValue(depth);
         } else {
             return calculateDirection(dir, x, y, speed, depth, pseudoEvaluatedCells);
         }
@@ -139,19 +139,19 @@ public class MoveCalculation {
                 //Jumping-Cases
                 if (boardAnalyzer.checkForJumping(depth)) {
                     if (offBoardOrDeadly(x - 1, y)) {
-                        return 10 * (6 - depth);
+                        return deathValue(depth);
                     }
                     result = evaluateResult(pseudEvaluatedCells, result, x - 1, y);
 
                     if (offBoardOrDeadly(x - speed, y)) {
-                        return 10 * (6 - depth);
+                        return deathValue(depth);
                     }
                     result = evaluateResult(pseudEvaluatedCells, result, x - speed, y);
 
                 } else { //Normal Cases
                     for (int i = 1; i < speed + 1; i++) {
                         if (offBoardOrDeadly(x - i, y)) {
-                            return 10 * (6 - depth);
+                            return deathValue(depth);
                         }
                         result = evaluateResult(pseudEvaluatedCells, result, x - i, y);
                     }
@@ -162,19 +162,19 @@ public class MoveCalculation {
                     //Jumping-Cases
                     if (boardAnalyzer.checkForJumping(depth)) {
                         if (offBoardOrDeadly(x + 1, y)) {
-                            return 10 * (6 - depth);
+                            return deathValue(depth);
                         }
                         result = evaluateResult(pseudEvaluatedCells, result, x + 1, y);
 
                         if (offBoardOrDeadly(x + speed, y)) {
-                            return 10 * (6 - depth);
+                            return deathValue(depth);
                         }
                         result = evaluateResult(pseudEvaluatedCells, result, x + speed, y);
 
                     } else { //Normal Cases
                         for (int i = 1; i < speed + 1; i++) {
                             if (offBoardOrDeadly(x + i, y)) {
-                                return 10 * (6 - depth);
+                                return deathValue(depth);
                             }
                             result = evaluateResult(pseudEvaluatedCells, result, x + i, y);
 
@@ -186,19 +186,19 @@ public class MoveCalculation {
                     //Jumping-Cases
                     if (boardAnalyzer.checkForJumping(depth)) {
                         if (offBoardOrDeadly(x, y + 1)) {
-                            return 10 * (6 - depth);
+                            return deathValue(depth);
                         }
                         result = evaluateResult(pseudEvaluatedCells, result, x, y + 1);
 
                         if (offBoardOrDeadly(x, y + speed)) {
-                            return 10 * (6 - depth);
+                            return deathValue(depth);
                         }
                         result = evaluateResult(pseudEvaluatedCells, result, x, y + speed);
 
                     } else { //Normal Cases
                         for (int i = 1; i < speed + 1; i++) {
                             if (offBoardOrDeadly(x, y + i)) {
-                                return 10 * (6 - depth);
+                                return deathValue(depth);
                             }
                             result = evaluateResult(pseudEvaluatedCells, result, x, y + i);
                         }
@@ -209,19 +209,19 @@ public class MoveCalculation {
                     //Jumping-Cases
                     if (boardAnalyzer.checkForJumping(depth)) {
                         if (offBoardOrDeadly(x, y - 1)) {
-                            return 10 * (6 - depth);
+                            return deathValue(depth);
                         }
                         result = evaluateResult(pseudEvaluatedCells, result, x, y - 1);
 
                         if (offBoardOrDeadly(x, y - speed)) {
-                            return 10 * (6 - depth);
+                            return deathValue(depth);
                         }
                         result = evaluateResult(pseudEvaluatedCells, result, x, y - speed);
 
                     } else { //Normal Cases
                         for (int i = 1; i < speed + 1; i++) {
                             if (offBoardOrDeadly(x, y - i)) {
-                                return 10 * (6 - depth);
+                                return deathValue(depth);
                             }
                             result = evaluateResult(pseudEvaluatedCells, result, x, y + i);
                         }
@@ -229,6 +229,10 @@ public class MoveCalculation {
                     return result * calculateAction(Direction.UP, x, y - speed, speed, depth + 1, pseudEvaluatedCells);
         }
         return result;
+    }
+
+    private double deathValue(int depth) {
+        return 10 * (6 - depth);
     }
 
     public boolean offBoardOrDeadly(int x, int y) {
