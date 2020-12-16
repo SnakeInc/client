@@ -24,7 +24,10 @@ public class BoardAnalyzer {
         this.us = us;
     }
 
-    public void analyze () {
+    /**
+     * TODO JAVADOC.
+     */
+    public void analyze() {
         round++;
         OpponentMovesCalculation calc = new OpponentMovesCalculation(cells, players, us, this);
         evaluatedCells = calc.evaluate();
@@ -45,11 +48,11 @@ public class BoardAnalyzer {
 
     /**
      * simple method to check if this is a jumping round.
-     * @param roundsInFuture
-     * @return
+     * @param roundsInFuture Todo this
+     * @return Todo this
      */
     public boolean checkForJumping(int roundsInFuture) {
-        return round +roundsInFuture % 6 == 0;
+        return round + roundsInFuture % 6 == 0;
     }
 
     /**

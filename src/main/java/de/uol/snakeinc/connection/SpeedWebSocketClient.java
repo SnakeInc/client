@@ -59,7 +59,8 @@ public class SpeedWebSocketClient extends WebSocketClient {
             game.setUs(jsonObject.get("you").getAsInt());
             if (initialMessage) {
                 initialMessage = false;
-                game.informIntelligentBoard(EvaluationBoard.initParseFromJson(jsonObject, game.getPlayers(), game.getUs()), getRawBoard(jsonObject));
+                game.informIntelligentBoard(EvaluationBoard
+                    .initParseFromJson(jsonObject, game.getPlayers(), game.getUs()), getRawBoard(jsonObject));
             } else {
                 game.informIntelligentBoard(getRawBoard(jsonObject));
             }

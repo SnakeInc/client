@@ -71,16 +71,17 @@ public class EvaluationBoard {
         Player[] playersArray = new Player[playerHashMap.size()];
         int count = 0;
         for (Integer position : playerHashMap.keySet()) {
-            if(playerHashMap.get(position).isActive()) {
-            playersArray[count] = playerHashMap.get(position);
-            count++;}
+            if (playerHashMap.get(position).isActive()) {
+                playersArray[count] = playerHashMap.get(position);
+                count++;
+            }
         }
         players = playersArray;
         int iD;
         int x;
         int y;
         int speed;
-        for (int i=0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             iD = players[i].getId();
             x = players[i].getX();
             y = players[i].getY();
@@ -129,21 +130,22 @@ public class EvaluationBoard {
             }
         }
         boardAnalyzer.analyze();
-        StringBuilder log = new StringBuilder();
-        for (int i = 0; i< cells.length; i++) {
-            for (int j=0; j< cells[1].length; j++) {
-                log.append(cells[i][j].getRisks()).append(" ");
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[1].length; j++) {
+                str.append(cells[i][j].getRisks()).append(" ");
             }
-            log.append("\n");
+            str.append("\n");
         }
-        System.out.println(log.toString());
+
+        log.debug(str.toString());
     }
 
     /**
      * Updating Cells in jump-cases.
      * @param player the jumping player
      */
-    private void updateJumpingPlayer (Player player){
+    private void updateJumpingPlayer(Player player) {
         Cell tmp;
         int x = player.getX();
         int y = player.getY();
@@ -202,7 +204,7 @@ public class EvaluationBoard {
                         cells[x - speed + j + 1][y].setPrevCell(iD, tmp);
                         tmp = cells[x - speed + j + 1][y];
 
-                } else {
+                    } else {
                         tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
                         cells[x - speed + j + 1][y].setPrevHoleCell(iD, tmp);
                         tmp = cells[x - speed + j + 1][y];
@@ -224,6 +226,10 @@ public class EvaluationBoard {
         return moveCalculation.calculateBestAction();
     }
 
+    /**
+     * Todo javadoc.
+     * @return todo this
+     */
     public Action startingStrategy() {
         //TODO: Implement this.
         return Action.CHANGE_NOTHING;
@@ -231,8 +237,9 @@ public class EvaluationBoard {
 
     /**
      * Parse board based on json-format.
-     * @param json json from websocket
+     * @param json    json from websocket
      * @param players parsed players
+     * @param us      // todo this
      * @return parsed board
      */
     public static EvaluationBoard initParseFromJson(JsonObject json, HashMap<Integer, Player> players, Player us) {
