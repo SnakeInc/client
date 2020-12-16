@@ -97,33 +97,25 @@ public class EvaluationBoard {
                     case UP:
                         tmp = cells[x][y + speed];
                         for (int j = 0; j < speed; j++) {
-                            tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
-                            cells[x][y + speed - j - 1].setPrevCell(iD, tmp);
-                            tmp = cells[x][y + speed - j - 1];
+                            tmp = tmpSetCell(iD, tmp, cells[x][y + speed - j - 1]);
                         }
                         break;
                     case DOWN:
                         tmp = cells[x][y - speed];
                         for (int j = 0; j < speed; j++) {
-                            tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
-                            cells[x][y - speed + j + 1].setPrevCell(iD, tmp);
-                            tmp = cells[x][y - speed + j + 1];
+                            tmp = tmpSetCell(iD, tmp, cells[x][y - speed + j + 1]);
                         }
                         break;
                     case LEFT:
                         tmp = cells[x + speed][y];
                         for (int j = 0; j < speed; j++) {
-                            tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
-                            cells[x + speed - j - 1][y].setPrevCell(iD, tmp);
-                            tmp = cells[x + speed - j - 1][y];
+                            tmp = tmpSetCell(iD, tmp, cells[x + speed - j - 1][y]);
                         }
                         break;
                     case RIGHT:
                         tmp = cells[x - speed][y];
                         for (int j = 0; j < speed; j++) {
-                            tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
-                            cells[x - speed + j + 1][y].setPrevCell(iD, tmp);
-                            tmp = cells[x - speed + j + 1][y];
+                            tmp = tmpSetCell(iD, tmp, cells[x - speed + j + 1][y]);
                         }
                         break;
                 }
@@ -141,6 +133,18 @@ public class EvaluationBoard {
         log.debug(str.toString());
     }
 
+    private Cell tmpSetCell(int iD, Cell tmp, Cell nextCell) {
+        tmp.setNextCell(iD, nextCell);
+        nextCell.setPrevCell(iD, tmp);
+        return nextCell;
+    }
+
+    private Cell tmpSetPrevHoleCell(Cell tmp, Cell cell, int iD) {
+        tmp.setNextCell(iD, cell);
+        cell.setPrevHoleCell(iD, tmp);
+        return cell;
+    }
+
     /**
      * Updating Cells in jump-cases.
      * @param player the jumping player
@@ -156,13 +160,9 @@ public class EvaluationBoard {
                 tmp = cells[x][y + speed];
                 for (int j = 0; j < speed; j++) {
                     if (j == 0 || j == speed - 1) {
-                        tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
-                        cells[x][y + speed - j - 1].setPrevCell(iD, tmp);
-                        tmp = cells[x][y + speed - j - 1];
+                        tmp = tmpSetCell(iD, tmp, cells[x][y + speed - j - 1]);
                     } else {
-                        tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
-                        cells[x][y + speed - j - 1].setPrevHoleCell(iD, tmp);
-                        tmp = cells[x][y + speed - j - 1];
+                        tmp = tmpSetPrevHoleCell(tmp, cells[x][y + speed - j - 1], iD);
                     }
                 }
                 break;
@@ -170,14 +170,9 @@ public class EvaluationBoard {
                 tmp = cells[x][y - speed];
                 for (int j = 0; j < speed; j++) {
                     if (j == 0 || j == speed - 1) {
-
-                        tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
-                        cells[x][y - speed + j + 1].setPrevCell(iD, tmp);
-                        tmp = cells[x][y - speed + j + 1];
+                        tmp = tmpSetCell(iD, tmp, cells[x][y - speed + j + 1]);
                     } else {
-                        tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
-                        cells[x][y - speed + j + 1].setPrevHoleCell(iD, tmp);
-                        tmp = cells[x][y - speed + j + 1];
+                        tmp = tmpSetPrevHoleCell(tmp, cells[x][y - speed + j + 1], iD);
                     }
                 }
                 break;
@@ -185,14 +180,9 @@ public class EvaluationBoard {
                 tmp = cells[x + speed][y];
                 for (int j = 0; j < speed; j++) {
                     if (j == 0 || j == speed - 1) {
-                        tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
-                        cells[x + speed - j - 1][y].setPrevCell(iD, tmp);
-                        tmp = cells[x + speed - j - 1][y];
+                        tmp = tmpSetCell(iD, tmp, cells[x + speed - j - 1][y]);
                     } else {
-                        tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
-                        cells[x + speed - j - 1][y].setPrevHoleCell(iD, tmp);
-                        tmp = cells[x + speed - j - 1][y];
-
+                        tmp = tmpSetPrevHoleCell(tmp, cells[x + speed - j - 1][y], iD);
                     }
                 }
                 break;
@@ -200,14 +190,9 @@ public class EvaluationBoard {
                 tmp = cells[x - speed][y];
                 for (int j = 0; j < speed; j++) {
                     if (j == 0 || j == speed - 1) {
-                        tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
-                        cells[x - speed + j + 1][y].setPrevCell(iD, tmp);
-                        tmp = cells[x - speed + j + 1][y];
-
+                        tmp = tmpSetCell(iD, tmp, cells[x - speed + j + 1][y]);
                     } else {
-                        tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
-                        cells[x - speed + j + 1][y].setPrevHoleCell(iD, tmp);
-                        tmp = cells[x - speed + j + 1][y];
+                        tmp = tmpSetPrevHoleCell(tmp, cells[x - speed + j + 1][y], iD);
                     }
                 }
                 break;

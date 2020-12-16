@@ -52,8 +52,7 @@ public class MoveCalculation {
         return bestAction;
     }
 
-    private double calculateAction(Direction dir, int x, int y, int speed,
-                                   int depth, HashSet<Cell> pseudoEvaluatedCells) {
+    private double calculateAction(Direction dir, int x, int y, int speed, int depth) {
         if (depth == 6) {
             return 1;
         }
@@ -170,7 +169,7 @@ public class MoveCalculation {
                         result = evaluateResult(pseudEvaluatedCells, result, x - i, y);
                     }
                 }
-                return result * calculateAction(Direction.LEFT, x - speed, y, speed, depth + 1, pseudEvaluatedCells);
+                return result * calculateAction(Direction.LEFT, x - speed, y, speed, depth + 1);
 
             case RIGHT:
                 //Jumping-Cases
@@ -193,7 +192,7 @@ public class MoveCalculation {
                         result = evaluateResult(pseudEvaluatedCells, result, x + i, y);
                     }
                 }
-                return result * calculateAction(Direction.RIGHT, x + speed, y, speed, depth + 1, pseudEvaluatedCells);
+                return result * calculateAction(Direction.RIGHT, x + speed, y, speed, depth + 1);
 
             case DOWN:
                 //Jumping-Cases
@@ -216,7 +215,7 @@ public class MoveCalculation {
                         result = evaluateResult(pseudEvaluatedCells, result, x, y + i);
                     }
                 }
-                return result * calculateAction(Direction.DOWN, x, y + speed, speed, depth + 1, pseudEvaluatedCells);
+                return result * calculateAction(Direction.DOWN, x, y + speed, speed, depth + 1);
 
             case UP:
                 //Jumping-Cases
@@ -239,7 +238,7 @@ public class MoveCalculation {
                         result = evaluateResult(pseudEvaluatedCells, result, x, y - i);
                     }
                 }
-                return result * calculateAction(Direction.UP, x, y - speed, speed, depth + 1, pseudEvaluatedCells);
+                return result * calculateAction(Direction.UP, x, y - speed, speed, depth + 1);
         }
         return result;
     }
