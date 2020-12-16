@@ -40,7 +40,9 @@ class MoveCalculationTest {
     }
 
     @Property
-    boolean testPreCalculateDirection(@ForAll Action act, @ForAll Direction dir, @ForAll @IntRange(min = 1, max = 10) int speed) {
+    boolean testPreCalculateDirection(@ForAll Action act,
+                                      @ForAll Direction dir,
+                                      @ForAll @IntRange(min = 1, max = 10) int speed) {
         var moveCalc = new MoveCalculation(new Cell[1][0], null, null);
         var res = moveCalc.preCalculate(act, dir, speed);
         var resDir = res.getDirection();
