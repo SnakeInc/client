@@ -141,11 +141,11 @@ public class MoveCalculation {
                     if (offBoardOrDeadly(x - 1, y)) {
                         return 10 * (6 - depth);
                     }
-
                     result = evaluateResult(pseudEvaluatedCells, result, x - 1, y);
 
-                    if (offBoardOrDeadly(x - speed, y))
+                    if (offBoardOrDeadly(x - speed, y)) {
                         return 10 * (6 - depth);
+                    }
                     result = evaluateResult(pseudEvaluatedCells, result, x - speed, y);
 
                 } else { //Normal Cases
