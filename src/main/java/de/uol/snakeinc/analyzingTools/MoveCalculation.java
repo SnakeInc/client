@@ -4,7 +4,9 @@ import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
+import lombok.AllArgsConstructor;
 import lombok.CustomLog;
+import lombok.Getter;
 
 import java.util.HashSet;
 
@@ -20,7 +22,7 @@ public class MoveCalculation {
     public MoveCalculation(Cell[][] cells, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
         this.us = us;
-        this.height= cells[1].length;
+        this.height = cells[0].length;
         this.width = cells.length;
         this.boardAnalyzer = boardAnalyzer;
     }
@@ -67,79 +69,104 @@ public class MoveCalculation {
     }
 
     private double calculate(Action act, Direction dir, int x, int y, int speed, int depth, HashSet<Cell> pseudoEvaluatedCells) {
+        var dirSpeedDepth = preCalculate(act, dir, speed);
+        dir = dirSpeedDepth.direction;
+        speed = dirSpeedDepth.speed;
+
+        if (speed < 1 || speed > 10) {
+            return 10 * (6 - depth);
+        } else {
+            return calculateDirection(dir, x, y, speed, depth, pseudoEvaluatedCells);
+        }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class DirSpeed {
+
+        private final Direction direction;
+        private final int speed;
+    }
+
+    public DirSpeed preCalculate(Action act, Direction dir, int speed) {
         switch (act) {
             case SPEED_UP:
-                if (speed + 1 > 10) {
-                    return 10 * (6 - depth);
-                }
-                return calculateDirection(dir, x, y, speed + 1, depth, pseudoEvaluatedCells);
+                return new DirSpeed(dir, speed + 1);
             case CHANGE_NOTHING:
-                return calculateDirection(dir, x, y, speed , depth, pseudoEvaluatedCells);
+                return new DirSpeed(dir, speed);
             case SLOW_DOWN:
-                if (speed - 1 == 0) {
-                    return 10 * (6-depth);
-                }
-                return calculateDirection(dir, x, y, speed - 1, depth, pseudoEvaluatedCells);
+                return new DirSpeed(dir, speed - 1);
             case TURN_LEFT:
                 switch (dir) {
                     case UP:
-                        return calculateDirection(Direction.LEFT, x, y, speed, depth, pseudoEvaluatedCells);
+                        dir = Direction.LEFT;
+                        break;
                     case DOWN:
-                        return calculateDirection(Direction.RIGHT, x, y, speed, depth, pseudoEvaluatedCells);
+                        dir = Direction.RIGHT;
+                        break;
                     case RIGHT:
-                        return calculateDirection(Direction.UP, x, y, speed, depth, pseudoEvaluatedCells);
+                        dir = Direction.UP;
+                        break;
                     case LEFT:
-                        return calculateDirection(Direction.DOWN, x, y, speed, depth, pseudoEvaluatedCells);
+                        dir = Direction.DOWN;
+                        break;
                 }
+                return new DirSpeed(dir, speed);
             case TURN_RIGHT:
                 switch (dir) {
                     case UP:
-                        return calculateDirection(Direction.RIGHT, x, y, speed, depth, pseudoEvaluatedCells);
+                        dir = Direction.RIGHT;
+                        break;
                     case DOWN:
-                        return calculateDirection(Direction.LEFT, x, y, speed, depth, pseudoEvaluatedCells);
+                        dir = Direction.LEFT;
+                        break;
                     case RIGHT:
-                        return calculateDirection(Direction.DOWN, x, y, speed, depth, pseudoEvaluatedCells);
+                        dir = Direction.DOWN;
+                        break;
                     case LEFT:
-                        return calculateDirection(Direction.UP, x, y, speed, depth, pseudoEvaluatedCells);
-                }        }
-        return 1;
+                        dir = Direction.UP;
+                        break;
+                }
+                return new DirSpeed(dir, speed);
+        }
+        throw new IllegalStateException();
     }
 
     private double calculateDirection(Direction dir, int x, int y, int speed, int depth, HashSet<Cell> pseudEvaluatedCells) {
-            double result = 1;
-            switch (dir) {
-                case LEFT:
-                    //Jumping-Cases
-                    if (boardAnalyzer.checkForJumping(depth)) {
-                        if (x - 1 < 0 || x - 1 >= width || y < 0 || y >= height) {
-                            return 10 * (6 - depth);
-                        } else if (cells[x - 1][y].isDeadly()) {
-                            return 10 * (6 - depth);
-                        }
-                        result = result * cells[x - 1][y].getRisks();
-                        cells[x - 1][y].setPseudoValue();
-                        pseudEvaluatedCells.add(cells[x - 1][y]);
-
-                        if (x - speed < 0 || x - speed >= width || y < 0 /* todo: is always false remove?*/ || y >= height) {
-                            return 10 * (6 - depth);
-                        } else if (cells[x - speed][y].isDeadly()) {
-                            return 10 * (6 - depth);
-                        }
-                        result = result * cells[x - speed][y].getRisks();
-                        cells[x - speed][y].setPseudoValue();
-                        pseudEvaluatedCells.add(cells[x - speed][y]);
-                    } else { //Normal Cases
-                        for (int i = 1; i < speed + 1; i++) {
-                            if (x - i < 0 || x - i >= width || y < 0 || y >= height) {
-                                return 10 * (6 - depth);
-                            } else if (cells[x - i][y].isDeadly()) {
-                                return 10 * (6 - depth);
-                            }
-                            result = result * cells[x - i][y].getRisks();
-                            cells[x - i][y].setPseudoValue();
-                            pseudEvaluatedCells.add(cells[x - i][y]);
-                        }
+        double result = 1;
+        switch (dir) {
+            case LEFT:
+                //Jumping-Cases
+                if (boardAnalyzer.checkForJumping(depth)) {
+                    if (x - 1 < 0 || x - 1 >= width || y < 0 || y >= height) {
+                        return 10 * (6 - depth);
+                    } else if (cells[x - 1][y].isDeadly()) {
+                        return 10 * (6 - depth);
                     }
+                    result = result * cells[x - 1][y].getRisks();
+                    cells[x - 1][y].setPseudoValue();
+                    pseudEvaluatedCells.add(cells[x - 1][y]);
+
+                    if (x - speed < 0 || x - speed >= width || y < 0 /* todo: is always false remove?*/ || y >= height) {
+                        return 10 * (6 - depth);
+                    } else if (cells[x - speed][y].isDeadly()) {
+                        return 10 * (6 - depth);
+                    }
+                    result = result * cells[x - speed][y].getRisks();
+                    cells[x - speed][y].setPseudoValue();
+                    pseudEvaluatedCells.add(cells[x - speed][y]);
+                } else { //Normal Cases
+                    for (int i = 1; i < speed + 1; i++) {
+                        if (x - i < 0 || x - i >= width || y < 0 || y >= height) {
+                            return 10 * (6 - depth);
+                        } else if (cells[x - i][y].isDeadly()) {
+                            return 10 * (6 - depth);
+                        }
+                        result = result * cells[x - i][y].getRisks();
+                        cells[x - i][y].setPseudoValue();
+                        pseudEvaluatedCells.add(cells[x - i][y]);
+                    }
+                }
                     return result * calculateAction(Direction.LEFT, x - speed, y, speed, depth + 1, pseudEvaluatedCells);
 
                 case RIGHT:
