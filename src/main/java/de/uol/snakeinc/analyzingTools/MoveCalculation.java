@@ -236,7 +236,7 @@ public class MoveCalculation {
                         if (offBoardOrDeadly(x, y - i)) {
                             return deathValue(depth);
                         }
-                        result = evaluateResult(pseudEvaluatedCells, result, x, y + i);
+                        result = evaluateResult(pseudEvaluatedCells, result, x, y - i);
                     }
                 }
                 return result * calculateAction(Direction.UP, x, y - speed, speed, depth + 1, pseudEvaluatedCells);
