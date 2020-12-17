@@ -270,7 +270,7 @@ public class MoveCalculation {
 
     private double evaluateResult(HashSet<Cell> pseudEvaluatedCells, double result, int x, int y) {
         result = result * cells[x][y].getRisks();
-        cells[x][y].setPseudoValue();
+        cells[x][y].setTmpMoveCalcValue();
         pseudEvaluatedCells.add(cells[x][y]);
         return result;
     }

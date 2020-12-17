@@ -4,11 +4,15 @@ import lombok.Getter;
 
 public class Cell {
 
+    //Basic Value.
     @Getter
     private double value;
-    private double pseudoValue;
 
-    private double actionRisk;
+    //Value that is calculated temporarily
+    private double tmpMoveCalcValue;
+
+    //The risk that another agent will move to this cell
+    private double opponentMovementRisk;
 
     @Getter
     private Cell prevCell;
@@ -19,8 +23,8 @@ public class Cell {
 
     public Cell() {
         value = 1;
-        actionRisk = 1;
-        pseudoValue = 1;
+        opponentMovementRisk = 1;
+        tmpMoveCalcValue = 1;
     }
 
 
@@ -56,15 +60,15 @@ public class Cell {
     public void raiseActionRisk(int depth) {
         switch (depth) {
             case 1:
-                actionRisk = actionRisk * 1.25;
+                opponentMovementRisk = opponentMovementRisk * 1.25;
                 //TODO here was fallthrough
                 break;
             case 2:
-                actionRisk = actionRisk * 1.0625;
+                opponentMovementRisk = opponentMovementRisk * 1.0625;
                 //TODO here was fallthrough
                 break;
             case 3:
-                actionRisk = actionRisk * 1.015625;
+                opponentMovementRisk = opponentMovementRisk * 1.015625;
                 //TODO here was fallthrough
                 break;
             default:
@@ -79,18 +83,18 @@ public class Cell {
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interinteraktion between players.
-        return getValue() * actionRisk * pseudoValue;
+        return getValue() * opponentMovementRisk * tmpMoveCalcValue;
     }
 
     public void clearPseudoValue() {
-        pseudoValue = 1;
+        tmpMoveCalcValue = 1;
     }
 
-    public void setPseudoValue() {
-        pseudoValue = 10;
+    public void setTmpMoveCalcValue() {
+        tmpMoveCalcValue = 10;
     }
 
     public void prepareNextPhase() {
-        this.actionRisk = 1;
+        this.opponentMovementRisk = 1;
     }
 }
