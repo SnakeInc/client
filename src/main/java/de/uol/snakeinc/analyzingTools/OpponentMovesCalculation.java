@@ -93,6 +93,8 @@ public class OpponentMovesCalculation {
                 if (!abort) {
                     nextDepth(x, y - speed, depth + 1, speed);
                 }
+                //TODO here was fallthrough
+                break;
             case DOWN:
                 for (int j = 1; j + 1 < speed + 1; j++) {
                     if (y + j < 0 || y + j >= height) {
@@ -109,6 +111,8 @@ public class OpponentMovesCalculation {
                 if (!abort) {
                     nextDepth(x, y + speed, depth + 1, speed);
                 }
+                //TODO here was fallthrough
+                break;
             case RIGHT:
                 for (int j = 1; j + 1 < speed + 1; j++) {
                     if (x + j < 0 || x + j >= width) {
@@ -125,6 +129,8 @@ public class OpponentMovesCalculation {
                 if (!abort) {
                     nextDepth(x + speed, y, depth + 1, speed);
                 }
+                //TODO here was fallthrough
+                break;
             case LEFT:
                 for (int j = 1; j < speed + 1; j++) {
                     if (x - j < 0 || x - j >= width) {
@@ -141,6 +147,10 @@ public class OpponentMovesCalculation {
                 if (!abort) {
                     nextDepth(x - speed, y, depth + 1, speed);
                 }
+                //TODO here was fallthrough
+                break;
+            default:
+                throw new IllegalStateException();
         }
     }
     private void recursiveRiskByDirectionWithJumping(int x, int y, int depth, int speed, Direction dir) {
@@ -162,6 +172,8 @@ public class OpponentMovesCalculation {
                 if (!abort) {
                     nextDepth(x, y - speed, depth + 1, speed);
                 }
+                //TODO here was fallthrough
+                break;
             case DOWN:
                 for (int j = 1; j + 1 < speed + 1; j++) {
                     if (y + j < 0 || y + j >= height) {
@@ -178,6 +190,8 @@ public class OpponentMovesCalculation {
                 if (!abort) {
                     nextDepth(x, y + speed, depth + 1, speed);
                 }
+                //TODO here was fallthrough
+                break;
             case RIGHT:
                 for (int j = 1; j + 1 < speed + 1; j++) {
                     if (x + j < 0 || x + j >= width) {
@@ -194,6 +208,8 @@ public class OpponentMovesCalculation {
                 if (!abort) {
                     nextDepth(x + speed, y, depth + 1, speed);
                 }
+                //TODO here was fallthrough
+                break;
             case LEFT:
                 for (int j = 1; j < speed + 1; j++) {
                     if (x - j < 0 || x - j >= width) {
@@ -210,6 +226,10 @@ public class OpponentMovesCalculation {
                 if (!abort) {
                     nextDepth(x - speed, y, depth + 1, speed);
                 }
+                //TODO here was fallthrough
+                break;
+            default:
+                throw new IllegalStateException();
         }
     }
 }

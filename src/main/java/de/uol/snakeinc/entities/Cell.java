@@ -57,10 +57,18 @@ public class Cell {
         switch (depth) {
             case 1:
                 actionRisk = actionRisk * 1.25;
+                //TODO here was fallthrough
+                break;
             case 2:
                 actionRisk = actionRisk * 1.0625;
+                //TODO here was fallthrough
+                break;
             case 3:
                 actionRisk = actionRisk * 1.015625;
+                //TODO here was fallthrough
+                break;
+            default:
+                throw new IllegalStateException();
         }
     }
 

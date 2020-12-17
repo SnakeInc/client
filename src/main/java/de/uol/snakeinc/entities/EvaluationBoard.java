@@ -118,6 +118,8 @@ public class EvaluationBoard {
                             tmp = tmpSetCell(iD, tmp, cells[x - speed + j + 1][y]);
                         }
                         break;
+                    default:
+                        throw new IllegalStateException();
                 }
             }
         }
@@ -196,6 +198,8 @@ public class EvaluationBoard {
                     }
                 }
                 break;
+            default:
+                throw new IllegalStateException();
         }
     }
 
