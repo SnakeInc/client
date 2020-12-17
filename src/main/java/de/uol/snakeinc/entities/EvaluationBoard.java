@@ -71,16 +71,17 @@ public class EvaluationBoard {
         Player[] playersArray = new Player[playerHashMap.size()];
         int count = 0;
         for (Integer position : playerHashMap.keySet()) {
-            if(playerHashMap.get(position).isActive()) {
-            playersArray[count] = playerHashMap.get(position);
-            count++;}
+            if (playerHashMap.get(position).isActive()) {
+                playersArray[count] = playerHashMap.get(position);
+                count++;
+            }
         }
         players = playersArray;
         int iD;
         int x;
         int y;
         int speed;
-        for (int i=0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             iD = players[i].getId();
             x = players[i].getX();
             y = players[i].getY();
@@ -96,54 +97,59 @@ public class EvaluationBoard {
                     case UP:
                         tmp = cells[x][y + speed];
                         for (int j = 0; j < speed; j++) {
-                            tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
-                            cells[x][y + speed - j - 1].setPrevCell(iD, tmp);
-                            tmp = cells[x][y + speed - j - 1];
+                            tmp = tmpSetCell(iD, tmp, cells[x][y + speed - j - 1]);
                         }
                         break;
                     case DOWN:
                         tmp = cells[x][y - speed];
                         for (int j = 0; j < speed; j++) {
-                            tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
-                            cells[x][y - speed + j + 1].setPrevCell(iD, tmp);
-                            tmp = cells[x][y - speed + j + 1];
+                            tmp = tmpSetCell(iD, tmp, cells[x][y - speed + j + 1]);
                         }
                         break;
                     case LEFT:
                         tmp = cells[x + speed][y];
                         for (int j = 0; j < speed; j++) {
-                            tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
-                            cells[x + speed - j - 1][y].setPrevCell(iD, tmp);
-                            tmp = cells[x + speed - j - 1][y];
+                            tmp = tmpSetCell(iD, tmp, cells[x + speed - j - 1][y]);
                         }
                         break;
                     case RIGHT:
                         tmp = cells[x - speed][y];
                         for (int j = 0; j < speed; j++) {
-                            tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
-                            cells[x - speed + j + 1][y].setPrevCell(iD, tmp);
-                            tmp = cells[x - speed + j + 1][y];
+                            tmp = tmpSetCell(iD, tmp, cells[x - speed + j + 1][y]);
                         }
                         break;
                 }
             }
         }
         boardAnalyzer.analyze();
-        StringBuilder log = new StringBuilder();
-        for (int i = 0; i< cells.length; i++) {
-            for (int j=0; j< cells[1].length; j++) {
-                log.append(cells[i][j].getRisks()).append(" ");
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[1].length; j++) {
+                str.append(cells[i][j].getRisks()).append(" ");
             }
-            log.append("\n");
+            str.append("\n");
         }
-        System.out.println(log.toString());
+
+        log.debug(str.toString());
+    }
+
+    private Cell tmpSetCell(int iD, Cell tmp, Cell nextCell) {
+        tmp.setNextCell(iD, nextCell);
+        nextCell.setPrevCell(iD, tmp);
+        return nextCell;
+    }
+
+    private Cell tmpSetPrevHoleCell(Cell tmp, Cell cell, int iD) {
+        tmp.setNextCell(iD, cell);
+        cell.setPrevHoleCell(iD, tmp);
+        return cell;
     }
 
     /**
      * Updating Cells in jump-cases.
      * @param player the jumping player
      */
-    private void updateJumpingPlayer (Player player){
+    private void updateJumpingPlayer(Player player) {
         Cell tmp;
         int x = player.getX();
         int y = player.getY();
@@ -154,13 +160,9 @@ public class EvaluationBoard {
                 tmp = cells[x][y + speed];
                 for (int j = 0; j < speed; j++) {
                     if (j == 0 || j == speed - 1) {
-                        tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
-                        cells[x][y + speed - j - 1].setPrevCell(iD, tmp);
-                        tmp = cells[x][y + speed - j - 1];
+                        tmp = tmpSetCell(iD, tmp, cells[x][y + speed - j - 1]);
                     } else {
-                        tmp.setNextCell(iD, cells[x][y + speed - j - 1]);
-                        cells[x][y + speed - j - 1].setPrevHoleCell(iD, tmp);
-                        tmp = cells[x][y + speed - j - 1];
+                        tmp = tmpSetPrevHoleCell(tmp, cells[x][y + speed - j - 1], iD);
                     }
                 }
                 break;
@@ -168,14 +170,9 @@ public class EvaluationBoard {
                 tmp = cells[x][y - speed];
                 for (int j = 0; j < speed; j++) {
                     if (j == 0 || j == speed - 1) {
-
-                        tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
-                        cells[x][y - speed + j + 1].setPrevCell(iD, tmp);
-                        tmp = cells[x][y - speed + j + 1];
+                        tmp = tmpSetCell(iD, tmp, cells[x][y - speed + j + 1]);
                     } else {
-                        tmp.setNextCell(iD, cells[x][y - speed + j + 1]);
-                        cells[x][y - speed + j + 1].setPrevHoleCell(iD, tmp);
-                        tmp = cells[x][y - speed + j + 1];
+                        tmp = tmpSetPrevHoleCell(tmp, cells[x][y - speed + j + 1], iD);
                     }
                 }
                 break;
@@ -183,14 +180,9 @@ public class EvaluationBoard {
                 tmp = cells[x + speed][y];
                 for (int j = 0; j < speed; j++) {
                     if (j == 0 || j == speed - 1) {
-                        tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
-                        cells[x + speed - j - 1][y].setPrevCell(iD, tmp);
-                        tmp = cells[x + speed - j - 1][y];
+                        tmp = tmpSetCell(iD, tmp, cells[x + speed - j - 1][y]);
                     } else {
-                        tmp.setNextCell(iD, cells[x + speed - j - 1][y]);
-                        cells[x + speed - j - 1][y].setPrevHoleCell(iD, tmp);
-                        tmp = cells[x + speed - j - 1][y];
-
+                        tmp = tmpSetPrevHoleCell(tmp, cells[x + speed - j - 1][y], iD);
                     }
                 }
                 break;
@@ -198,14 +190,9 @@ public class EvaluationBoard {
                 tmp = cells[x - speed][y];
                 for (int j = 0; j < speed; j++) {
                     if (j == 0 || j == speed - 1) {
-                        tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
-                        cells[x - speed + j + 1][y].setPrevCell(iD, tmp);
-                        tmp = cells[x - speed + j + 1][y];
-
-                } else {
-                        tmp.setNextCell(iD, cells[x - speed + j + 1][y]);
-                        cells[x - speed + j + 1][y].setPrevHoleCell(iD, tmp);
-                        tmp = cells[x - speed + j + 1][y];
+                        tmp = tmpSetCell(iD, tmp, cells[x - speed + j + 1][y]);
+                    } else {
+                        tmp = tmpSetPrevHoleCell(tmp, cells[x - speed + j + 1][y], iD);
                     }
                 }
                 break;
@@ -224,6 +211,10 @@ public class EvaluationBoard {
         return moveCalculation.calculateBestAction();
     }
 
+    /**
+     * Todo javadoc.
+     * @return todo this
+     */
     public Action startingStrategy() {
         //TODO: Implement this.
         return Action.CHANGE_NOTHING;
@@ -231,8 +222,9 @@ public class EvaluationBoard {
 
     /**
      * Parse board based on json-format.
-     * @param json json from websocket
+     * @param json    json from websocket
      * @param players parsed players
+     * @param us      // todo this
      * @return parsed board
      */
     public static EvaluationBoard initParseFromJson(JsonObject json, HashMap<Integer, Player> players, Player us) {

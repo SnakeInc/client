@@ -19,7 +19,6 @@ public class OpponentMovesCalculation {
     private int height;
     Set<Cell> evaluatedCells = new HashSet<>();
 
-
     public OpponentMovesCalculation(Cell[][] cells, Player[] players, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
         this.width = cells.length;
@@ -29,6 +28,10 @@ public class OpponentMovesCalculation {
         this.boardAnalyzer = boardAnalyzer;
     }
 
+    /**
+     * todo this.
+     * @return todo
+     */
     public Set<Cell> evaluate() {
         int x;
         int y;
@@ -62,8 +65,7 @@ public class OpponentMovesCalculation {
     }
 
     private void nextDepthWithJumping(int x, int y, int depth, int speed) {
-
-        if(depth <= 3) {
+        if (depth <= 3) {
             //Recursive call
             recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.UP);
             recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.DOWN);
@@ -143,71 +145,71 @@ public class OpponentMovesCalculation {
     }
     private void recursiveRiskByDirectionWithJumping(int x, int y, int depth, int speed, Direction dir) {
         boolean abort = false;
-            switch (dir) {
-                case UP:
-                    for (int j = 1; j < speed + 1; j++) {
-                        if (y - j < 0 || y - j >= height) {
-                            abort = true;
-                            break;
-                        } else if (cells[x][y - j].isDeadly()) {
-                            abort = true;
-                            break;
-                        } else if (j == 1 || j == speed) {
-                            evaluatedCells.add(cells[x][y - j]);
-                            cells[x][y - j].raiseActionRisk(depth);
-                        }
+        switch (dir) {
+            case UP:
+                for (int j = 1; j < speed + 1; j++) {
+                    if (y - j < 0 || y - j >= height) {
+                        abort = true;
+                        break;
+                    } else if (cells[x][y - j].isDeadly()) {
+                        abort = true;
+                        break;
+                    } else if (j == 1 || j == speed) {
+                        evaluatedCells.add(cells[x][y - j]);
+                        cells[x][y - j].raiseActionRisk(depth);
                     }
-                    if (!abort) {
-                        nextDepth(x, y - speed, depth + 1, speed);
+                }
+                if (!abort) {
+                    nextDepth(x, y - speed, depth + 1, speed);
+                }
+            case DOWN:
+                for (int j = 1; j + 1 < speed + 1; j++) {
+                    if (y + j < 0 || y + j >= height) {
+                        abort = true;
+                        break;
+                    } else if (cells[x][y + j].isDeadly()) {
+                        abort = true;
+                        break;
+                    } else if (j == 1 || j == speed) {
+                        evaluatedCells.add(cells[x][y + j]);
+                        cells[x][y + j].raiseActionRisk(depth);
                     }
-                case DOWN:
-                    for (int j = 1; j + 1 < speed + 1; j++) {
-                        if (y + j < 0 || y + j >= height) {
-                            abort = true;
-                            break;
-                        } else if (cells[x][y + j].isDeadly()) {
-                            abort = true;
-                            break;
-                        } else if (j == 1 || j == speed) {
-                            evaluatedCells.add(cells[x][y + j]);
-                            cells[x][y + j].raiseActionRisk(depth);
-                        }
+                }
+                if (!abort) {
+                    nextDepth(x, y + speed, depth + 1, speed);
+                }
+            case RIGHT:
+                for (int j = 1; j + 1 < speed + 1; j++) {
+                    if (x + j < 0 || x + j >= width) {
+                        abort = true;
+                        break;
+                    } else if (cells[x + j][y].isDeadly()) {
+                        abort = true;
+                        break;
+                    } else if (j == 1 || j == speed) {
+                        evaluatedCells.add(cells[x + j][y]);
+                        cells[x + j][y].raiseActionRisk(depth);
                     }
-                    if (!abort) {
-                        nextDepth(x, y + speed, depth + 1, speed);
+                }
+                if (!abort) {
+                    nextDepth(x + speed, y, depth + 1, speed);
+                }
+            case LEFT:
+                for (int j = 1; j < speed + 1; j++) {
+                    if (x - j < 0 || x - j >= width) {
+                        abort = true;
+                        break;
+                    } else if (cells[x - j][y].isDeadly()) {
+                        abort = true;
+                        break;
+                    } else if (j == 1 || j == speed) {
+                        evaluatedCells.add(cells[x - j][y]);
+                        cells[x - j][y].raiseActionRisk(depth);
                     }
-                case RIGHT:
-                    for (int j = 1; j + 1 < speed + 1; j++) {
-                        if (x + j < 0 || x + j >= width) {
-                            abort = true;
-                            break;
-                        } else if (cells[x + j][y].isDeadly()) {
-                            abort = true;
-                            break;
-                        } else if (j == 1 || j == speed) {
-                            evaluatedCells.add(cells[x + j][y]);
-                            cells[x + j][y].raiseActionRisk(depth);
-                        }
-                    }
-                    if (!abort) {
-                        nextDepth(x + speed, y, depth + 1, speed);
-                    }
-                case LEFT:
-                    for (int j = 1; j < speed + 1; j++) {
-                        if (x - j < 0 || x - j >= width) {
-                            abort = true;
-                            break;
-                        } else if (cells[x - j][y].isDeadly()) {
-                            abort = true;
-                            break;
-                        } else if (j == 1 || j == speed) {
-                            evaluatedCells.add(cells[x - j][y]);
-                            cells[x - j][y].raiseActionRisk(depth);
-                        }
-                    }
-                    if (!abort) {
-                        nextDepth(x - speed, y, depth + 1, speed);
-                    }
-            }
+                }
+                if (!abort) {
+                    nextDepth(x - speed, y, depth + 1, speed);
+                }
         }
+    }
 }

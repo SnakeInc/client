@@ -36,6 +36,11 @@ public class Game {
         this.us = this.players.get(id);
     }
 
+    /**
+     * todo javadoc.
+     * @param evaluationBoard todo this
+     * @param rawBoard        todo this
+     */
     public void informIntelligentBoard(EvaluationBoard evaluationBoard, int[][] rawBoard) {
         EvaluationBoard = evaluationBoard;
         if (evaluationBoard != null) {
@@ -43,6 +48,10 @@ public class Game {
         }
     }
 
+    /**
+     * todo javadoc.
+     * @param rawBoard todo
+     */
     public void informIntelligentBoard(int[][] rawBoard) {
         EvaluationBoard.update(players, us, round);
         boards.put(round, rawBoard);
@@ -57,10 +66,11 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
-        if(round < 2) {
+        if (round < 2) {
             socket.sendAction(EvaluationBoard.startingStrategy());
         } else {
-        socket.sendAction(EvaluationBoard.getAction());}
+            socket.sendAction(EvaluationBoard.getAction());
+        }
         EvaluationBoard.prepareNextPhase();
         round++;
     }

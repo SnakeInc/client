@@ -24,7 +24,10 @@ public class BoardAnalyzer {
         this.us = us;
     }
 
-    public void analyze () {
+    /**
+     * TODO JAVADOC.
+     */
+    public void analyze() {
         round++;
         OpponentMovesCalculation calc = new OpponentMovesCalculation(cells, players, us, this);
         evaluatedCells = calc.evaluate();
@@ -40,16 +43,16 @@ public class BoardAnalyzer {
         int distance;
         distance = Math.abs(player1.getX() - player2.getX()) + Math.abs(player1.getY() - player2.getY());
         //TODO: Implement and use pathfinder-algorithm to check if the players can reach each other in max three rounds.
-        return distance <= player1.getSpeed() * 3 + player2.getSpeed() * 3 && distance != 0;
+        return distance <= (player1.getSpeed() * 3) + (player2.getSpeed() * 3) + 6 && distance != 0;
     }
 
     /**
      * simple method to check if this is a jumping round.
-     * @param roundsInFuture
-     * @return
+     * @param roundsInFuture Todo this
+     * @return Todo this
      */
     public boolean checkForJumping(int roundsInFuture) {
-        return round +roundsInFuture % 6 == 0;
+        return (round + roundsInFuture) % 6 == 0;
     }
 
     /**

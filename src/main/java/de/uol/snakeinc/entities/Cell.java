@@ -45,10 +45,14 @@ public class Cell {
         this.prevCell = prevCell;
     }
 
-    public boolean isDeadly(){
+    public boolean isDeadly() {
         return value >= 10;
     }
 
+    /**
+     * Todo this.
+     * @param depth Todo this
+     */
     public void raiseActionRisk(int depth) {
         switch (depth) {
             case 1:
