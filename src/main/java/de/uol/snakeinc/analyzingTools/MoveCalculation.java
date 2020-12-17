@@ -122,6 +122,8 @@ public class MoveCalculation {
                     case LEFT:
                         dir = Direction.DOWN;
                         break;
+                    default:
+                        throw new IllegalStateException();
                 }
                 return new DirSpeed(dir, speed);
             case TURN_RIGHT:
@@ -138,10 +140,13 @@ public class MoveCalculation {
                     case LEFT:
                         dir = Direction.UP;
                         break;
+                    default:
+                        throw new IllegalStateException();
                 }
                 return new DirSpeed(dir, speed);
+            default:
+                throw new IllegalStateException();
         }
-        throw new IllegalStateException();
     }
 
     private double calculateDirection(Direction dir, int x, int y, int speed,
@@ -239,8 +244,10 @@ public class MoveCalculation {
                     }
                 }
                 return result * calculateAction(Direction.UP, x, y - speed, speed, depth + 1);
+            default:
+                throw new IllegalStateException();
         }
-        return result;
+        //return result; todo this or IllegalState ?
     }
 
     private double deathValue(int depth) {
