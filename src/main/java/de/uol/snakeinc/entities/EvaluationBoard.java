@@ -85,45 +85,50 @@ public class EvaluationBoard {
         int x;
         int y;
         int speed;
+        Player tmpPlayer;
         for (int i = 1; i < playerHashMap.keySet().size() + 1; i++) {
+
             iD = playerHashMap.get(i).getId();
             x = playerHashMap.get(i).getX();
             y = playerHashMap.get(i).getY();
-            speed = playerHashMap.get(i).getSpeed();
-            Cell tmp;
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                speed = playerHashMap.get(i).getSpeed();
+                Cell tmp;
+                tmpPlayer = playerHashMap.get(i);
 
-            //Checking for jumping
-            if (round % 6 == 0 && speed >= 3) {
-                updateJumpingPlayer(players[i]);
-            } else {
-                //Updating Cells without jumping. Implements an iteration-logic vor snakes
-                switch (players[i].getDirection()) {
-                    case UP:
-                        tmp = cells[x][y + speed];
-                        for (int j = 0; j < speed; j++) {
-                            tmp = tmpSetCell(iD, tmp, cells[x][y + speed - j - 1]);
-                        }
-                        break;
-                    case DOWN:
-                        tmp = cells[x][y - speed];
-                        for (int j = 0; j < speed; j++) {
-                            tmp = tmpSetCell(iD, tmp, cells[x][y - speed + j + 1]);
-                        }
-                        break;
-                    case LEFT:
-                        tmp = cells[x + speed][y];
-                        for (int j = 0; j < speed; j++) {
-                            tmp = tmpSetCell(iD, tmp, cells[x + speed - j - 1][y]);
-                        }
-                        break;
-                    case RIGHT:
-                        tmp = cells[x - speed][y];
-                        for (int j = 0; j < speed; j++) {
-                            tmp = tmpSetCell(iD, tmp, cells[x - speed + j + 1][y]);
-                        }
-                        break;
-                    default:
-                        throw new IllegalStateException();
+                //Checking for jumping
+                if (round % 6 == 0 && speed >= 3) {
+                    updateJumpingPlayer(tmpPlayer);
+                } else {
+                    //Updating Cells without jumping. Implements an iteration-logic vor snakes
+                    switch (tmpPlayer.getDirection()) {
+                        case UP:
+                            tmp = cells[x][y + speed];
+                            for (int j = 0; j < speed; j++) {
+                                tmp = tmpSetCell(iD, tmp, cells[x][y + speed - j - 1]);
+                            }
+                            break;
+                        case DOWN:
+                            tmp = cells[x][y - speed];
+                            for (int j = 0; j < speed; j++) {
+                                tmp = tmpSetCell(iD, tmp, cells[x][y - speed + j + 1]);
+                            }
+                            break;
+                        case LEFT:
+                            tmp = cells[x + speed][y];
+                            for (int j = 0; j < speed; j++) {
+                                tmp = tmpSetCell(iD, tmp, cells[x + speed - j - 1][y]);
+                            }
+                            break;
+                        case RIGHT:
+                            tmp = cells[x - speed][y];
+                            for (int j = 0; j < speed; j++) {
+                                tmp = tmpSetCell(iD, tmp, cells[x - speed + j + 1][y]);
+                            }
+                            break;
+                        default:
+                            throw new IllegalStateException();
+                    }
                 }
             }
         }
