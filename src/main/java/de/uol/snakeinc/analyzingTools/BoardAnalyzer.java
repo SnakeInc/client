@@ -19,6 +19,9 @@ public class BoardAnalyzer {
 
     /**
      * TODO JAVADOC.
+     * @param us todo
+     * @param players todo
+     * @param cells todo
      */
     public void analyze(Cell[][] cells, Player[] players, Player us) {
         round++;

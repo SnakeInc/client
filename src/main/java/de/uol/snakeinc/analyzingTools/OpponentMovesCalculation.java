@@ -24,6 +24,9 @@ public class OpponentMovesCalculation {
     /**
      * todo this.
      * @return todo
+     * @param cells todo
+     * @param players todo
+     * @param us todo
      */
     public Set<Cell> evaluate(Cell[][] cells, Player[] players, Player us) {
         this.width = cells.length;
@@ -33,14 +36,14 @@ public class OpponentMovesCalculation {
         int y;
         int speed;
         for (int i = 0; i < players.length; i++) {
-                if (BoardAnalyzer.inDistance(us, players[i])) {
-                    log.info("Computing Opponent Moves.");
-                    x = players[i].getX();
-                    y = players[i].getY();
-                    speed = players[i].getSpeed();
-                    nextDepth(x, y, 1, speed);
-                }
+            if (BoardAnalyzer.inDistance(us, players[i])) {
+                log.info("Computing Opponent Moves.");
+                x = players[i].getX();
+                y = players[i].getY();
+                speed = players[i].getSpeed();
+                nextDepth(x, y, 1, speed);
             }
+        }
         return evaluatedCells;
     }
 
