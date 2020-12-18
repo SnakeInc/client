@@ -38,14 +38,14 @@ public class Gates {
                 //#o#
                 //
                 if (_4b && _6b) {
-                    _5.raiseActionRisk(1);
+                    _5.raiseActionRisk(3);
                 }
 
                 // # 
                 // o
                 // #
                 if (_8b && _2b) {
-                    _5.raiseActionRisk(1);
+                    _5.raiseActionRisk(3);
                 }
             }
         }
