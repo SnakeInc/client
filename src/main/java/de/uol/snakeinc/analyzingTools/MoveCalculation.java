@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.CustomLog;
 import lombok.Getter;
 
-import java.util.HashSet;
-
 @CustomLog
 public class MoveCalculation {
 
@@ -38,11 +36,7 @@ public class MoveCalculation {
         Action bestAction = Action.CHANGE_NOTHING;
         double tmp;
         for (Action act : Action.values()) {
-            HashSet<Cell> pseudoEvaluatedCells = new HashSet<>();
-            tmp = calculate(act, us.getDirection(), us.getX(), us.getY(), us.getSpeed(), 1, pseudoEvaluatedCells);
-            for (Cell cell : pseudoEvaluatedCells) {
-                cell.clearPseudoValue();
-            }
+            tmp = calculate(act, us.getDirection(), us.getX(), us.getY(), us.getSpeed(), 1);
             log.debug("Action eval.: " + act + "with: " + tmp);
             if (tmp < bestActionTmp) {
                 bestActionTmp = tmp;
@@ -60,11 +54,7 @@ public class MoveCalculation {
         double bestAction = 100;
         double tmp;
         for (Action act : Action.values()) {
-            HashSet<Cell> pseudoEvaluatedCellsNextDepth = new HashSet<>();
-            tmp = calculate(act, dir, x, y, speed, depth, pseudoEvaluatedCellsNextDepth);
-            for (Cell cell : pseudoEvaluatedCellsNextDepth) {
-                cell.clearPseudoValue();
-            }
+            tmp = calculate(act, dir, x, y, speed, depth);
             if (tmp < bestAction) {
                 bestAction = tmp;
             }
@@ -73,8 +63,7 @@ public class MoveCalculation {
         return bestAction;
     }
 
-    private double calculate(Action act, Direction dir, int x, int y, int speed,
-                             int depth, HashSet<Cell> pseudoEvaluatedCells) {
+    private double calculate(Action act, Direction dir, int x, int y, int speed, int depth) {
         var dirSpeedDepth = preCalculate(act, dir, speed);
         dir = dirSpeedDepth.direction;
         speed = dirSpeedDepth.speed;
@@ -82,7 +71,7 @@ public class MoveCalculation {
         if (speed < 1 || speed > 10) {
             return deathValue(depth);
         } else {
-            return calculateDirection(dir, x, y, speed, depth, pseudoEvaluatedCells);
+            return calculateDirection(dir, x, y, speed, depth);
         }
     }
 
@@ -101,7 +90,7 @@ public class MoveCalculation {
      * @param speed todo
      * @return todo
      */
-    public DirSpeed preCalculate(Action act, Direction dir, int speed) {
+    public static DirSpeed preCalculate(Action act, Direction dir, int speed) {
         switch (act) {
             case SPEED_UP:
                 return new DirSpeed(dir, speed + 1);
@@ -150,8 +139,9 @@ public class MoveCalculation {
         }
     }
 
-    private double calculateDirection(Direction dir, int x, int y, int speed,
-                                      int depth, HashSet<Cell> pseudEvaluatedCells) {
+    private double calculateDirection(Direction dir, int x, int y, int speed, int depth) {
+        Cell[] pseudoEvaluatedCells = new Cell[11];
+        double res;
         double result = 1;
         switch (dir) {
             case LEFT:
@@ -160,95 +150,102 @@ public class MoveCalculation {
                     if (offBoardOrDeadly(x - 1, y)) {
                         return deathValue(depth);
                     }
-                    result = result * evaluateResult(pseudEvaluatedCells, result, x - 1, y);
+                    result = result * evaluateResult(pseudoEvaluatedCells, result, x - 1, y, 0);
 
                     if (offBoardOrDeadly(x - speed, y)) {
                         return deathValue(depth);
                     }
-                    result = result * evaluateResult(pseudEvaluatedCells, result, x - speed, y);
+                    result = result * evaluateResult(pseudoEvaluatedCells, result, x - speed, y, 1);
 
                 } else { //Normal Cases
                     for (int i = 1; i < speed + 1; i++) {
                         if (offBoardOrDeadly(x - i, y)) {
                             return deathValue(depth);
                         }
-                        result = result * evaluateResult(pseudEvaluatedCells, result, x - i, y);
+                        result = result * evaluateResult(pseudoEvaluatedCells, result, x - i, y, i);
                     }
                 }
-                return result * calculateAction(Direction.LEFT, x - speed, y, speed, depth + 1);
-
+                res = result * calculateAction(Direction.LEFT, x - speed, y, speed, depth + 1);
+                break;
             case RIGHT:
                 //Jumping-Cases
                 if (boardAnalyzer.checkForJumping(depth)) {
                     if (offBoardOrDeadly(x + 1, y)) {
                         return deathValue(depth);
                     }
-                    result = result * evaluateResult(pseudEvaluatedCells, result, x + 1, y);
+                    result = result * evaluateResult(pseudoEvaluatedCells, result, x + 1, y, 0);
 
                     if (offBoardOrDeadly(x + speed, y)) {
                         return deathValue(depth);
                     }
-                    result = result * evaluateResult(pseudEvaluatedCells, result, x + speed, y);
+                    result = result * evaluateResult(pseudoEvaluatedCells, result, x + speed, y, 1);
 
                 } else { //Normal Cases
                     for (int i = 1; i < speed + 1; i++) {
                         if (offBoardOrDeadly(x + i, y)) {
                             return deathValue(depth);
                         }
-                        result = result * evaluateResult(pseudEvaluatedCells, result, x + i, y);
+                        result = result * evaluateResult(pseudoEvaluatedCells, result, x + i, y, i);
                     }
                 }
-                return result * calculateAction(Direction.RIGHT, x + speed, y, speed, depth + 1);
-
+                res = result * calculateAction(Direction.RIGHT, x + speed, y, speed, depth + 1);
+                break;
             case DOWN:
                 //Jumping-Cases
                 if (boardAnalyzer.checkForJumping(depth)) {
                     if (offBoardOrDeadly(x, y + 1)) {
                         return deathValue(depth);
                     }
-                    result = result * evaluateResult(pseudEvaluatedCells, result, x, y + 1);
+                    result = result * evaluateResult(pseudoEvaluatedCells, result, x, y + 1, 0);
 
                     if (offBoardOrDeadly(x, y + speed)) {
                         return deathValue(depth);
                     }
-                    result = result * evaluateResult(pseudEvaluatedCells, result, x, y + speed);
+                    result = result * evaluateResult(pseudoEvaluatedCells, result, x, y + speed, 1);
 
                 } else { //Normal Cases
                     for (int i = 1; i < speed + 1; i++) {
                         if (offBoardOrDeadly(x, y + i)) {
                             return deathValue(depth);
                         }
-                        result = result * evaluateResult(pseudEvaluatedCells, result, x, y + i);
+                        result = result * evaluateResult(pseudoEvaluatedCells, result, x, y + i, i);
                     }
                 }
-                return result * calculateAction(Direction.DOWN, x, y + speed, speed, depth + 1);
-
+                res = result * calculateAction(Direction.DOWN, x, y + speed, speed, depth + 1);
+                break;
             case UP:
                 //Jumping-Cases
                 if (boardAnalyzer.checkForJumping(depth)) {
                     if (offBoardOrDeadly(x, y - 1)) {
                         return deathValue(depth);
                     }
-                    result = result * evaluateResult(pseudEvaluatedCells, result, x, y - 1);
+                    result = result * evaluateResult(pseudoEvaluatedCells, result, x, y - 1, 0);
 
                     if (offBoardOrDeadly(x, y - speed)) {
                         return deathValue(depth);
                     }
-                    result = result * evaluateResult(pseudEvaluatedCells, result, x, y - speed);
+                    result = result * evaluateResult(pseudoEvaluatedCells, result, x, y - speed, 1);
 
                 } else { //Normal Cases
                     for (int i = 1; i < speed + 1; i++) {
                         if (offBoardOrDeadly(x, y - i)) {
                             return deathValue(depth);
                         }
-                        result = result * evaluateResult(pseudEvaluatedCells, result, x, y - i);
+                        result = result * evaluateResult(pseudoEvaluatedCells, result, x, y - i, i);
                     }
                 }
-                return result * calculateAction(Direction.UP, x, y - speed, speed, depth + 1);
+                res = result * calculateAction(Direction.UP, x, y - speed, speed, depth + 1);
+                break;
             default:
                 throw new IllegalStateException();
         }
-        //return result; todo this or IllegalState ?
+        for (var cell : pseudoEvaluatedCells) {
+            if (cell == null) {
+                continue;
+            }
+            cell.clearPseudoValue();
+        }
+        return res;
     }
 
     private double deathValue(int depth) {
@@ -269,10 +266,10 @@ public class MoveCalculation {
         }
     }
 
-    private double evaluateResult(HashSet<Cell> pseudEvaluatedCells, double result, int x, int y) {
+    private double evaluateResult(Cell[] pseudoEvaluatedCells, double result, int x, int y, int j) {
         result = result * cells[x][y].getRisks();
         cells[x][y].setTmpMoveCalcValue();
-        pseudEvaluatedCells.add(cells[x][y]);
+        pseudoEvaluatedCells[j] = cells[x][y];
         return result;
     }
 }
