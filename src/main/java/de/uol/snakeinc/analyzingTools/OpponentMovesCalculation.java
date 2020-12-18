@@ -11,20 +11,13 @@ import java.util.Set;
 @CustomLog
 public class OpponentMovesCalculation {
 
-    private Cell[][] cells;
-    private Player[] players;
-    private Player us;
     private BoardAnalyzer boardAnalyzer;
     private int width;
     private int height;
+    private Cell [][] cells;
     Set<Cell> evaluatedCells = new HashSet<>();
 
-    public OpponentMovesCalculation(Cell[][] cells, Player[] players, Player us, BoardAnalyzer boardAnalyzer) {
-        this.cells = cells;
-        this.width = cells.length;
-        this.height = cells[1].length;
-        this.players = players;
-        this.us = us;
+    public OpponentMovesCalculation(BoardAnalyzer boardAnalyzer) {
         this.boardAnalyzer = boardAnalyzer;
     }
 
@@ -32,19 +25,22 @@ public class OpponentMovesCalculation {
      * todo this.
      * @return todo
      */
-    public Set<Cell> evaluate() {
+    public Set<Cell> evaluate(Cell[][] cells, Player[] players, Player us) {
+        this.width = cells.length;
+        this.height = cells[1].length;
+        this.cells = cells;
         int x;
         int y;
         int speed;
-        for (Player player : players) {
-            if (BoardAnalyzer.inDistance(us, player) && player.isActive()) {
-                log.info("Computing Opponent Moves.");
-                x = player.getX();
-                y = player.getY();
-                speed = player.getSpeed();
-                nextDepth(x, y, 1, speed);
+        for (int i = 0; i < players.length; i++) {
+                if (BoardAnalyzer.inDistance(us, players[i])) {
+                    log.info("Computing Opponent Moves.");
+                    x = players[i].getX();
+                    y = players[i].getY();
+                    speed = players[i].getSpeed();
+                    nextDepth(x, y, 1, speed);
+                }
             }
-        }
         return evaluatedCells;
     }
 
@@ -96,7 +92,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case DOWN:
-                for (int j = 1; j + 1 < speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (y + j < 0 || y + j >= height) {
                         abort = true;
                         break;
@@ -114,7 +110,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case RIGHT:
-                for (int j = 1; j + 1 < speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (x + j < 0 || x + j >= width) {
                         abort = true;
                         break;
@@ -132,7 +128,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case LEFT:
-                for (int j = 1; j < speed + 1; j++) {
+                for (int j = 1; j  < speed + 1; j++) {
                     if (x - j < 0 || x - j >= width) {
                         abort = true;
                         break;
@@ -175,7 +171,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case DOWN:
-                for (int j = 1; j + 1 < speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (y + j < 0 || y + j >= height) {
                         abort = true;
                         break;
@@ -193,7 +189,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case RIGHT:
-                for (int j = 1; j + 1 < speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (x + j < 0 || x + j >= width) {
                         abort = true;
                         break;
