@@ -42,8 +42,8 @@ public class OpponentMovesCalculation {
                 y = players[i].getY();
                 speed = players[i].getSpeed();
                 nextDepth(x, y, 1, speed);
-                }
             }
+        }
         return evaluatedCells;
     }
 
