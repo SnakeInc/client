@@ -18,7 +18,7 @@ public class MoveCalculation {
     int width;
     int height;
     BoardAnalyzer boardAnalyzer;
-    private int searchingDepth = 12;
+    private int searchingDepth = 8;
 
     public MoveCalculation(Cell[][] cells, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
