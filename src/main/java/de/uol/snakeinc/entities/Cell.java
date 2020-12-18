@@ -72,6 +72,10 @@ public class Cell {
         }
     }
 
+    public void raiseRisk(double risk) {
+        this.actionRisk *= risk;
+    }
+
     public double getValue() {
         return value;
     }
