@@ -74,7 +74,7 @@ public class OpponentMovesCalculation {
         boolean abort = false;
         switch (dir) {
             case UP:
-                for (int j = 1; j + 1 < speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (y - j < 0 || y - j >= height) {
                         abort = true;
                         break;
@@ -92,7 +92,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case DOWN:
-                for (int j = 1; j + 1 < speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (y + j < 0 || y + j >= height) {
                         abort = true;
                         break;
@@ -110,7 +110,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case RIGHT:
-                for (int j = 1; j + 1 < speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (x + j < 0 || x + j >= width) {
                         abort = true;
                         break;
@@ -128,7 +128,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case LEFT:
-                for (int j = 1; j + 1< speed + 1; j++) {
+                for (int j = 1; j  < speed + 1; j++) {
                     if (x - j < 0 || x - j >= width) {
                         abort = true;
                         break;
@@ -153,7 +153,7 @@ public class OpponentMovesCalculation {
         boolean abort = false;
         switch (dir) {
             case UP:
-                for (int j = 1; j + 1 < speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (y - j < 0 || y - j >= height) {
                         abort = true;
                         break;
@@ -171,7 +171,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case DOWN:
-                for (int j = 1; j + 1< speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (y + j < 0 || y + j >= height) {
                         abort = true;
                         break;
@@ -189,7 +189,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case RIGHT:
-                for (int j = 1; j + 1  < speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (x + j < 0 || x + j >= width) {
                         abort = true;
                         break;
@@ -207,7 +207,7 @@ public class OpponentMovesCalculation {
                 //TODO here was fallthrough
                 break;
             case LEFT:
-                for (int j = 1; j + 1 < speed + 1; j++) {
+                for (int j = 1; j < speed + 1; j++) {
                     if (x - j < 0 || x - j >= width) {
                         abort = true;
                         break;
