@@ -55,7 +55,7 @@ public class EvaluationBoard {
                 cells[player.getX()][player.getY()].setId(player.getId());
             }
         }
-        boardAnalyzer = new BoardAnalyzer(cells, players, us);
+        boardAnalyzer = new BoardAnalyzer();
     }
 
     /**
@@ -68,13 +68,17 @@ public class EvaluationBoard {
         log.info("Updating the evaluationBoard!");
         this.us = us;
         this.round = round;
-        Player[] playersArray = new Player[playerHashMap.size()];
+        Player[] playersArrayTmp = new Player[playerHashMap.size()];
         int count = 0;
         for (Integer position : playerHashMap.keySet()) {
             if (playerHashMap.get(position).isActive()) {
-                playersArray[count] = playerHashMap.get(position);
+                playersArrayTmp[count] = playerHashMap.get(position);
                 count++;
             }
+        }
+        Player[] playersArray = new Player[count];
+        for (int i = 0; i < count; i++) {
+            playersArray[i] = playersArrayTmp[i];
         }
         players = playersArray;
         int iD;
@@ -123,7 +127,7 @@ public class EvaluationBoard {
                 }
             }
         }
-        boardAnalyzer.analyze();
+        boardAnalyzer.analyze(cells, players, us);
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[1].length; j++) {

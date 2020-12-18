@@ -53,7 +53,7 @@ public class MoveCalculation {
     }
 
     private double calculateAction(Direction dir, int x, int y, int speed, int depth) {
-        if (depth == 6) {
+        if (depth == 9) {
             return 1;
         }
         double bestAction = 100;
@@ -251,7 +251,7 @@ public class MoveCalculation {
     }
 
     private double deathValue(int depth) {
-        return 10 * (6 - depth);
+        return 10 * (9 - depth);
     }
 
     /**

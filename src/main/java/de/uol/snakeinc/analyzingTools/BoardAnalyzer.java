@@ -12,25 +12,18 @@ import java.util.Set;
 @CustomLog
 public class BoardAnalyzer {
 
-    private Cell[][] cells;
-    private Player[] players;
-    private Player us;
     private Set<Cell> evaluatedCells;
     private int round = 0;
 
-    public BoardAnalyzer(Cell[][] cells, Player[] players, Player us) {
-        this.cells = cells;
-        this.players = players;
-        this.us = us;
-    }
+    public BoardAnalyzer() { }
 
     /**
      * TODO JAVADOC.
      */
-    public void analyze() {
+    public void analyze(Cell[][] cells, Player[] players, Player us) {
         round++;
-        OpponentMovesCalculation calc = new OpponentMovesCalculation(cells, players, us, this);
-        evaluatedCells = calc.evaluate();
+        OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
+        evaluatedCells = calc.evaluate(cells, players, us);
     }
 
     /**
@@ -40,8 +33,8 @@ public class BoardAnalyzer {
      * @return True - inDistance
      */
     public static Boolean inDistance(Player player1, Player player2) {
-        int distance;
-        distance = Math.abs(player1.getX() - player2.getX()) + Math.abs(player1.getY() - player2.getY());
+        log.info(player1.getX() + " "+ player2.getX() + " " + player1.getY() + " " + player2.getY());
+        int distance = Math.abs(player1.getX() - player2.getX()) + Math.abs(player1.getY() - player2.getY());
         //TODO: Implement and use pathfinder-algorithm to check if the players can reach each other in max three rounds.
         return distance <= (player1.getSpeed() * 3) + (player2.getSpeed() * 3) + 6 && distance != 0;
     }
