@@ -85,11 +85,11 @@ public class EvaluationBoard {
         int x;
         int y;
         int speed;
-        for (int i = 0; i < count; i++) {
-            iD = players[i].getId();
-            x = players[i].getX();
-            y = players[i].getY();
-            speed = players[i].getSpeed();
+        for (int i = 1; i < playerHashMap.keySet().size() + 1; i++) {
+            iD = playerHashMap.get(i).getId();
+            x = playerHashMap.get(i).getX();
+            y = playerHashMap.get(i).getY();
+            speed = playerHashMap.get(i).getSpeed();
             Cell tmp;
 
             //Checking for jumping

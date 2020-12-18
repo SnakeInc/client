@@ -18,6 +18,7 @@ public class MoveCalculation {
     int width;
     int height;
     BoardAnalyzer boardAnalyzer;
+    private int searchingDepth = 12;
 
     public MoveCalculation(Cell[][] cells, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
@@ -53,7 +54,7 @@ public class MoveCalculation {
     }
 
     private double calculateAction(Direction dir, int x, int y, int speed, int depth) {
-        if (depth == 9) {
+        if (depth == depth) {
             return 1;
         }
         double bestAction = 100;
@@ -251,7 +252,7 @@ public class MoveCalculation {
     }
 
     private double deathValue(int depth) {
-        return 10 * (9 - depth);
+        return 10 * (this.searchingDepth - depth);
     }
 
     /**
