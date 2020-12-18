@@ -30,6 +30,7 @@ public class BoardAnalyzer {
     public void analyze() {
         round++;
         OpponentMovesCalculation calc = new OpponentMovesCalculation(cells, players, us, this);
+        Gates.markGates(cells);
         evaluatedCells = calc.evaluate();
     }
 
