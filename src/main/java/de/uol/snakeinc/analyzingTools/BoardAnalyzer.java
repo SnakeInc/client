@@ -51,13 +51,15 @@ public class BoardAnalyzer {
     /**
      * Prepares the cells for the next phase (f.e. deleting old values)
      */
-    public void prepareNextPhase() {
+    public void prepareNextPhase(Cell[][] cells) {
         if (evaluatedCells != null) {
-            log.info("Preparing Next Phase " + evaluatedCells.size());
-            for (Cell cell : evaluatedCells) {
-                cell.prepareNextPhase();
-            }
             evaluatedCells.clear();
+        }
+        for (int i = 0; i < cells.length; i++) {
+            var row = cells[i];
+            for (int j = 0; j < row.length; j++) {
+                row[j].prepareNextPhase();
+            }
         }
     }
 

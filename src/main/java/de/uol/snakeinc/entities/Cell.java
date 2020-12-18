@@ -77,7 +77,7 @@ public class Cell {
     }
 
     public void raiseRisk(double risk) {
-        this.actionRisk *= risk;
+        this.opponentMovementRisk *= risk;
     }
 
     public double getValue() {

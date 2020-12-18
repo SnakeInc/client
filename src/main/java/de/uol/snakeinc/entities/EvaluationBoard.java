@@ -216,7 +216,7 @@ public class EvaluationBoard {
      * Called after an action was chosen.
      */
     public void prepareNextPhase() {
-        boardAnalyzer.prepareNextPhase();
+        boardAnalyzer.prepareNextPhase(getCells());
     }
 
     public Action getAction() {
