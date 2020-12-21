@@ -66,7 +66,10 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
-        if (round < 2) {
+        if (!us.isActive()) {
+            socket.sendAction(Action.CHANGE_NOTHING);
+        }
+        if (round < 0) {
             socket.sendAction(EvaluationBoard.startingStrategy());
         } else {
             socket.sendAction(EvaluationBoard.getAction());
