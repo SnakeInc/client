@@ -68,6 +68,7 @@ public class Game {
     public void runAction(SpeedWebSocketClient socket) {
         if (!us.isActive()) {
             //socket.sendAction(Action.CHANGE_NOTHING);
+            round++;
             return;
         }
         if (round < 0) {
