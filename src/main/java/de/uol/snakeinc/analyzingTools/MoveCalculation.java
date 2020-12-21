@@ -18,7 +18,7 @@ public class MoveCalculation {
     int width;
     int height;
     BoardAnalyzer boardAnalyzer;
-    private int searchingDepth = 8;
+    private int searchingDepth = 10;
 
     public MoveCalculation(Cell[][] cells, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
@@ -156,7 +156,7 @@ public class MoveCalculation {
         switch (dir) {
             case LEFT:
                 //Jumping-Cases
-                if (boardAnalyzer.checkForJumping(depth)) {
+                if (boardAnalyzer.checkForJumping(depth) && speed >= 3) {
                     if (offBoardOrDeadly(x - 1, y)) {
                         return deathValue(depth);
                     }
@@ -179,7 +179,7 @@ public class MoveCalculation {
 
             case RIGHT:
                 //Jumping-Cases
-                if (boardAnalyzer.checkForJumping(depth)) {
+                if (boardAnalyzer.checkForJumping(depth) && speed >= 3) {
                     if (offBoardOrDeadly(x + 1, y)) {
                         return deathValue(depth);
                     }
@@ -202,7 +202,7 @@ public class MoveCalculation {
 
             case DOWN:
                 //Jumping-Cases
-                if (boardAnalyzer.checkForJumping(depth)) {
+                if (boardAnalyzer.checkForJumping(depth) && speed >= 3) {
                     if (offBoardOrDeadly(x, y + 1)) {
                         return deathValue(depth);
                     }
@@ -225,7 +225,7 @@ public class MoveCalculation {
 
             case UP:
                 //Jumping-Cases
-                if (boardAnalyzer.checkForJumping(depth)) {
+                if (boardAnalyzer.checkForJumping(depth) && speed >= 3) {
                     if (offBoardOrDeadly(x, y - 1)) {
                         return deathValue(depth);
                     }
