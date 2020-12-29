@@ -41,7 +41,7 @@ public class OpponentMovesCalculation {
                 x = players[i].getX();
                 y = players[i].getY();
                 speed = players[i].getSpeed();
-                nextDepth(x, y, 1, speed);
+                calculateRisk(x, y, 1, speed);
             }
         }
         return evaluatedCells;
@@ -49,9 +49,9 @@ public class OpponentMovesCalculation {
 
 
 
-    private void nextDepth(int x, int y, int depth, int speed) {
+    private void calculateRisk(int x, int y, int depth, int speed) {
         if (boardAnalyzer.checkForJumping(depth)) {
-            nextDepthWithJumping(x, y, depth, speed);
+            calculateRiskWithJumping(x, y, depth, speed);
         } else {
             if (depth <= 3) {
                 //Recursive call
@@ -63,7 +63,7 @@ public class OpponentMovesCalculation {
         }
     }
 
-    private void nextDepthWithJumping(int x, int y, int depth, int speed) {
+    private void calculateRiskWithJumping(int x, int y, int depth, int speed) {
         if (depth <= 3) {
             //Recursive call
             recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.UP);
@@ -86,7 +86,7 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    nextDepth(x, y - speed, depth + 1, speed);
+                    calculateRisk(x, y - speed, depth + 1, speed);
                 }
                 break;
             case DOWN:
@@ -99,7 +99,7 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    nextDepth(x, y + speed, depth + 1, speed);
+                    calculateRisk(x, y + speed, depth + 1, speed);
                 }
                 break;
             case RIGHT:
@@ -112,7 +112,7 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    nextDepth(x + speed, y, depth + 1, speed);
+                    calculateRisk(x + speed, y, depth + 1, speed);
                 }
                 break;
             case LEFT:
@@ -125,7 +125,7 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    nextDepth(x - speed, y, depth + 1, speed);
+                    calculateRisk(x - speed, y, depth + 1, speed);
                 }
                 break;
             default:
@@ -145,7 +145,7 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    nextDepth(x, y - speed, depth + 1, speed);
+                    calculateRisk(x, y - speed, depth + 1, speed);
                 }
                 break;
             case DOWN:
@@ -159,7 +159,7 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    nextDepth(x, y + speed, depth + 1, speed);
+                    calculateRisk(x, y + speed, depth + 1, speed);
                 }
                 break;
             case RIGHT:
@@ -173,7 +173,7 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    nextDepth(x + speed, y, depth + 1, speed);
+                    calculateRisk(x + speed, y, depth + 1, speed);
                 }
                 break;
             case LEFT:
@@ -186,7 +186,7 @@ public class OpponentMovesCalculation {
                     }
                 }
                 if (!abort) {
-                    nextDepth(x - speed, y, depth + 1, speed);
+                    calculateRisk(x - speed, y, depth + 1, speed);
                 }
                 break;
             default:
