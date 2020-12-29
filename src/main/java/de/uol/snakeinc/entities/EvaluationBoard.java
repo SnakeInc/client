@@ -95,7 +95,7 @@ public class EvaluationBoard {
     }
 
     /**
-     * gives back an array of active players
+     * gives back an array of active players.
      * @param playerHashMap players
      * @return              players[activePlayers]
      */
@@ -116,7 +116,7 @@ public class EvaluationBoard {
     }
 
     /**
-     * links the cells of a snake
+     * links the cells of a snake.
      * @param iD        iD of the snake
      * @param tmp       latest cell
      * @param nextCell  next cell
@@ -129,7 +129,7 @@ public class EvaluationBoard {
     }
 
     /**
-     * links the cells of a snake reminding holes
+     * links the cells of a snake reminding holes.
      * @param tmp       iD of the snake
      * @param cell      latest cell
      * @param iD        next cell
