@@ -91,7 +91,7 @@ public class OpponentMovesCalculation {
                 break;
             case DOWN:
                 for (int j = 1; j < speed + 1; j++) {
-                    if(offBoardOrDeadly(x, y + j)) {
+                    if (offBoardOrDeadly(x, y + j)) {
                         abort = true;
                         break;
                     } else {
