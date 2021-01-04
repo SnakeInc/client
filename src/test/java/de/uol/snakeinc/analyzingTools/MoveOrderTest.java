@@ -3,7 +3,9 @@ package de.uol.snakeinc.analyzingTools;
 import static org.junit.jupiter.api.Assertions.*;
 
 import de.uol.snakeinc.entities.Action;
-import net.jqwik.api.*;
+import net.jqwik.api.Assume;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
 import net.jqwik.api.constraints.IntRange;
 
 import java.util.Arrays;
