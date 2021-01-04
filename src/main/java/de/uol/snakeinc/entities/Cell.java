@@ -53,9 +53,14 @@ public class Cell {
                 opponentMovementRisk = opponentMovementRisk * 1.0625;
                 //TODO here was fallthrough
                 break;
+        //    case 3:
+         //       opponentMovementRisk = opponentMovementRisk * 1.015625;
+           //     //TODO here was fallthrough
+             //   break;
             case 3:
-                opponentMovementRisk = opponentMovementRisk * 1.015625;
-                //TODO here was fallthrough
+                if (opponentMovementRisk == 1) {
+                    opponentMovementRisk = 0.7;
+                }
                 break;
             default:
                 throw new IllegalStateException();
