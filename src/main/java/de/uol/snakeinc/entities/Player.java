@@ -27,6 +27,8 @@ public class Player {
     private boolean active;
     @Getter
     private String name;
+    @Getter
+    private int leftRightBalance;
 
     public Player(int id, int x, int y, Direction direction, int speed, boolean active, String name) {
         this.id = id;
@@ -36,6 +38,28 @@ public class Player {
         this.speed = speed;
         this.active = active;
         this.name = name;
+        this.leftRightBalance = 0;
+    }
+
+    /**
+     * updates the left right balance of the player.
+     * @param action whether the payer moves left to right
+     */
+    public void updateLeftRightBalance(Action action) {
+        switch (action) {
+            case TURN_LEFT:
+                if (leftRightBalance > -3) {
+                    leftRightBalance--;
+                }
+                return;
+            case TURN_RIGHT:
+                if (leftRightBalance < 3) {
+                    leftRightBalance++;
+                }
+                return;
+            default:
+                return;
+        }
     }
 
     /**

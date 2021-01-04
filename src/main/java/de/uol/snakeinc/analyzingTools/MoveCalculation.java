@@ -37,7 +37,9 @@ public class MoveCalculation {
         double bestActionTmp = 100;
         Action bestAction = Action.CHANGE_NOTHING;
         double tmp;
-        for (Action act : Action.values()) {
+        Action[] actions =
+                MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(), 3,5, MoveOrder.SpiralForm.NoSpiral);
+        for (Action act : actions) {
             HashSet<Cell> pseudoEvaluatedCells = new HashSet<>();
             tmp = calculate(act, us.getDirection(), us.getX(), us.getY(), us.getSpeed(), 1, pseudoEvaluatedCells);
             for (Cell cell : pseudoEvaluatedCells) {
@@ -48,6 +50,9 @@ public class MoveCalculation {
                 bestActionTmp = tmp;
                 bestAction = act;
             }
+        }
+        if (bestAction == Action.TURN_LEFT || bestAction == Action.TURN_RIGHT) {
+            us.updateLeftRightBalance(bestAction);
         }
         log.debug("BestAction: " + bestAction + "result: " + bestActionTmp);
         return bestAction;
