@@ -14,6 +14,8 @@ public class Cell {
     //The risk that another agent will move to this cell
     private double opponentMovementRisk;
 
+    private double killIncentive;
+
     @Getter
     private int iD;
 
@@ -21,6 +23,7 @@ public class Cell {
         value = 1;
         opponentMovementRisk = 1;
         tmpMoveCalcValue = 1;
+        killIncentive = 1;
     }
 
 
@@ -74,7 +77,7 @@ public class Cell {
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interinteraktion between players.
-        return getValue() * opponentMovementRisk * tmpMoveCalcValue;
+        return getValue() * opponentMovementRisk * tmpMoveCalcValue * killIncentive;
     }
 
     public void clearPseudoValue() {
@@ -87,5 +90,9 @@ public class Cell {
 
     public void prepareNextPhase() {
         this.opponentMovementRisk = 1;
+    }
+
+    public void setKillIncentive() {
+        this.killIncentive = 0.5;
     }
 }
