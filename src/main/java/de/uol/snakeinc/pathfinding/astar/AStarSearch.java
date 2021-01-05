@@ -1,0 +1,101 @@
+package de.uol.snakeinc.pathfinding.astar;
+
+import de.uol.snakeinc.pathfinding.PathCell;
+import de.uol.snakeinc.pathfinding.Pathfinder;
+
+import java.util.*;
+
+/**
+ The AStarSearch class, along with the AStarNode class,
+ implements a generic A* search algorithm. The AStarNode
+ class should be subclassed to provide searching capability.
+ */
+public class AStarSearch extends Pathfinder {
+
+    private List<AStarNode> open;
+    private List<AStarNode> closed;
+    private List<AStarNode> path;
+    private PathCell[][] maze;
+    private AStarNode now;
+    private PathCell start;
+    private PathCell end;
+
+    public AStarSearch(PathCell[][] cells) {
+        super(cells);
+        this.open = new ArrayList<>();
+        this.closed = new ArrayList<>();
+        this.path = new ArrayList<>();
+        this.maze = cells;
+    }
+
+    @Override
+    public List<PathCell> findPath(PathCell start, PathCell end) {
+        this.start = start;
+        this.now = new AStarNode(null, start, 0, 0);
+        this.end = end;
+        this.closed.add(this.now);
+        addNeigborsToOpenList();
+        while (this.now.getCell().getX() != this.end.getX() || this.now.getCell().getY() != this.end.getY()) {
+            if (this.open.isEmpty()) { // Nothing to examine
+                return null;
+            }
+            this.now = this.open.get(0); // get first node (lowest f score)
+            this.open.remove(0); // remove it
+            this.closed.add(this.now); // and add to the closed
+            addNeigborsToOpenList();
+        }
+        this.path.add(0, this.now);
+        while (this.now.getCell().getX() != this.start.getX() || this.now.getCell().getY() != this.start.getY()) {
+            this.now = this.now.getParent();
+            this.path.add(0, this.now);
+        }
+        List<PathCell> cells = new ArrayList<>();
+        for (AStarNode node : this.path) {
+            cells.add(node.getCell());
+        }
+        return cells;
+    }
+    /*
+     ** Looks in a given List<> for a node
+     **
+     ** @return (bool) NeightborInListFound
+     */
+    private static boolean findNeighborInList(List<AStarNode> array, AStarNode node) {
+        return array.stream().anyMatch((n) -> (n.getCell().getX() == node.getCell().getX() && n.getCell().getY() == node.getCell().getY()));
+    }
+
+    /*
+     ** Calulate distance between this.now and xend/yend
+     **
+     ** @return (int) distance
+     */
+    private double distance(int dx, int dy) {
+        return Math.abs(this.now.getCell().getX() + dx - this.end.getX()) + Math.abs(this.now.getCell().getY() + dy - this.end.getY()); // else return "Manhattan distance"
+    }
+
+    private void addNeigborsToOpenList() {
+        for (int x = -1; x <= 1; x++) { // TODO: For Pathfinding with jumps etc. implement options like jump/left/right instead of directions - Maybe extra algorithm
+            for (int y = -1; y <= 1; y++) {
+                if (x != 0 && y != 0) {
+                    continue; // skip if diagonal movement is not allowed
+                }
+                int mazePositionY = this.now.getCell().getY() + y;
+                int mazePositionX = this.now.getCell().getX() + x;
+                if (mazePositionY >= this.maze.length || mazePositionY < 0 ||
+                    mazePositionX >= this.maze[0].length || mazePositionX < 0) {
+                    continue; // skip if diagonal movement is not allowed
+                }
+                AStarNode node = new AStarNode(this.now, maze[mazePositionY][mazePositionX], this.now.getCost(), this.distance(x, y));
+                if ((x != 0 || y != 0) // not this.now
+                    && this.now.getCell().getX() + x >= 0 && this.now.getCell().getX() + x < this.maze[0].length // check maze boundaries
+                    && this.now.getCell().getY() + y >= 0 && this.now.getCell().getY() + y < this.maze.length
+                    && !this.maze[this.now.getCell().getY() + y][this.now.getCell().getX() + x].isInUse() // check if square is walkable
+                    && !findNeighborInList(this.open, node) && !findNeighborInList(this.closed, node)) { // if not already done
+                    node.setCost(node.getParent().getCost() + 1.); // Horizontal/vertical cost = 1.0
+                    this.open.add(node);
+                }
+            }
+        }
+        Collections.sort(this.open);
+    }
+}

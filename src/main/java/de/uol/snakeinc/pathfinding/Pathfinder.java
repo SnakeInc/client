@@ -1,11 +1,15 @@
 package de.uol.snakeinc.pathfinding;
 
-import de.uol.snakeinc.entities.Cell;
-
 import java.util.List;
 
-public interface Pathfinder {
+public abstract class Pathfinder {
 
-    public List<Cell> findPath(Cell[][] cells);
+    private PathCell[][] cells;
+
+    public Pathfinder(PathCell[][] cells) {
+        this.cells = cells;
+    }
+
+    public abstract List<PathCell> findPath(PathCell start, PathCell end);
 
 }
