@@ -1,10 +1,7 @@
 package de.uol.snakeinc.analyzingTools;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import de.uol.snakeinc.entities.Action;
-import lombok.CustomLog;
-import net.jqwik.api.Assume;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.GenerationMode;
 import net.jqwik.api.Property;
@@ -66,14 +63,14 @@ class MoveOrderTest {
             idealSpeedMin = swap;
         }
 
-        if(leftRightBalance == 0) {
+        if (leftRightBalance == 0) {
             return true;
         }
 
         var res = MoveOrder.weights(speed, leftRightBalance, idealSpeedMin, idealSpeedMax, MoveOrder.SpiralForm.Spiral);
 
         if (leftRightBalance < 0) {
-            for(var act : res) {
+            for (var act : res) {
                 switch (act) {
                     case TURN_LEFT: return true;
                     case TURN_RIGHT: return false;
@@ -81,7 +78,7 @@ class MoveOrderTest {
                 }
             }
         } else {
-            for(var act : res) {
+            for (var act : res) {
                 switch (act) {
                     case TURN_LEFT: return false;
                     case TURN_RIGHT: return true;
@@ -113,14 +110,15 @@ class MoveOrderTest {
             idealSpeedMin = swap;
         }
 
-        if(leftRightBalance == 0) {
+        if (leftRightBalance == 0) {
             return true;
         }
 
-        var res = MoveOrder.weights(speed, leftRightBalance, idealSpeedMin, idealSpeedMax, MoveOrder.SpiralForm.NoSpiral);
+        var res = MoveOrder.weights(speed, leftRightBalance,
+                idealSpeedMin, idealSpeedMax, MoveOrder.SpiralForm.NoSpiral);
 
         if (leftRightBalance < 0) {
-            for(var act : res) {
+            for (var act : res) {
                 switch (act) {
                     case TURN_LEFT: return false;
                     case TURN_RIGHT: return true;
@@ -128,7 +126,7 @@ class MoveOrderTest {
                 }
             }
         } else {
-            for(var act : res) {
+            for (var act : res) {
                 switch (act) {
                     case TURN_LEFT: return true;
                     case TURN_RIGHT: return false;
@@ -146,7 +144,7 @@ class MoveOrderTest {
      * @param idealSpeedMin params
      * @param idealSpeedMax params
      * @param spiralForm params
-     * @return the test value.
+     * @return the test value
      */
     @Property(generation = GenerationMode.EXHAUSTIVE)
     boolean SpeedTest(@ForAll @IntRange(min = 1, max = 10) int speed,
@@ -163,8 +161,8 @@ class MoveOrderTest {
 
         var res = MoveOrder.weights(speed, leftRightBalance, idealSpeedMin, idealSpeedMax, spiralForm);
 
-        if(speed <= idealSpeedMax && speed >= idealSpeedMin) {
-            for(var act : res) {
+        if (speed <= idealSpeedMax && speed >= idealSpeedMin) {
+            for (var act : res) {
                 switch (act) {
                     case CHANGE_NOTHING: return true;
                     case SPEED_UP: return false;
@@ -174,8 +172,8 @@ class MoveOrderTest {
             }
         }
 
-        if(speed < idealSpeedMin) {
-            for(var act : res) {
+        if (speed < idealSpeedMin) {
+            for (var act : res) {
                 switch (act) {
                     case CHANGE_NOTHING: return false;
                     case SPEED_UP: return true;
@@ -185,8 +183,8 @@ class MoveOrderTest {
             }
         }
 
-        if(speed > idealSpeedMax) {
-            for(var act : res) {
+        if (speed > idealSpeedMax) {
+            for (var act : res) {
                 switch (act) {
                     case CHANGE_NOTHING: return false;
                     case SPEED_UP: return false;

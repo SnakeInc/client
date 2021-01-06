@@ -38,7 +38,7 @@ public class MoveCalculation {
         Action bestAction = Action.CHANGE_NOTHING;
         double tmp;
         Action[] actions =
-                MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(), 3,5, MoveOrder.SpiralForm.NoSpiral);
+                MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(), 2,3, MoveOrder.SpiralForm.NoSpiral);
         for (Action act : actions) {
             HashSet<Cell> pseudoEvaluatedCells = new HashSet<>();
             tmp = calculate(act, us.getDirection(), us.getX(), us.getY(), us.getSpeed(), 1, pseudoEvaluatedCells);
