@@ -90,9 +90,10 @@ public class Cell {
 
     public void prepareNextPhase() {
         this.opponentMovementRisk = 1;
+        this.killIncentive = 1;
     }
 
     public void setKillIncentive() {
-        this.killIncentive = 0.5;
+        this.killIncentive = 0.9;
     }
 }
