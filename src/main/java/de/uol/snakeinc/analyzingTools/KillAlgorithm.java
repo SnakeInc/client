@@ -13,7 +13,7 @@ public class KillAlgorithm {
     int floodTerminationCount = 400;
 
     public Set<Cell> killAlgorithm(Cell[][] cells, Player[] players, Player us) {
-        Set<Cell> killingCells = new HashSet<>();
+        Set<Cell> evaluatedCells = new HashSet<>();
         int width = cells.length;
         int height = cells[1].length;
         for (int i = 0; i < players.length; i++) {
@@ -23,43 +23,42 @@ public class KillAlgorithm {
                 Player op = players[i];
                 int x = players[i].getX();
                 int y = players[i].getY();
-                int speed = players[i].getSpeed();
                 Direction dir = players[i].getDirection();
                 switch (dir) {
                     case DOWN:
                     case UP:
                         if (checkForDeadEnd(x - 1, y, width, height, cells)) {
-                            killingCells = raiseKillIncentive(op, cells, killingCells, dir, Direction.LEFT, width, height);
+                            evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
                         } else if (checkForDeadEnd(x + 1, y, width, height, cells)) {
-                            killingCells = raiseKillIncentive(op, cells, killingCells, dir, Direction.RIGHT, width, height);
+                            evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
                         }
                         break;
                     //      case DOWN:
                     //        if (checkForDeadEnd(x - 1, y, width, height, cells)) {
-                    //          killingCells = raiseKillIncentive(op, cells, killingCells, dir, Direction.LEFT, width, height);
+                    //          evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
                     //    } else if (checkForDeadEnd(x + 1, y, width, height, cells)) {
-                    //      killingCells = raiseKillIncentive(op, cells, killingCells, dir, Direction.RIGHT, width, height);
+                    //      evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
                     //}
                     //  break;
                     case RIGHT:
                     case LEFT:
                         if (checkForDeadEnd(x, y - 1, width, height, cells)) {
-                            killingCells = raiseKillIncentive(op, cells, killingCells, dir, Direction.UP, width, height);
+                            evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
                         } else if (checkForDeadEnd(x, y + 1, width, height, cells)) {
-                            killingCells = raiseKillIncentive(op, cells, killingCells, dir, Direction.DOWN, width, height);
+                            evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
                         }
                         break;
                     //            case RIGHT:
                     //              if (checkForDeadEnd(x, y - 1, width, height, cells)) {
-                    //                killingCells = raiseKillIncentive(op, cells, killingCells, dir, Direction.UP, width, height);
+                    //                evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
                     //          } else if (checkForDeadEnd(x, y + 1, width, height, cells)) {
-                    //            killingCells = raiseKillIncentive(op, cells, killingCells, dir, Direction.DOWN, width, height);
+                    //            evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
                     //      }
                     //        break;
                 }
             }
         }
-        return killingCells;
+        return evaluatedCells;
     }
 
     private boolean checkForDeadEnd(int x, int y, int width, int height, Cell[][] cells) {
@@ -79,6 +78,12 @@ public class KillAlgorithm {
         }
     }
 
+    /**
+     * Marks cells between the heads of us and op.
+     * @param cells cells
+     * @param op    opponent
+     * @param us    us
+     */
     private void closeCircle(Cell[][] cells, Player op, Player us) {
         int usX = us.getX();
         int usY = us.getY();
@@ -91,7 +96,7 @@ public class KillAlgorithm {
                 floodCache[usX - i][usY][0] = 1;
             }
         } else if (diffX < 0) {
-            for (int i = 0; i < -diffX; i++) {
+            for (int i = 0; i < - diffX; i++) {
                 floodCache[usX + i][usY][0] = 1;
             }
         }
@@ -100,17 +105,33 @@ public class KillAlgorithm {
                 floodCache[opX][opY + i][0] = 1;
             }
         } else if (diffY < 0) {
-            for (int i = 0; i < -diffY; i++) {
+            for (int i = 0; i < - diffY; i++) {
                 floodCache[opX][opY - i][0] = 1;
             }
         }
     }
 
+    /**
+     * Clears cache.
+     * @param width     width
+     * @param height    height
+     */
     private void clearFloodCache(int width, int height) {
         floodCache = new int[width][height][1];
         floodTerminationCount = 400;
     }
 
+    /**
+     * Raises the kill incentives by direction - combinations
+     * @param player             opponent
+     * @param cells              cells
+     * @param killingCells       cells with incentiv
+     * @param opDirection        direction of opponent
+     * @param attackDirection    direction of the attack
+     * @param width              width
+     * @param height             height
+     * @return                   Set<Cell> cells
+     */
     private Set<Cell> raiseKillIncentive(Player player, Cell[][] cells, Set<Cell> killingCells, Direction opDirection, Direction attackDirection, int width, int height) {
         int x = player.getX();
         int y = player.getY();
@@ -171,6 +192,11 @@ public class KillAlgorithm {
         return killingCells;
     }
 
+    /**
+     * Evaluate the cells.
+     * @param cell          cell
+     * @param killingCells  Set of Cells
+     */
     private void evaluateCell(Cell cell, Set<Cell> killingCells) {
         cell.setKillIncentive();
         killingCells.add(cell);
