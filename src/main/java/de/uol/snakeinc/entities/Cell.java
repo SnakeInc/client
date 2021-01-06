@@ -88,6 +88,9 @@ public class Cell {
         tmpMoveCalcValue = 10;
     }
 
+    /**
+     * Prepare the next phase.
+     */
     public void prepareNextPhase() {
         this.opponentMovementRisk = 1;
         this.killIncentive = 1;
