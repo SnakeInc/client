@@ -45,7 +45,7 @@ public class EvaluationBoard {
         cells = new Cell[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                cells[i][j] = new Cell();
+                cells[i][j] = new Cell(j, i);
             }
         }
 

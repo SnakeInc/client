@@ -1,20 +1,16 @@
 package de.uol.snakeinc.pathfinding;
 
-public class PathCell {
+public abstract class PathCell {
 
-    private boolean inUse;
     private int x;
     private int y;
 
-    public PathCell(boolean inUse, int x, int y) {
-        this.inUse = inUse;
+    public PathCell(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public boolean isInUse() {
-        return this.inUse;
-    }
+    public abstract boolean isInUse();
 
     public int getX() {
         return this.x;

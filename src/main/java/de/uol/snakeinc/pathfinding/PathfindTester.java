@@ -1,5 +1,6 @@
 package de.uol.snakeinc.pathfinding;
 
+import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.pathfinding.astar.AStarSearch;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class PathfindTester {
                 if (new Random().nextInt(chance) == 0) {
                     inUse = true;
                 }
-                cells[y][x] = new PathCell(inUse, x, y);
+                cells[y][x] = new DefaultPathCell(inUse, x, y);
             }
         }
         return cells;
