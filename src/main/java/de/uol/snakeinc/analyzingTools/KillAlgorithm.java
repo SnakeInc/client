@@ -107,7 +107,6 @@ public abstract class KillAlgorithm {
             floodVar = flood(floodVar, x, y + 1, width, height, cells);
             floodVar = flood(floodVar, x, y - 1, width, height, cells);
         }
-
         return floodVar;
     }
 
