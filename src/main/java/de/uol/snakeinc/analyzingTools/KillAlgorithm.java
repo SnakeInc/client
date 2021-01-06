@@ -12,6 +12,13 @@ public class KillAlgorithm {
     int[][][] floodCache;
     int floodTerminationCount = 400;
 
+    /**
+     * Sets incentives if another Player can be attacked.
+     * @param cells     cells
+     * @param players   players
+     * @param us        us
+     * @return          Set<Cell>
+     */
     public Set<Cell> killAlgorithm(Cell[][] cells, Player[] players, Player us) {
         Set<Cell> evaluatedCells = new HashSet<>();
         int width = cells.length;
@@ -47,11 +54,28 @@ public class KillAlgorithm {
         return evaluatedCells;
     }
 
+    /**
+     * checks for dead end.
+     * @param x         x coordinate
+     * @param y         y coordinate
+     * @param width     width
+     * @param height    height
+     * @param cells     cells
+     * @return          true if theres a dead end
+     */
     private boolean checkForDeadEnd(int x, int y, int width, int height, Cell[][] cells) {
         flood(x, y, width, height, cells);
         return floodTerminationCount > 0;
     }
 
+    /**
+     * floods to find a dead end.
+     * @param x         x coordinate
+     * @param y         y coordinate
+     * @param width     width
+     * @param height    height
+     * @param cells     cells
+     */
     private void flood(int x, int y, int width, int height, Cell[][] cells) {
         if (x >= 0 && x < width && y >= 0 && y < height && !cells[x][y].isDeadly()
             && floodTerminationCount > 0 && floodCache[x][y][0] != 1) {
