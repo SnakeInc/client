@@ -28,6 +28,7 @@ public class BoardAnalyzer {
         round++;
         OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
         evaluatedCells = calc.evaluate(cells, players, us);
+        evaluatedCells.addAll(new KillAlgorithm().killAlgorithm(cells, players, us));
     }
 
     /**
