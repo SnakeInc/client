@@ -93,6 +93,7 @@ public abstract class KillAlgorithm {
      * @param width     width
      * @param height    height
      * @param cells     cells
+     * @return          floodVar
      */
     private static FloodVar flood(FloodVar floodVar ,int x, int y, int width, int height, Cell[][] cells) {
         if (x >= 0 && x < width && y >= 0 && y < height && !cells[x][y].isDeadly()
@@ -146,7 +147,7 @@ public abstract class KillAlgorithm {
     }
 
     /**
-     * Raises the kill incentives by direction - combinations
+     * Raises the kill incentives by direction - combinations.
      * @param player             opponent
      * @param cells              cells
      * @param killingCells       cells with incentive
@@ -213,6 +214,7 @@ public abstract class KillAlgorithm {
                         }
                     }
                 }
+                break;
             default:
                 throw new IllegalStateException();
         }
