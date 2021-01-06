@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-public class KillAlgorithm {
+public abstract class KillAlgorithm {
 
     /**
      * Sets incentives if another Player can be attacked.
@@ -19,7 +19,7 @@ public class KillAlgorithm {
      * @param us        us
      * @return          Set of cells
      */
-    public Set<Cell> killAlgorithm(Cell[][] cells, Player[] players, Player us) {
+    public static Set<Cell> killAlgorithm(Cell[][] cells, Player[] players, Player us) {
         Set<Cell> evaluatedCells = new HashSet<>();
         int width = cells.length;
         int height = cells[1].length;
@@ -65,7 +65,7 @@ public class KillAlgorithm {
     @AllArgsConstructor
     @Getter
     @Setter
-    public class FloodVar {
+    public static class FloodVar {
 
         int floodTerminationCount;
         int[][][] floodCache;
@@ -81,7 +81,7 @@ public class KillAlgorithm {
      * @param cells     cells
      * @return          true if theres a dead end
      */
-    private boolean checkForDeadEnd(int x, int y, int width, int height, Cell[][] cells, FloodVar floodVar) {
+    private static boolean checkForDeadEnd(int x, int y, int width, int height, Cell[][] cells, FloodVar floodVar) {
         return flood(floodVar, x, y, width, height, cells).getFloodTerminationCount() > 0;
     }
 
@@ -94,7 +94,7 @@ public class KillAlgorithm {
      * @param height    height
      * @param cells     cells
      */
-    private FloodVar flood(FloodVar floodVar ,int x, int y, int width, int height, Cell[][] cells) {
+    private static FloodVar flood(FloodVar floodVar ,int x, int y, int width, int height, Cell[][] cells) {
         if (x >= 0 && x < width && y >= 0 && y < height && !cells[x][y].isDeadly()
             && floodVar.getFloodTerminationCount() > 0 && floodVar.getFloodCache()[x][y][0] != 1) {
 
@@ -117,7 +117,7 @@ public class KillAlgorithm {
      * @param us          us
      * @return           floodCache
      */
-    private int[][][] closeCircle(int[][][] floodCache, Player op, Player us) {
+    private static int[][][] closeCircle(int[][][] floodCache, Player op, Player us) {
         int usX = us.getX();
         int usY = us.getY();
         int opX = op.getX();
@@ -156,7 +156,7 @@ public class KillAlgorithm {
      * @param height             height
      * @return                   Set of cells
      */
-    private Set<Cell> raiseKillIncentive(Player player, Cell[][] cells, Set<Cell> killingCells,
+    private static Set<Cell> raiseKillIncentive(Player player, Cell[][] cells, Set<Cell> killingCells,
                                          Direction opDirection, Direction attackDirection, int width, int height) {
         int x = player.getX();
         int y = player.getY();
@@ -224,7 +224,7 @@ public class KillAlgorithm {
      * @param cell          cell
      * @param killingCells  Set of Cells
      */
-    private void evaluateCell(Cell cell, Set<Cell> killingCells) {
+    private static void evaluateCell(Cell cell, Set<Cell> killingCells) {
         cell.setKillIncentive();
         killingCells.add(cell);
     }
