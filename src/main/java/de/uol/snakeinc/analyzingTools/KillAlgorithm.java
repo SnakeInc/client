@@ -33,13 +33,6 @@ public class KillAlgorithm {
                             evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
                         }
                         break;
-                    //      case DOWN:
-                    //        if (checkForDeadEnd(x - 1, y, width, height, cells)) {
-                    //          evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
-                    //    } else if (checkForDeadEnd(x + 1, y, width, height, cells)) {
-                    //      evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
-                    //}
-                    //  break;
                     case RIGHT:
                     case LEFT:
                         if (checkForDeadEnd(x, y - 1, width, height, cells)) {
@@ -48,13 +41,6 @@ public class KillAlgorithm {
                             evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
                         }
                         break;
-                    //            case RIGHT:
-                    //              if (checkForDeadEnd(x, y - 1, width, height, cells)) {
-                    //                evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
-                    //          } else if (checkForDeadEnd(x, y + 1, width, height, cells)) {
-                    //            evaluatedCells = raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
-                    //      }
-                    //        break;
                 }
             }
         }
@@ -67,7 +53,9 @@ public class KillAlgorithm {
     }
 
     private void flood(int x, int y, int width, int height, Cell[][] cells) {
-        if (x >= 0 && x < width && y >= 0 && y < height && !cells[x][y].isDeadly() && floodTerminationCount > 0 && floodCache[x][y][0] != 1) {
+        if (x >= 0 && x < width && y >= 0 && y < height && !cells[x][y].isDeadly()
+            && floodTerminationCount > 0 && floodCache[x][y][0] != 1) {
+
             floodTerminationCount--;
             floodCache[x][y][0] = 1;
 
@@ -132,7 +120,8 @@ public class KillAlgorithm {
      * @param height             height
      * @return                   Set<Cell> cells
      */
-    private Set<Cell> raiseKillIncentive(Player player, Cell[][] cells, Set<Cell> killingCells, Direction opDirection, Direction attackDirection, int width, int height) {
+    private Set<Cell> raiseKillIncentive(Player player, Cell[][] cells, Set<Cell> killingCells,
+                                         Direction opDirection, Direction attackDirection, int width, int height) {
         int x = player.getX();
         int y = player.getY();
         int attackDistance = player.getSpeed() * 3;
