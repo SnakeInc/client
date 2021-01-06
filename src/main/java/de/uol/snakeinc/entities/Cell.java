@@ -1,8 +1,9 @@
 package de.uol.snakeinc.entities;
 
+import de.uol.snakeinc.pathfinding.PathCell;
 import lombok.Getter;
 
-public class Cell {
+public class Cell extends PathCell {
 
     //Basic Value.
     @Getter
@@ -14,15 +15,24 @@ public class Cell {
     //The risk that another agent will move to this cell
     private double opponentMovementRisk;
 
+    //Area-risk
+    private double areaRisk;
+
     @Getter
     private int iD;
 
-    public Cell() {
+    public Cell(int x, int y) {
+        super(x, y);
         value = 1;
         opponentMovementRisk = 1;
         tmpMoveCalcValue = 1;
+        areaRisk = 1;
     }
 
+    @Override
+    public boolean isInUse() {
+        return value != 1;
+    }
 
     public void setId(int id) {
         this.iD = id;
@@ -60,6 +70,10 @@ public class Cell {
             default:
                 throw new IllegalStateException();
         }
+    }
+
+    public void setAreaRisk(double risk) {
+        this.areaRisk = risk;
     }
 
     public double getValue() {
