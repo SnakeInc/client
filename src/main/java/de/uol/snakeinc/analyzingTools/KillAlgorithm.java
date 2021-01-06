@@ -95,7 +95,7 @@ public abstract class KillAlgorithm {
      * @param cells     cells
      * @return          floodVar
      */
-    private static FloodVar flood(FloodVar floodVar ,int x, int y, int width, int height, Cell[][] cells) {
+    private static FloodVar flood(FloodVar floodVar , int x, int y, int width, int height, Cell[][] cells) {
         if (x >= 0 && x < width && y >= 0 && y < height && !cells[x][y].isDeadly()
             && floodVar.getFloodTerminationCount() > 0 && floodVar.getFloodCache()[x][y][0] != 1) {
 
