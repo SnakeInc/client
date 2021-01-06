@@ -93,7 +93,7 @@ public abstract class KillAlgorithm {
      * @param width     width
      * @param height    height
      * @param cells     cells
-     * @return          floodVar
+     * @return floodVar
      */
     private static FloodVar flood(FloodVar floodVar , int x, int y, int width, int height, Cell[][] cells) {
         if (x >= 0 && x < width && y >= 0 && y < height && !cells[x][y].isDeadly()
