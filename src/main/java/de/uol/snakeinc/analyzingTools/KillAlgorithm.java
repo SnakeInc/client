@@ -73,6 +73,7 @@ public class KillAlgorithm {
 
     /**
      * checks for dead end.
+     * @param floodVar  floodVariables
      * @param x         x coordinate
      * @param y         y coordinate
      * @param width     width
@@ -114,6 +115,7 @@ public class KillAlgorithm {
      * @param floodCache floodCache
      * @param op         opponent
      * @param us          us
+     * @return           floodCache
      */
     private int[][][] closeCircle(int[][][] floodCache, Player op, Player us) {
         int usX = us.getX();
