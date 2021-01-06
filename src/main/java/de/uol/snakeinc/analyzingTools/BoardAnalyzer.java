@@ -11,8 +11,11 @@ import lombok.CustomLog;
 public class BoardAnalyzer {
 
     private int round = 0;
+    private SectionCalculator sectionCalculator;
 
-    public BoardAnalyzer() { }
+    public BoardAnalyzer(int width, int height) {
+        this.sectionCalculator = new SectionCalculator(width, height);
+    }
 
     /**
      * TODO JAVADOC.
@@ -24,6 +27,7 @@ public class BoardAnalyzer {
         round++;
         OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
         Gates.markGates(cells);
+        sectionCalculator.calculate(cells);
         calc.evaluate(cells, players, us);
     }
 

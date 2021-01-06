@@ -55,7 +55,7 @@ public class EvaluationBoard {
                 cells[player.getX()][player.getY()].setId(player.getId());
             }
         }
-        boardAnalyzer = new BoardAnalyzer();
+        boardAnalyzer = new BoardAnalyzer(width, height);
     }
 
     /**
