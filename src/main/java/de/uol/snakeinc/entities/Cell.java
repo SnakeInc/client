@@ -83,7 +83,7 @@ public class Cell extends PathCell {
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interinteraktion between players.
-        return getValue() * opponentMovementRisk * tmpMoveCalcValue;
+        return getValue() * opponentMovementRisk * tmpMoveCalcValue * areaRisk;
     }
 
     public void clearPseudoValue() {
