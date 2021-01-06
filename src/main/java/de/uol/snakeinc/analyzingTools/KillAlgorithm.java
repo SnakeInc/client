@@ -88,11 +88,11 @@ public abstract class KillAlgorithm {
     /**
      * floods to find a dead end.
      * @param floodVar  floodVar
-     * @param x         x coordinate
-     * @param y         y coordinate
-     * @param width     width
-     * @param height    height
-     * @param cells     cells
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param width width
+     * @param height height
+     * @param cells cells
      * @return floodVar
      */
     private static FloodVar flood(FloodVar floodVar , int x, int y, int width, int height, Cell[][] cells) {
