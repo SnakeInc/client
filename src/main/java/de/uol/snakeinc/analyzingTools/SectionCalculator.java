@@ -70,6 +70,7 @@ public class SectionCalculator {
 
         for (int x = 0; x < cells.length; x++) {
             for (int y = 0; y < cells[0].length; y++) {
+                //#start
                 int sectionX = (int) Math.floor(x / devideWidth);
                 int sectionY = (int) Math.floor(y / devideHeight);
 
@@ -80,6 +81,7 @@ public class SectionCalculator {
                 double value = new LinearInterpolator(1.2, 1.0).getInterpolation(scale);
                 //System.out.println("Value: " +  value + " Scale: " + scale + " Range: " + range);
                 // set value here
+                //#end -> In own for-loop for performance
                 cells[x][y].setAreaRisk(value);
             }
         }
