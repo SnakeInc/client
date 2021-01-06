@@ -7,7 +7,7 @@ public abstract class MoveOrder {
             int speed, int leftRightBalance, int idealSpeedMin, int idealSpeedMax, SpiralForm spiral) {
         // negative left right balance means left
         //speed in right place
-        if (idealSpeedMin < speed && speed > idealSpeedMax) {
+        if (idealSpeedMin <= speed && speed <= idealSpeedMax) {
             if (spiral == SpiralForm.Spiral) {
                 if (leftRightBalance < 0) {
                     return new Action[]{Action.TURN_LEFT, Action.CHANGE_NOTHING,
