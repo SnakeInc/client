@@ -22,11 +22,11 @@ public class OpponentMovesCalculation {
     }
 
     /**
-     * todo this.
-     * @return todo
-     * @param cells todo
-     * @param players todo
-     * @param us todo
+     * evaluates the risk of a cell if an other player could reach it.
+     * @return evaluated Cells
+     * @param cells cells
+     * @param players players
+     * @param us us
      */
     public Set<Cell> evaluate(Cell[][] cells, Player[] players, Player us) {
         this.width = cells.length;
@@ -41,7 +41,7 @@ public class OpponentMovesCalculation {
                 x = players[i].getX();
                 y = players[i].getY();
                 speed = players[i].getSpeed();
-                nextDepth(x, y, 1, speed);
+                calculateRisk(x, y, 1, speed);
             }
         }
         return evaluatedCells;
@@ -49,9 +49,9 @@ public class OpponentMovesCalculation {
 
 
 
-    private void nextDepth(int x, int y, int depth, int speed) {
+    private void calculateRisk(int x, int y, int depth, int speed) {
         if (boardAnalyzer.checkForJumping(depth)) {
-            nextDepthWithJumping(x, y, depth, speed);
+            calculateRiskWithJumping(x, y, depth, speed);
         } else {
             if (depth <= 3) {
                 //Recursive call
@@ -63,7 +63,7 @@ public class OpponentMovesCalculation {
         }
     }
 
-    private void nextDepthWithJumping(int x, int y, int depth, int speed) {
+    private void calculateRiskWithJumping(int x, int y, int depth, int speed) {
         if (depth <= 3) {
             //Recursive call
             recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.UP);
@@ -78,75 +78,55 @@ public class OpponentMovesCalculation {
         switch (dir) {
             case UP:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (y - j < 0 || y - j >= height) {
-                        abort = true;
-                        break;
-                    } else if (cells[x][y - j].isDeadly()) {
+                    if (offBoardOrDeadly(x, y - j)) {
                         abort = true;
                         break;
                     } else {
-                        evaluatedCells.add(cells[x][y - j]);
-                        cells[x][y - j].raiseActionRisk(depth);
+                        evaluateCells(x, y - j, depth);
                     }
                 }
                 if (!abort) {
-                    nextDepth(x, y - speed, depth + 1, speed);
+                    calculateRisk(x, y - speed, depth + 1, speed);
                 }
-                //TODO here was fallthrough
                 break;
             case DOWN:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (y + j < 0 || y + j >= height) {
-                        abort = true;
-                        break;
-                    } else if (cells[x][y + j].isDeadly()) {
+                    if (offBoardOrDeadly(x, y + j)) {
                         abort = true;
                         break;
                     } else {
-                        evaluatedCells.add(cells[x][y + j]);
-                        cells[x][y + j].raiseActionRisk(depth);
+                        evaluateCells(x, y + j, depth);
                     }
                 }
                 if (!abort) {
-                    nextDepth(x, y + speed, depth + 1, speed);
+                    calculateRisk(x, y + speed, depth + 1, speed);
                 }
-                //TODO here was fallthrough
                 break;
             case RIGHT:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (x + j < 0 || x + j >= width) {
-                        abort = true;
-                        break;
-                    } else if (cells[x + j][y].isDeadly()) {
+                    if (offBoardOrDeadly(x + j, y)) {
                         abort = true;
                         break;
                     } else {
-                        evaluatedCells.add(cells[x + j][y]);
-                        cells[x + j][y].raiseActionRisk(depth);
+                        evaluateCells(x + j, y, depth);
                     }
                 }
                 if (!abort) {
-                    nextDepth(x + speed, y, depth + 1, speed);
+                    calculateRisk(x + speed, y, depth + 1, speed);
                 }
-                //TODO here was fallthrough
                 break;
             case LEFT:
                 for (int j = 1; j  < speed + 1; j++) {
-                    if (x - j < 0 || x - j >= width) {
-                        abort = true;
-                        break;
-                    } else if (cells[x - j][y].isDeadly()) {
+                    if (offBoardOrDeadly(x - j, y)) {
                         abort = true;
                         break;
                     } else {
-                        evaluatedCells.add(cells[x - j][y]);
-                        cells[x - j][y].raiseActionRisk(depth);
+                        evaluateCells(x - j, y, depth);
                     }
                 }
                 if (!abort) {
-                    nextDepth(x - speed, y, depth + 1, speed);
+                    calculateRisk(x - speed, y, depth + 1, speed);
                 }
-                //TODO here was fallthrough
                 break;
             default:
                 throw new IllegalStateException();
@@ -157,78 +137,85 @@ public class OpponentMovesCalculation {
         switch (dir) {
             case UP:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (y - j < 0 || y - j >= height) {
-                        abort = true;
-                        break;
-                    } else if (cells[x][y - j].isDeadly()) {
+                    if (offBoardOrDeadly(x, y - j)) {
                         abort = true;
                         break;
                     } else if (j == 1 || j == speed) {
-                        evaluatedCells.add(cells[x][y - j]);
-                        cells[x][y - j].raiseActionRisk(depth);
+                        evaluateCells(x, y - j, depth);
                     }
                 }
                 if (!abort) {
-                    nextDepth(x, y - speed, depth + 1, speed);
+                    calculateRisk(x, y - speed, depth + 1, speed);
                 }
-                //TODO here was fallthrough
                 break;
             case DOWN:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (y + j < 0 || y + j >= height) {
-                        abort = true;
-                        break;
-                    } else if (cells[x][y + j].isDeadly()) {
+                    if (offBoardOrDeadly(x, y + j)) {
                         abort = true;
                         break;
                     } else if (j == 1 || j == speed) {
-                        evaluatedCells.add(cells[x][y + j]);
-                        cells[x][y + j].raiseActionRisk(depth);
+                        evaluateCells(x, y + j, depth);
+
                     }
                 }
                 if (!abort) {
-                    nextDepth(x, y + speed, depth + 1, speed);
+                    calculateRisk(x, y + speed, depth + 1, speed);
                 }
-                //TODO here was fallthrough
                 break;
             case RIGHT:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (x + j < 0 || x + j >= width) {
-                        abort = true;
-                        break;
-                    } else if (cells[x + j][y].isDeadly()) {
+                    if (offBoardOrDeadly(x + j, y)) {
                         abort = true;
                         break;
                     } else if (j == 1 || j == speed) {
-                        evaluatedCells.add(cells[x + j][y]);
-                        cells[x + j][y].raiseActionRisk(depth);
+                        evaluateCells(x + j, y, depth);
+
                     }
                 }
                 if (!abort) {
-                    nextDepth(x + speed, y, depth + 1, speed);
+                    calculateRisk(x + speed, y, depth + 1, speed);
                 }
-                //TODO here was fallthrough
                 break;
             case LEFT:
                 for (int j = 1; j < speed + 1; j++) {
-                    if (x - j < 0 || x - j >= width) {
-                        abort = true;
-                        break;
-                    } else if (cells[x - j][y].isDeadly()) {
+                    if (offBoardOrDeadly(x - j, y)) {
                         abort = true;
                         break;
                     } else if (j == 1 || j == speed) {
-                        evaluatedCells.add(cells[x - j][y]);
-                        cells[x - j][y].raiseActionRisk(depth);
+                        evaluateCells(x - j, y, depth);
                     }
                 }
                 if (!abort) {
-                    nextDepth(x - speed, y, depth + 1, speed);
+                    calculateRisk(x - speed, y, depth + 1, speed);
                 }
-                //TODO here was fallthrough
                 break;
             default:
                 throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * raises actionRisk of cells.
+     * @param x coordinate
+     * @param y coordinate
+     * @param depth depth
+     */
+    public void evaluateCells (int x, int y, int depth) {
+        evaluatedCells.add(cells[x][y]);
+        cells[x][y].raiseActionRisk(depth);
+    }
+
+    /**
+     * tests if coordinates are on the board or the cell is deadly.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return returns the test value
+     */
+    public boolean offBoardOrDeadly(int x, int y) {
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            return true;
+        } else {
+            return cells[x][y].isDeadly();
         }
     }
 }

@@ -15,10 +15,6 @@ public class Cell {
     private double opponentMovementRisk;
 
     @Getter
-    private Cell prevCell;
-    @Getter
-    private Cell nextCell;
-    @Getter
     private int iD;
 
     public Cell() {
@@ -34,19 +30,9 @@ public class Cell {
     }
 
     //??? Why id?
-    public void setNextCell(int id, Cell nextCell) {
-        this.nextCell = nextCell;
-    }
-
-    //??? Why id?
-    public void setPrevCell(int id, Cell prevCell) {
+    public void setCell(int id) {
         value = 10;
-        this.prevCell = prevCell;
-    }
-
-    //??? Why id?
-    public void setPrevHoleCell(int id, Cell prevCell) {
-        this.prevCell = prevCell;
+        this.iD = id;
     }
 
     public boolean isDeadly() {

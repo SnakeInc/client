@@ -68,6 +68,38 @@ public class EvaluationBoard {
         log.info("Updating the evaluationBoard!");
         this.us = us;
         this.round = round;
+        this.players = getActivePlayers(playerHashMap);
+
+        updatePlayersCells(playerHashMap);
+
+        //initiate analyzing process
+        boardAnalyzer.analyze(cells, players, us);
+
+        logCurrentEvaluation(cells);
+    }
+
+    /**
+     * logs the compute values for each cell.
+     * @param cells cells
+     */
+    private void logCurrentEvaluation (Cell[][] cells) {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[1].length; j++) {
+                str.append(cells[i][j].getRisks()).append(" ");
+            }
+            str.append("\n");
+        }
+
+        log.debug(str.toString());
+    }
+
+    /**
+     * gives back an array of active players.
+     * @param playerHashMap players
+     * @return              players[activePlayers]
+     */
+    private Player [] getActivePlayers (HashMap<Integer, Player> playerHashMap) {
         Player[] playersArrayTmp = new Player[playerHashMap.size()];
         int count = 0;
         for (Integer position : playerHashMap.keySet()) {
@@ -80,87 +112,14 @@ public class EvaluationBoard {
         for (int i = 0; i < count; i++) {
             playersArray[i] = playersArrayTmp[i];
         }
-        players = playersArray;
-        int iD;
-        int x;
-        int y;
-        int speed;
-        Player tmpPlayer;
-        for (int i = 1; i < playerHashMap.keySet().size() + 1; i++) {
-
-            iD = playerHashMap.get(i).getId();
-            x = playerHashMap.get(i).getX();
-            y = playerHashMap.get(i).getY();
-            if (x >= 0 && x < width && y >= 0 && y < height) {
-                speed = playerHashMap.get(i).getSpeed();
-                Cell tmp;
-                tmpPlayer = playerHashMap.get(i);
-
-                //Checking for jumping
-                if (round % 6 == 0 && speed >= 3) {
-                    updateJumpingPlayer(tmpPlayer);
-                } else {
-                    //Updating Cells without jumping. Implements an iteration-logic vor snakes
-                    switch (tmpPlayer.getDirection()) {
-                        case UP:
-                            tmp = cells[x][y + speed];
-                            for (int j = 0; j < speed; j++) {
-                                tmp = tmpSetCell(iD, tmp, cells[x][y + speed - j - 1]);
-                            }
-                            break;
-                        case DOWN:
-                            tmp = cells[x][y - speed];
-                            for (int j = 0; j < speed; j++) {
-                                tmp = tmpSetCell(iD, tmp, cells[x][y - speed + j + 1]);
-                            }
-                            break;
-                        case LEFT:
-                            tmp = cells[x + speed][y];
-                            for (int j = 0; j < speed; j++) {
-                                tmp = tmpSetCell(iD, tmp, cells[x + speed - j - 1][y]);
-                            }
-                            break;
-                        case RIGHT:
-                            tmp = cells[x - speed][y];
-                            for (int j = 0; j < speed; j++) {
-                                tmp = tmpSetCell(iD, tmp, cells[x - speed + j + 1][y]);
-                            }
-                            break;
-                        default:
-                            throw new IllegalStateException();
-                    }
-                }
-            }
-        }
-        boardAnalyzer.analyze(cells, players, us);
-        StringBuilder str = new StringBuilder();
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[1].length; j++) {
-                str.append(cells[i][j].getRisks()).append(" ");
-            }
-            str.append("\n");
-        }
-
-        log.debug(str.toString());
-    }
-
-    private Cell tmpSetCell(int iD, Cell tmp, Cell nextCell) {
-        tmp.setNextCell(iD, nextCell);
-        nextCell.setPrevCell(iD, tmp);
-        return nextCell;
-    }
-
-    private Cell tmpSetPrevHoleCell(Cell tmp, Cell cell, int iD) {
-        tmp.setNextCell(iD, cell);
-        cell.setPrevHoleCell(iD, tmp);
-        return cell;
+        return  playersArray;
     }
 
     /**
      * Updating Cells in jump-cases.
      * @param player the jumping player
      */
-    private void updateJumpingPlayer(Player player) {
+    private void updateJumpingPlayerCells(Player player) {
         Cell tmp;
         int x = player.getX();
         int y = player.getY();
@@ -168,49 +127,83 @@ public class EvaluationBoard {
         int iD = player.getId();
         switch (player.getDirection()) {
             case UP:
-                tmp = cells[x][y + speed];
-                for (int j = 0; j < speed; j++) {
-                    if (j == 0 || j == speed - 1) {
-                        tmp = tmpSetCell(iD, tmp, cells[x][y + speed - j - 1]);
-                    } else {
-                        tmp = tmpSetPrevHoleCell(tmp, cells[x][y + speed - j - 1], iD);
-                    }
-                }
+                setCells(x, y, iD);
+                setCells(x, y + speed - 1, iD);
                 break;
             case DOWN:
-                tmp = cells[x][y - speed];
-                for (int j = 0; j < speed; j++) {
-                    if (j == 0 || j == speed - 1) {
-                        tmp = tmpSetCell(iD, tmp, cells[x][y - speed + j + 1]);
-                    } else {
-                        tmp = tmpSetPrevHoleCell(tmp, cells[x][y - speed + j + 1], iD);
-                    }
-                }
+                setCells(x, y, iD);
+                setCells(x, y - speed + 1, iD);
                 break;
             case LEFT:
-                tmp = cells[x + speed][y];
-                for (int j = 0; j < speed; j++) {
-                    if (j == 0 || j == speed - 1) {
-                        tmp = tmpSetCell(iD, tmp, cells[x + speed - j - 1][y]);
-                    } else {
-                        tmp = tmpSetPrevHoleCell(tmp, cells[x + speed - j - 1][y], iD);
-                    }
-                }
+                setCells(x, y, iD);
+                setCells(x + speed - 1, y, iD);
                 break;
             case RIGHT:
-                tmp = cells[x - speed][y];
-                for (int j = 0; j < speed; j++) {
-                    if (j == 0 || j == speed - 1) {
-                        tmp = tmpSetCell(iD, tmp, cells[x - speed + j + 1][y]);
-                    } else {
-                        tmp = tmpSetPrevHoleCell(tmp, cells[x - speed + j + 1][y], iD);
-                    }
-                }
+                setCells(x, y, iD);
+                setCells(x - speed + 1, y, iD);
                 break;
             default:
                 throw new IllegalStateException();
         }
     }
+    private void setCells(int x, int y, int iD) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            cells[x][y].setCell(iD);
+        }
+    }
+
+    /**
+     * updates the latest moves of all players to the cells.
+     * @param playerHashMap all players
+     */
+    public void updatePlayersCells(HashMap<Integer, Player> playerHashMap) {
+        int iD;
+        int x;
+        int y;
+        int speed;
+        Player tmpPlayer;
+        for (int i = 1; i < playerHashMap.keySet().size() + 1; i++) {
+            iD = playerHashMap.get(i).getId();
+            x = playerHashMap.get(i).getX();
+            y = playerHashMap.get(i).getY();
+            speed = playerHashMap.get(i).getSpeed();
+            Cell tmp;
+            tmpPlayer = playerHashMap.get(i);
+
+            //Checking for jumping
+            if (round % 6 == 0 && speed >= 3) {
+                updateJumpingPlayerCells(tmpPlayer);
+            } else {
+                //Updating Cells without jumping. Implements an iteration-logic for snakes
+                switch (tmpPlayer.getDirection()) {
+                    case UP:
+                        for (int j = 0; j < speed; j++) {
+                            setCells(x, y + j, iD);
+                        }
+                        break;
+                    case DOWN:
+                        for (int j = 0; j < speed; j++) {
+                            setCells(x, y - j, iD);
+                        }
+                        break;
+                    case LEFT:
+                        for (int j = 0; j < speed; j++) {
+                            setCells(x + j, y, iD);
+                        }
+                        break;
+                    case RIGHT:
+                        for (int j = 0; j < speed; j++) {
+                            setCells(x - j, y, iD);
+                        }
+                        break;
+                    default:
+                        throw new IllegalStateException();
+                }
+            }
+        }
+    }
+
+
 
     /**
      * Called after an action was chosen.
@@ -219,6 +212,10 @@ public class EvaluationBoard {
         boardAnalyzer.prepareNextPhase();
     }
 
+    /**
+     * starts a MoveCalculation and returns the resulting action.
+     * @return action
+     */
     public Action getAction() {
         MoveCalculation moveCalculation = new MoveCalculation(cells, us, boardAnalyzer);
         return moveCalculation.calculateBestAction();
@@ -232,6 +229,7 @@ public class EvaluationBoard {
         //TODO: Implement this.
         return Action.CHANGE_NOTHING;
     }
+
 
     /**
      * Parse board based on json-format.
