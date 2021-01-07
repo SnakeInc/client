@@ -15,7 +15,11 @@ public class BoardAnalyzer {
     private Set<Cell> evaluatedCells;
     private int round = 0;
 
-    public BoardAnalyzer() { }
+    private SectionCalculator sectionCalculator;
+
+    public BoardAnalyzer(int width, int height) {
+        this.sectionCalculator = new SectionCalculator(width, height);
+    }
 
     /**
      * Is called once per round and initiates the analyzing.
@@ -27,6 +31,7 @@ public class BoardAnalyzer {
     public void analyze(Cell[][] cells, Player[] players, Player us) {
         round++;
         OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
+        sectionCalculator.calculate(cells);
         evaluatedCells = calc.evaluate(cells, players, us);
         evaluatedCells.addAll(KillAlgorithm.killAlgorithm(cells, players, us));
     }
