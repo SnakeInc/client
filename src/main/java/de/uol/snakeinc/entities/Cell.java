@@ -22,6 +22,9 @@ public class Cell extends PathCell {
     //Area-risk
     private double areaRisk;
 
+    //Highlighted path
+    private double pathHighlight;
+
     //
     private double deadEndRisk;
 
@@ -42,6 +45,7 @@ public class Cell extends PathCell {
         deadEndRisk = 1;
         hardDeadly = false;
         tmpDeadly = false;
+        pathHighlight = 1.2;
     }
 
     @Override
@@ -83,6 +87,10 @@ public class Cell extends PathCell {
         this.areaRisk = risk;
     }
 
+    public void setPathHighlight(double risk) {
+        this.pathHighlight = risk;
+    }
+
     public void setDeadEndRisk(double riskValue) {
         if((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;
@@ -100,7 +108,7 @@ public class Cell extends PathCell {
         if (hardDeadly || tmpDeadly) {
             return DEATH_VALUE;
         }
-        return getValue()  * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk * killIncentive;
+        return getValue()  * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk * pathHighlight * killIncentive;
     }
 
     public void clearPseudoValue() {
