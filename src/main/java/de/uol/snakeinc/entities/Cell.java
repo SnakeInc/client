@@ -18,6 +18,9 @@ public class Cell extends PathCell {
     //Area-risk
     private double areaRisk;
 
+    //
+    private double deadEndRisk;
+
     @Getter
     private int iD;
 
@@ -27,6 +30,7 @@ public class Cell extends PathCell {
         opponentMovementRisk = 1;
         tmpMoveCalcValue = 1;
         areaRisk = 1;
+        deadEndRisk = 1;
     }
 
     @Override
@@ -76,6 +80,10 @@ public class Cell extends PathCell {
         this.areaRisk = risk;
     }
 
+    public void setDeadEndRisk(double riskValue) {
+        this.deadEndRisk = riskValue;
+    }
+
     public double getValue() {
         return value;
     }
@@ -83,7 +91,7 @@ public class Cell extends PathCell {
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interinteraktion between players.
-        return getValue() * opponentMovementRisk * tmpMoveCalcValue * areaRisk;
+        return getValue() * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk;
     }
 
     public void clearPseudoValue() {

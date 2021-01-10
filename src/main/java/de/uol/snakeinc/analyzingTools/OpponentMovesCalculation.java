@@ -132,6 +132,7 @@ public class OpponentMovesCalculation {
                 throw new IllegalStateException();
         }
     }
+
     private void recursiveRiskByDirectionWithJumping(int x, int y, int depth, int speed, Direction dir) {
         boolean abort = false;
         switch (dir) {
