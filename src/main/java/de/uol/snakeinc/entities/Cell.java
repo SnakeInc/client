@@ -81,7 +81,9 @@ public class Cell extends PathCell {
     }
 
     public void setDeadEndRisk(double riskValue) {
-        this.deadEndRisk = riskValue;
+        if(this.deadEndRisk < riskValue) {
+            this.deadEndRisk = riskValue;
+        }
     }
 
     public double getValue() {

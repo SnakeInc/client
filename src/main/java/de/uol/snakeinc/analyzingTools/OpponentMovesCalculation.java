@@ -47,8 +47,6 @@ public class OpponentMovesCalculation {
         return evaluatedCells;
     }
 
-
-
     private void calculateRisk(int x, int y, int depth, int speed) {
         if (boardAnalyzer.checkForJumping(depth)) {
             calculateRiskWithJumping(x, y, depth, speed);
