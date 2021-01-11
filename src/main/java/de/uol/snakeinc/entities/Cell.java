@@ -15,6 +15,8 @@ public class Cell extends PathCell {
     //The risk that another agent will move to this cell
     private double opponentMovementRisk;
 
+    private double killIncentive;
+
     //Area-risk
     private double areaRisk;
 
@@ -27,6 +29,7 @@ public class Cell extends PathCell {
         opponentMovementRisk = 1;
         tmpMoveCalcValue = 1;
         areaRisk = 1;
+        killIncentive = 1;
     }
 
     @Override
@@ -83,7 +86,7 @@ public class Cell extends PathCell {
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interinteraktion between players.
-        return getValue() * opponentMovementRisk * tmpMoveCalcValue * areaRisk;
+        return getValue() * opponentMovementRisk * tmpMoveCalcValue * areaRisk * killIncentive;
     }
 
     public void clearPseudoValue() {
@@ -94,7 +97,15 @@ public class Cell extends PathCell {
         tmpMoveCalcValue = 10;
     }
 
+    /**
+     * Prepare the next phase.
+     */
     public void prepareNextPhase() {
         this.opponentMovementRisk = 1;
+        this.killIncentive = 1;
+    }
+
+    public void setKillIncentive() {
+        this.killIncentive = 0.8;
     }
 }

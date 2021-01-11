@@ -33,18 +33,20 @@ public class BoardAnalyzer {
         OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
         sectionCalculator.calculate(cells);
         evaluatedCells = calc.evaluate(cells, players, us);
+        evaluatedCells.addAll(KillAlgorithm.killAlgorithm(cells, players, us));
     }
 
     /**
      * Checks if players are in a defined reachable distance.
      * @param player1 player 1
      * @param player2 player 2
+     * @param inRounds rounds till possible collision
      * @return True - inDistance
      */
-    public static Boolean inDistance(Player player1, Player player2) {
+    public static Boolean inDistance(Player player1, Player player2, int inRounds) {
         int distance = Math.abs(player1.getX() - player2.getX()) + Math.abs(player1.getY() - player2.getY());
         //TODO: Implement and use pathfinder-algorithm to check if the players can reach each other in max three rounds.
-        return distance <= (player1.getSpeed() * 3) + (player2.getSpeed() * 3) + 6 && distance != 0;
+        return distance <= (player1.getSpeed() * inRounds) + (player2.getSpeed() * inRounds) && distance != 0;
     }
 
     /**
