@@ -4,11 +4,15 @@ import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
 import lombok.AllArgsConstructor;
+import lombok.CustomLog;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
 
+@CustomLog
 public class DeadEndRecognition {
 
     Cell[][] cells;
@@ -17,7 +21,7 @@ public class DeadEndRecognition {
     ArrayList<Gate> gates;
     int width;
     int height;
-    int mapCellCount;
+    double mapCellCount;
 
     public DeadEndRecognition(Cell[][] cells, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
@@ -35,6 +39,7 @@ public class DeadEndRecognition {
         int y = us.getY();
         int speed = us.getSpeed();
         calculateRisk(x, y, 1, speed, dir);
+        calcDeadEndSize();
     }
 
     private void calculateRisk(int x, int y, int depth, int speed, Direction dir) {
@@ -166,11 +171,11 @@ public class DeadEndRecognition {
 
     private void calcDeadEndSize() {
         gates.forEach((gate) -> {
-            HashMap<Cell, Boolean> cellsTested = new HashMap<>();
-            HashMap<Cell, Boolean> cellsToTest = new HashMap<>();
+            Set<Cell> cellsTested = new HashSet<>();
+            Stack<Cell> cellsToTest = new Stack<>();
             int startX = gate.getX();
             int startY = gate.getY();
-            cellsTested.put(cells[startX][startY], true);
+            cellsTested.add(cells[startX][startY]);
             Direction dir = gate.getDir();
             switch (dir) {
                 case UP:
@@ -188,9 +193,42 @@ public class DeadEndRecognition {
         });
     }
 
-    private void findNeighbours(int x, int y, HashMap<Cell, Boolean> cellsTested, HashMap<Cell, Boolean> cellsToTest) {
-        int deadEndCellCount = 0;
-
+    private void findNeighbours(int x, int y, Set<Cell> cellsTested, Stack<Cell> cellsToTest) {
+        log.debug("Calculating Gate: " + x + " - " + y);
+        int deadEndCellCount = 1;
+        cellsToTest.add(cells[x][y]);
+        while(!cellsToTest.isEmpty() && (deadEndCellCount / 8.0) < mapCellCount) {
+            Cell cell = cellsToTest.pop();
+            int xCell = cell.getX();
+            int yCell = cell.getY();
+            if(!cellsTested.contains(cell) && !offBoardOrDeadly(xCell, yCell)) {
+                cellsTested.add(cell);
+                deadEndCellCount++;
+                //test up
+                if(!offBoardOrDeadly(xCell, yCell - 1)) {
+                    cellsToTest.add(cells[xCell][yCell - 1]);
+                }
+                //test right
+                if(!offBoardOrDeadly(xCell + 1, yCell)) {
+                    cellsToTest.add(cells[xCell + 1][yCell]);
+                }
+                //test down
+                if(!offBoardOrDeadly(xCell, yCell + 1)) {
+                    cellsToTest.add(cells[xCell][yCell + 1]);
+                }
+                //test left
+                if(!offBoardOrDeadly(xCell - 1, yCell)) {
+                    cellsToTest.add(cells[xCell - 1][yCell]);
+                }
+            }
+        }
+        if(deadEndCellCount < (mapCellCount / 8)) {
+            double deadEndRisk = 2.0;
+            cellsTested.forEach((testedCell) -> {
+                testedCell.setDeadEndRisk(deadEndRisk);
+            });
+        }
+        log.debug("Gate size: " + deadEndCellCount);
     }
 
     private Direction turnLeft(Direction dir) {

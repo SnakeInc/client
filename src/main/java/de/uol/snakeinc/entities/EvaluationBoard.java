@@ -84,9 +84,10 @@ public class EvaluationBoard {
      */
     private void logCurrentEvaluation (Cell[][] cells) {
         StringBuilder str = new StringBuilder();
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[1].length; j++) {
-                str.append(cells[i][j].getRisks()).append(" ");
+        str.append("\n");
+        for (int i = 0; i < cells[0].length; i++) {
+            for (int j = 0; j < cells.length; j++) {
+                str.append((int)cells[j][i].getRisks()).append("\t");
             }
             str.append("\n");
         }
