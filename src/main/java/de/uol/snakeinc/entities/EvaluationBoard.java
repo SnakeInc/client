@@ -24,7 +24,7 @@ public class EvaluationBoard {
     private Player us;
     @Getter
     private int round;
-    @Getter
+   @Getter
     private BoardAnalyzer boardAnalyzer;
 
 
