@@ -29,7 +29,7 @@ public class BoardAnalyzer {
      * Is called once per round and initiates the analyzing.
      * The method to initiate other heuristics
      * @param us us
-     * @param players active opponents
+     * @param players active players
      * @param cells cells
      */
     public void analyze(Cell[][] cells, Player[] players, Player us) {
