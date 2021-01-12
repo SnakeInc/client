@@ -1,6 +1,7 @@
 package de.uol.snakeinc.pathfinding.astar;
 
 import de.uol.snakeinc.pathfinding.PathCell;
+import org.antlr.v4.runtime.misc.NotNull;
 
 public class AStarNode implements Comparable {
 

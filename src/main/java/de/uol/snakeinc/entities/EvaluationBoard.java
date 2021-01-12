@@ -249,11 +249,6 @@ public class EvaluationBoard {
             count++;
         }
 
-        //Gson gson = new Gson();
-
-        //log.debug(json.get("cells").toString());
-        //int[][] cells = gson.fromJson(json.get("cells").toString(), int[][].class);
-
         return new EvaluationBoard(width, height, playersArray, us, 0);
     }
 }
