@@ -36,7 +36,7 @@ public class AStarSearch extends Pathfinder {
         this.now = new AStarNode(null, start, 0, 0);
         this.end = end;
         this.closed.add(this.now);
-        addNeigborsToOpenList();
+        addNeighborsToOpenList();
         while (this.now.getCell().getX() != this.end.getX() || this.now.getCell().getY() != this.end.getY()) {
             if (this.open.isEmpty()) { // Nothing to examine
                 return null;
@@ -44,7 +44,7 @@ public class AStarSearch extends Pathfinder {
             this.now = this.open.get(0); // get first node (lowest f score)
             this.open.remove(0); // remove it
             this.closed.add(this.now); // and add to the closed
-            addNeigborsToOpenList();
+            addNeighborsToOpenList();
         }
         this.path.add(0, this.now);
         while (this.now.getCell().getX() != this.start.getX() || this.now.getCell().getY() != this.start.getY()) {
@@ -60,7 +60,7 @@ public class AStarSearch extends Pathfinder {
     /*
      ** Looks in a given List<> for a node
      **
-     ** @return (bool) NeightborInListFound
+     ** @return (bool) NeighborInListFound
      */
     private static boolean findNeighborInList(List<AStarNode> array, AStarNode node) {
         return array.stream().anyMatch(
@@ -69,7 +69,7 @@ public class AStarSearch extends Pathfinder {
     }
 
     /*
-     ** Calulate distance between this.now and xend/yend
+     ** Calculate distance between this.now and xend/yend
      **
      ** @return (int) distance
      */
@@ -78,7 +78,7 @@ public class AStarSearch extends Pathfinder {
             + dy - this.end.getY()); // else return "Manhattan distance"
     }
 
-    private void addNeigborsToOpenList() {
+    private void addNeighborsToOpenList() {
         // TODO: For Pathfinding with jumps etc. implement options like jump/left/right instead of directions
         // Maybe extra algorithm
         for (int x = -1; x <= 1; x++) {

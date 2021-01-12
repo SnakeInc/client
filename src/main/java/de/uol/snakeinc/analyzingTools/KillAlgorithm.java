@@ -128,7 +128,7 @@ public abstract class KillAlgorithm {
             for (int i = 0; i < diffX; i++) {
                 floodCache[usX - i][usY][0] = 1;
             }
-        } else if (diffX < 0) {
+        } else { //if (diffX < 0) {
             for (int i = 0; i < - diffX; i++) {
                 floodCache[usX + i][usY][0] = 1;
             }
@@ -137,7 +137,7 @@ public abstract class KillAlgorithm {
             for (int i = 0; i < diffY; i++) {
                 floodCache[opX][opY + i][0] = 1;
             }
-        } else if (diffY < 0) {
+        } else { // if (diffY < 0)
             for (int i = 0; i < - diffY; i++) {
                 floodCache[opX][opY - i][0] = 1;
             }

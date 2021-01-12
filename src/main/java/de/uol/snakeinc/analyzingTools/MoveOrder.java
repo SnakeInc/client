@@ -64,7 +64,7 @@ public abstract class MoveOrder {
         }
     }
 
-    public static enum  SpiralForm {
+    public enum  SpiralForm {
         Spiral,
         NoSpiral,
     }
