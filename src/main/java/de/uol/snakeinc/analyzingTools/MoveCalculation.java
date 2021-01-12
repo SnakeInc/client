@@ -253,7 +253,6 @@ public class MoveCalculation {
             default:
                 throw new IllegalStateException();
         }
-        //return result; todo this or IllegalState ?
     }
 
     private double deathValue(int depth) {
