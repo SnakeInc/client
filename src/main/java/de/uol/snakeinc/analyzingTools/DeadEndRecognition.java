@@ -131,6 +131,7 @@ public class DeadEndRecognition {
             case DOWN:
                 if(offBoardOrDeadly(x - 1, y) && offBoardOrDeadly(x + 1, y)) {
                     gates.add(new Gate(dir, x, y));
+                    gates.add(new Gate(turnLeft(turnLeft(dir)), x, y));
                     return true;
                 } else
                     return false;
@@ -138,6 +139,7 @@ public class DeadEndRecognition {
             case RIGHT:
                 if(offBoardOrDeadly(x, y - 1) && offBoardOrDeadly(x, y + 1)) {
                     gates.add(new Gate(dir, x, y));
+                    gates.add(new Gate(turnLeft(turnLeft(dir)), x, y));
                     return true;
                 } else {
                     return false;
@@ -197,38 +199,45 @@ public class DeadEndRecognition {
         log.debug("Calculating Gate: " + x + " - " + y);
         int deadEndCellCount = 1;
         cellsToTest.add(cells[x][y]);
-        while(!cellsToTest.isEmpty() && (deadEndCellCount / 8.0) < mapCellCount) {
+        int toTestCount = 1;
+        while(toTestCount > 0 && deadEndCellCount < (mapCellCount / 4)) {
             Cell cell = cellsToTest.pop();
-            int xCell = cell.getX();
-            int yCell = cell.getY();
-            if(!cellsTested.contains(cell) && !offBoardOrDeadly(xCell, yCell)) {
+            toTestCount--;
+            int xCell = cell.getY();
+            int yCell = cell.getX();
+            if(!(cellsTested.contains(cell) || cellsToTest.contains(cell) || offBoardOrDeadly(xCell, yCell))) {
                 cellsTested.add(cell);
                 deadEndCellCount++;
                 //test up
-                if(!offBoardOrDeadly(xCell, yCell - 1)) {
-                    cellsToTest.add(cells[xCell][yCell - 1]);
+                if(!offBoardOrDeadly(xCell, (yCell - 1))) {
+                    cellsToTest.add(cells[xCell][(yCell - 1)]);
+                    toTestCount++;
                 }
                 //test right
-                if(!offBoardOrDeadly(xCell + 1, yCell)) {
-                    cellsToTest.add(cells[xCell + 1][yCell]);
+                if(!offBoardOrDeadly((xCell + 1), yCell)) {
+                    cellsToTest.add(cells[(xCell + 1)][yCell]);
+                    toTestCount++;
                 }
                 //test down
-                if(!offBoardOrDeadly(xCell, yCell + 1)) {
-                    cellsToTest.add(cells[xCell][yCell + 1]);
+                if(!offBoardOrDeadly(xCell, (yCell + 1))) {
+                    cellsToTest.add(cells[xCell][(yCell + 1)]);
+                    toTestCount++;
                 }
                 //test left
-                if(!offBoardOrDeadly(xCell - 1, yCell)) {
-                    cellsToTest.add(cells[xCell - 1][yCell]);
+                if(!offBoardOrDeadly((xCell - 1), yCell)) {
+                    cellsToTest.add(cells[(xCell - 1)][yCell]);
+                    toTestCount++;
                 }
             }
         }
-        if(deadEndCellCount < (mapCellCount / 8)) {
-            double deadEndRisk = 2.0;
+        double deadEndRisk;
+        if((deadEndCellCount < (mapCellCount / 4)) && deadEndCellCount > 1) {
+            deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
             cellsTested.forEach((testedCell) -> {
                 testedCell.setDeadEndRisk(deadEndRisk);
             });
+            log.debug("Gate size: " + deadEndCellCount + " - Risk: " + deadEndRisk);
         }
-        log.debug("Gate size: " + deadEndCellCount);
     }
 
     private Direction turnLeft(Direction dir) {
