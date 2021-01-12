@@ -120,7 +120,6 @@ public class EvaluationBoard {
      * @param player the jumping player
      */
     private void updateJumpingPlayerCells(Player player) {
-        Cell tmp;
         int x = player.getX();
         int y = player.getY();
         int speed = player.getSpeed();
@@ -167,7 +166,6 @@ public class EvaluationBoard {
             x = playerHashMap.get(i).getX();
             y = playerHashMap.get(i).getY();
             speed = playerHashMap.get(i).getSpeed();
-            Cell tmp;
             tmpPlayer = playerHashMap.get(i);
 
             //Checking for jumping

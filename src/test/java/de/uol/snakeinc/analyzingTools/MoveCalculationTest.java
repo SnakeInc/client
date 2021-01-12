@@ -15,7 +15,6 @@ class MoveCalculationTest {
                                   @ForAll @IntRange(min = 1, max = 10) int speed) {
         var moveCalc = new MoveCalculation(new Cell[1][0], null, null);
         var res = moveCalc.preCalculate(act, dir, speed);
-        var resDir = res.getDirection();
         int resSpeed = res.getSpeed();
 
         if (act == Action.CHANGE_NOTHING) {
@@ -48,7 +47,6 @@ class MoveCalculationTest {
         var moveCalc = new MoveCalculation(new Cell[1][0], null, null);
         var res = moveCalc.preCalculate(act, dir, speed);
         var resDir = res.getDirection();
-        int resSpeed = res.getSpeed();
 
         if (act == Action.CHANGE_NOTHING) {
             return dir == resDir;

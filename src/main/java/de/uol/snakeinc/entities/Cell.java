@@ -60,15 +60,12 @@ public class Cell extends PathCell {
         switch (depth) {
             case 1:
                 opponentMovementRisk = opponentMovementRisk * 1.25;
-                //TODO here was fallthrough
                 break;
             case 2:
                 opponentMovementRisk = opponentMovementRisk * 1.0625;
-                //TODO here was fallthrough
                 break;
             case 3:
                 opponentMovementRisk = opponentMovementRisk * 1.015625;
-                //TODO here was fallthrough
                 break;
             default:
                 throw new IllegalStateException();
