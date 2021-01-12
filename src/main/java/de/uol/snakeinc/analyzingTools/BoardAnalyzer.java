@@ -15,6 +15,8 @@ public class BoardAnalyzer {
 
     @Getter
     private Set<Cell> evaluatedCells;
+
+    @Getter
     private int round = 0;
 
     private SectionCalculator sectionCalculator;
