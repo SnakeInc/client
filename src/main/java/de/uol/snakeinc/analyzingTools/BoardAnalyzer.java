@@ -3,6 +3,7 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Player;
 import lombok.CustomLog;
+import lombok.Getter;
 
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @CustomLog
 public class BoardAnalyzer {
 
+    @Getter
     private Set<Cell> evaluatedCells;
     private int round = 0;
 
@@ -25,7 +27,7 @@ public class BoardAnalyzer {
      * Is called once per round and initiates the analyzing.
      * The method to initiate other heuristics
      * @param us us
-     * @param players active opponents
+     * @param players active players
      * @param cells cells
      */
     public void analyze(Cell[][] cells, Player[] players, Player us) {
