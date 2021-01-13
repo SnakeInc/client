@@ -165,19 +165,19 @@ public class MoveCalculation {
                     if (offBoardOrDeadly(x - 1, y)) {
                         return deathValue(depth);
                     }
-                    result = evaluateResult(pseudEvaluatedCells, result, x - 1, y);
+                    result = evaluateResult(pseudEvaluatedCells, result, cells[x - 1][y]);
 
                     if (offBoardOrDeadly(x - speed, y)) {
                         return deathValue(depth);
                     }
-                    result = evaluateResult(pseudEvaluatedCells, result, x - speed, y);
+                    result = evaluateResult(pseudEvaluatedCells, result, cells[x - speed][y]);
 
                 } else { //Normal Cases
                     for (int i = 1; i < speed + 1; i++) {
                         if (offBoardOrDeadly(x - i, y)) {
                             return deathValue(depth);
                         }
-                        result = evaluateResult(pseudEvaluatedCells, result, x - i, y);
+                        result = evaluateResult(pseudEvaluatedCells, result, cells[x - i][y]);
                     }
                 }
                 return result * calculateAction(Direction.LEFT, x - speed, y, speed, depth + 1);
@@ -273,10 +273,10 @@ public class MoveCalculation {
         }
     }
 
-    private double evaluateResult(HashSet<Cell> pseudEvaluatedCells, double result, int x, int y) {
-        result = result * cells[x][y].getRisks();
-        cells[x][y].setTmpMoveCalcValue();
-        pseudEvaluatedCells.add(cells[x][y]);
+    private double evaluateResult(HashSet<Cell> pseudEvaluatedCells, double result, Cell cell) {
+        result = result * cell.getRisks();
+        cell.setTmpMoveCalcValue();
+        pseudEvaluatedCells.add(cell);
         return result;
     }
 }
