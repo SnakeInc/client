@@ -5,6 +5,8 @@ import lombok.Getter;
 
 public class Cell extends PathCell {
 
+
+    public static final int DEATH_VALUE = 10;
     //Basic Value.
     @Getter
     private double value;
@@ -21,6 +23,10 @@ public class Cell extends PathCell {
     //
     private double deadEndRisk;
 
+    private boolean hardDeadly;
+
+    private boolean tmpDeadly;
+
     @Getter
     private int iD;
 
@@ -31,6 +37,8 @@ public class Cell extends PathCell {
         tmpMoveCalcValue = 1;
         areaRisk = 1;
         deadEndRisk = 1;
+        hardDeadly = false;
+        tmpDeadly = false;
     }
 
     @Override
@@ -40,17 +48,12 @@ public class Cell extends PathCell {
 
     public void setId(int id) {
         this.iD = id;
-        value = 10;
-    }
-
-    //??? Why id?
-    public void setCell(int id) {
-        value = 10;
-        this.iD = id;
+        value = DEATH_VALUE;
+        this.hardDeadly = true;
     }
 
     public boolean isDeadly() {
-        return value >= 10;
+        return hardDeadly || tmpDeadly;
     }
 
     /**
@@ -81,7 +84,7 @@ public class Cell extends PathCell {
     }
 
     public void setDeadEndRisk(double riskValue) {
-        if(this.deadEndRisk < riskValue) {
+        if((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;
         }
     }
@@ -93,15 +96,20 @@ public class Cell extends PathCell {
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interinteraktion between players.
+        if (hardDeadly || tmpDeadly) {
+            return DEATH_VALUE;
+        }
         return getValue() * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk;
     }
 
     public void clearPseudoValue() {
         tmpMoveCalcValue = 1;
+        tmpDeadly = false;
     }
 
     public void setTmpMoveCalcValue() {
-        tmpMoveCalcValue = 10;
+        tmpMoveCalcValue = DEATH_VALUE;
+        tmpDeadly = true;
     }
 
     public void prepareNextPhase() {

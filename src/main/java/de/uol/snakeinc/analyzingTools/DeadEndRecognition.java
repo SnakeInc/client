@@ -210,29 +210,44 @@ public class DeadEndRecognition {
                 deadEndCellCount++;
                 //test up
                 if(!offBoardOrDeadly(xCell, (yCell - 1))) {
-                    cellsToTest.add(cells[xCell][(yCell - 1)]);
-                    toTestCount++;
+                    var nextCell = cells[xCell][(yCell - 1)];
+                    if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
+                        cellsToTest.add(nextCell);
+                        toTestCount++;
+                    }
+
                 }
                 //test right
                 if(!offBoardOrDeadly((xCell + 1), yCell)) {
-                    cellsToTest.add(cells[(xCell + 1)][yCell]);
-                    toTestCount++;
+                    var nextCell = cells[(xCell + 1)][yCell];
+                    if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
+                        cellsToTest.add(nextCell);
+                        toTestCount++;
+                    }
+
                 }
                 //test down
                 if(!offBoardOrDeadly(xCell, (yCell + 1))) {
-                    cellsToTest.add(cells[xCell][(yCell + 1)]);
-                    toTestCount++;
+                    var nextCell = cells[xCell][(yCell + 1)];
+                    if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
+                        cellsToTest.add(nextCell);
+                        toTestCount++;
+                    }
+
                 }
                 //test left
                 if(!offBoardOrDeadly((xCell - 1), yCell)) {
-                    cellsToTest.add(cells[(xCell - 1)][yCell]);
-                    toTestCount++;
+                    var nextCell = cells[(xCell - 1)][yCell];
+                    if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
+                        cellsToTest.add(nextCell);
+                        toTestCount++;
+                    }
                 }
             }
         }
         double deadEndRisk;
         if((deadEndCellCount < (mapCellCount / 4)) && deadEndCellCount > 1) {
-            deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
+                deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
             cellsTested.forEach((testedCell) -> {
                 testedCell.setDeadEndRisk(deadEndRisk);
             });

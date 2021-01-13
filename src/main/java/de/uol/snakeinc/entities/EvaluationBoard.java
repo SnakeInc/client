@@ -123,7 +123,6 @@ public class EvaluationBoard {
      * @param player the jumping player
      */
     private void updateJumpingPlayerCells(Player player) {
-        Cell tmp;
         int x = player.getX();
         int y = player.getY();
         int speed = player.getSpeed();
@@ -151,7 +150,7 @@ public class EvaluationBoard {
     }
     private void setCells(int x, int y, int iD) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
-            cells[x][y].setCell(iD);
+            cells[x][y].setId(iD);
         }
     }
 
