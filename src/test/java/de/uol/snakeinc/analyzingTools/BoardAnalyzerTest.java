@@ -39,7 +39,7 @@ class BoardAnalyzerTest {
         assertTrue(BoardAnalyzer.inDistance(us, op, 3));
 
         Player us1 = new Player(1, 0, 0, Direction.DOWN, 1, true, "player1");
-        Player op1 = new Player(2, 2, 2, Direction.UP, 1, true, "player2");
+        Player op1 = new Player(2, 7, 7, Direction.UP, 1, true, "player2");
         assertFalse(BoardAnalyzer.inDistance(us1, op1, 3));
 
         Player us2 = new Player(1, 0, 0, Direction.DOWN, 1, true, "player1");
@@ -55,10 +55,14 @@ class BoardAnalyzerTest {
     void checkForJumping() {
         BoardAnalyzer boardAnalyzer = new BoardAnalyzer(10, 10);
         Player us = new Player(1, 0, 0, Direction.DOWN, 1, true, "player1");
-        Player[] players = {new Player(3, 5, 5, Direction.DOWN, 1, true, "player3"),
+        Player[] players = {new Player(3, 3, 3, Direction.DOWN, 1, true, "player3"),
             new Player(2, 5, 5, Direction.DOWN, 1, true, "player2")};
         Cell[][] cells = new Cell[10][10];
-
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                cells[i][j] = new Cell(i, j);
+            }
+        }
         boardAnalyzer.analyze(cells, players, us);
         assertTrue(boardAnalyzer.checkForJumping(5));
         boardAnalyzer.analyze(cells, players, us);
@@ -81,10 +85,8 @@ class BoardAnalyzerTest {
             }
         }
         Player us = new Player(1, 0, 0, Direction.DOWN, 1, true, "player1");
-        Player[] players = {new Player(3, 5, 5, Direction.DOWN, 1, true, "player3"),
+        Player[] players = {new Player(3, 2, 2, Direction.DOWN, 1, true, "player3"),
             new Player(2, 5, 5, Direction.DOWN, 1, true, "player2")};
-
-        assertTrue(boardAnalyzer.getEvaluatedCells().isEmpty());
 
         boardAnalyzer.analyze(cells, players, us);
 
