@@ -56,6 +56,7 @@ public class SectionCalculator {
                 options[sectionY][sectionX]++;
             }
         }
+
         double min = 100.0D;
         double max = 0.0D;
         double[][] percentages = new double[resolution][resolution];
@@ -72,6 +73,14 @@ public class SectionCalculator {
                 percentages[y][x] = percentage;
             }
         }
+
+        this.rankAreaRiskCells(percentages, cells, min, max);
+
+        double totalTime = (System.nanoTime() - time) / 1000000.0D;
+        log.info("Zeit: " + totalTime + "ms");
+    }
+
+    private void rankAreaRiskCells(double[][] percentages, Cell[][] cells, double min, double max) {
         double difference = max - min;
 
         for (int x = 0; x < cells.length; x++) {
@@ -91,9 +100,6 @@ public class SectionCalculator {
                 cells[x][y].setAreaRisk(value);
             }
         }
-
-        double totalTime = (System.nanoTime() - time) / 1000000.0D;
-        log.info("Zeit: " + totalTime + "ms");
     }
 
 }
