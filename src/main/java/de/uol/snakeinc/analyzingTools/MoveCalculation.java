@@ -258,7 +258,7 @@ public class MoveCalculation {
     }
 
     private double deathValue(int depth) {
-        return Cell.DEATH_VALUE * Math.pow(10,(this.searchingDepth - depth) + 1);
+        return Cell.DEATH_VALUE * Math.pow(5,(this.searchingDepth - depth) + 1);
     }
 
     /**
