@@ -37,6 +37,8 @@ public class BoardAnalyzer {
         OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
         sectionCalculator.calculate(cells);
         evaluatedCells = calc.evaluate(cells, players, us);
+        DeadEndRecognition deadEndRecognition = new DeadEndRecognition(cells, us,this);
+        deadEndRecognition.findDeadEnds();
         evaluatedCells.addAll(KillAlgorithm.killAlgorithm(cells, players, us));
     }
 

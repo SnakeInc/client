@@ -34,11 +34,13 @@ public class MoveCalculation {
      */
     public Action calculateBestAction() {
         log.info("calculating BestAction!");
-        double bestActionTmp = 100;
+        log.info("Speed = " + us.getSpeed());
+        //log.info("jumping in " );
+        double bestActionTmp = 100 * deathValue(1);
         Action bestAction = Action.CHANGE_NOTHING;
         double tmp;
         Action[] actions =
-                MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(), 2,3, MoveOrder.SpiralForm.NoSpiral);
+                MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(), 1,2, MoveOrder.SpiralForm.NoSpiral);
         for (Action act : actions) {
             HashSet<Cell> pseudoEvaluatedCells = new HashSet<>();
             tmp = calculate(act, us.getDirection(), us.getX(), us.getY(), us.getSpeed(), 1, pseudoEvaluatedCells);
@@ -62,7 +64,7 @@ public class MoveCalculation {
         if (this.searchingDepth == depth) {
             return 1;
         }
-        double bestAction = 100;
+        double bestAction = 100 * deathValue(1);
         double tmp;
         for (Action act : Action.values()) {
             HashSet<Cell> pseudoEvaluatedCellsNextDepth = new HashSet<>();
@@ -256,7 +258,7 @@ public class MoveCalculation {
     }
 
     private double deathValue(int depth) {
-        return 10 * (this.searchingDepth - depth);
+        return Cell.DEATH_VALUE * Math.pow(10,(this.searchingDepth - depth) + 1);
     }
 
     /**

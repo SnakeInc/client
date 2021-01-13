@@ -6,6 +6,7 @@ import de.uol.snakeinc.analyzingTools.MoveCalculation;
 import lombok.CustomLog;
 import lombok.Getter;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 /**
@@ -84,9 +85,11 @@ public class EvaluationBoard {
      */
     private void logCurrentEvaluation (Cell[][] cells) {
         StringBuilder str = new StringBuilder();
+        DecimalFormat f = new DecimalFormat("##.00");
+        str.append("\n");
         for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[1].length; j++) {
-                str.append(cells[i][j].getRisks()).append(" ");
+            for (int j = 0; j < cells[0].length; j++) {
+                str.append(f.format(cells[i][j].getRisks())).append("\t");
             }
             str.append("\n");
         }
@@ -147,7 +150,7 @@ public class EvaluationBoard {
     }
     private void setCells(int x, int y, int iD) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
-            cells[x][y].setCell(iD);
+            cells[x][y].setId(iD);
         }
     }
 

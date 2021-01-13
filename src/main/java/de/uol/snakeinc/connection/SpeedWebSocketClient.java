@@ -74,7 +74,6 @@ public class SpeedWebSocketClient extends WebSocketClient {
     @Override
     public void onClose(int code, String message, boolean remote) {
         log.info("Connection closed: " + message);
-
         // Run Game-Logging
         if (this.game != null) {
             try {
@@ -92,6 +91,7 @@ public class SpeedWebSocketClient extends WebSocketClient {
     @Override
     public void onError(Exception exception) {
         log.info("Got an exception: " + exception.getMessage());
+        exception.printStackTrace();
         this.thread.callBack();
     }
 

@@ -47,8 +47,6 @@ public class OpponentMovesCalculation {
         return evaluatedCells;
     }
 
-
-
     private void calculateRisk(int x, int y, int depth, int speed) {
         if (boardAnalyzer.checkForJumping(depth)) {
             calculateRiskWithJumping(x, y, depth, speed);
@@ -132,6 +130,7 @@ public class OpponentMovesCalculation {
                 throw new IllegalStateException();
         }
     }
+
     private void recursiveRiskByDirectionWithJumping(int x, int y, int depth, int speed, Direction dir) {
         boolean abort = false;
         switch (dir) {
