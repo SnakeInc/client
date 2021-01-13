@@ -99,7 +99,7 @@ public class Cell extends PathCell {
         if (hardDeadly || tmpDeadly) {
             return DEATH_VALUE;
         }
-        return getValue() * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk;
+        return getValue()  * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk;
     }
 
     public void clearPseudoValue() {

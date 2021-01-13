@@ -34,7 +34,9 @@ public class MoveCalculation {
      */
     public Action calculateBestAction() {
         log.info("calculating BestAction!");
-        double bestActionTmp = 1000;
+        log.info("Speed = " + us.getSpeed());
+        //log.info("jumping in " );
+        double bestActionTmp = 100 * deathValue(1);
         Action bestAction = Action.CHANGE_NOTHING;
         double tmp;
         Action[] actions =
@@ -62,7 +64,7 @@ public class MoveCalculation {
         if (this.searchingDepth == depth) {
             return 1;
         }
-        double bestAction = 1000;
+        double bestAction = 100 * deathValue(1);
         double tmp;
         for (Action act : Action.values()) {
             HashSet<Cell> pseudoEvaluatedCellsNextDepth = new HashSet<>();
@@ -257,7 +259,7 @@ public class MoveCalculation {
     }
 
     private double deathValue(int depth) {
-        return Cell.DEATH_VALUE * (this.searchingDepth - depth);
+        return Cell.DEATH_VALUE * Math.pow(10,(this.searchingDepth - depth) + 1);
     }
 
     /**
