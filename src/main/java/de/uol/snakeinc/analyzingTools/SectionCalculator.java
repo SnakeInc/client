@@ -45,6 +45,7 @@ public class SectionCalculator {
     /**
      * Calculate values for sections.
      * @param cells cells
+     * @param us player us
      */
     public void calculate(Cell[][] cells, Player us) {
         long time = System.nanoTime();
@@ -56,7 +57,7 @@ public class SectionCalculator {
             for (int y = 0; y < cells[0].length; y++) {
                 int sectionX = (int) Math.floor(x / devideWidth);
                 int sectionY = (int) Math.floor(y / devideHeight);
-                if (cells[x][y].getValue() == 1) {
+                if (cells[x][y].getValue() < 10) {
                     sections[sectionY][sectionX]++;
                 }
                 options[sectionY][sectionX]++;
@@ -73,7 +74,7 @@ public class SectionCalculator {
         // Calculate percentages of free space in the sections
         for (int x = 0; x < resolution; x++) {
             for (int y = 0; y < resolution; y++) {
-                double percentage = (sections[y][x] * 1.0D) / (options[y][x] * 1.0D);
+                double percentage = ((double) sections[y][x]) / ((double) options[y][x]);
                 if (percentage > max) {
                     max = percentage;
                     bestX = x;
@@ -90,15 +91,15 @@ public class SectionCalculator {
 
         // Path-Calculation
         int minX = (int) Math.floor(bestX * devideWidth);
-        int maxX = (int) Math.floor((bestX+1) * devideWidth);
+        int maxX = (int) Math.floor((bestX + 1) * devideWidth);
         int minY = (int) Math.floor(bestY * devideWidth);
-        int maxY = (int) Math.floor((bestY+1) * devideWidth);
+        int maxY = (int) Math.floor((bestY + 1) * devideWidth);
 
         int optionX = -1;
         int optionY = -1;
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
-                if(x >= cells.length || y >= cells[0].length) {
+                if (x >= cells.length || y >= cells[0].length) {
                     continue;
                 }
 
@@ -113,11 +114,13 @@ public class SectionCalculator {
             }
         }
 
+        double difference = max - min;
+
         if (optionX != -1 && optionY != -1 && us.getX() != -1 && us.getY() != -1) {
             int sectionX = (int) Math.floor(us.getX() / devideWidth);
             int sectionY = (int) Math.floor(us.getY() / devideHeight);
             double range = percentages[sectionY][sectionX] - min;
-            double scale = (range * 1.0D) / (difference * 1.0D);
+            double scale = range / difference;
 
             double value = new LinearInterpolator(1.0, 1.2).getInterpolation(scale);
 
@@ -151,7 +154,7 @@ public class SectionCalculator {
                 int sectionY = (int) Math.floor(y / devideHeight);
 
                 double range = percentages[sectionY][sectionX] - min;
-                double scale = (range * 1.0D) / (difference * 1.0D); // scale from min/max-percentage
+                double scale = range / difference; // scale from min/max-percentage
 
                 // interpolate based on scale. Lower 50 % will get additional risk, upper 50% will lower their risk
                 double value = new LinearInterpolator(1.2, 1.0).getInterpolation(scale);
