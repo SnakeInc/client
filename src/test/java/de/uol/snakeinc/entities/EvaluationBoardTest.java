@@ -64,7 +64,6 @@ class EvaluationBoardTest {
         HashMap<Integer, Player> playerHashMap2 =
             new HashMap<Integer, Player>(Map.of(1, usJ, 2, op1J, 3, op2J, 4, op3J));
 
-
         EvaluationBoard evaluationBoard2 = new EvaluationBoard(10, 10, players, us, 6);
         assertEquals(1, evaluationBoard2.getCells()[1][0].getRisks());
         evaluationBoard2.updatePlayersCells(playerHashMap);
@@ -75,7 +74,6 @@ class EvaluationBoardTest {
         assertEquals(10, evaluationBoard2.getCells()[4][5].getRisks());
 
         EvaluationBoard evaluationBoard3 = new EvaluationBoard(10, 10, players, us, 6);
-
         evaluationBoard3.updatePlayersCells(playerHashMap2);
         assertEquals(10, evaluationBoard3.getCells()[4][7].getRisks());
         assertEquals(1, evaluationBoard3.getCells()[5][7].getRisks());
@@ -85,12 +83,6 @@ class EvaluationBoardTest {
         assertEquals(1, evaluationBoard3.getCells()[2][0].getRisks());
         assertEquals(10, evaluationBoard3.getCells()[2][1].getRisks());
         assertEquals(1, evaluationBoard3.getCells()[2][0].getRisks());
-
-
-
-
-
-
     }
 
     @Test
@@ -127,7 +119,6 @@ class EvaluationBoardTest {
         HashMap<Integer, Player> playerHashMap = new HashMap<Integer, Player>(Map.of(1, usU, 2, op1U, 3, op2U));
 
         evaluationBoard.update(playerHashMap, usU, 1);
-
         assertEquals(Action.class, evaluationBoard.getAction().getClass());
     }
 
