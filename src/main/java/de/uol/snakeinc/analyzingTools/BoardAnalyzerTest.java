@@ -23,8 +23,8 @@ class BoardAnalyzerTest {
 
         boardAnalyzer.analyze(cells, players, us);
 
-        cells[0][0].setCell(1);
-        cells[5][5].setCell(2);
+        cells[0][0].setId(1);
+        cells[5][5].setId(2);
         us = new Player(1, 1 , 1, Direction.DOWN, 1, true, "player3");
 
         boardAnalyzer.analyze(cells, players, us);
