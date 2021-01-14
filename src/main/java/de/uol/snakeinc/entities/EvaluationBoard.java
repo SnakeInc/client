@@ -6,6 +6,7 @@ import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
 import de.uol.snakeinc.analyzingTools.MoveCalculation;
 import lombok.CustomLog;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.HashMap;
  * Uses the boardAnalyzer to delegate the valuation of the cells. (f.e. OpponentMovesCalculation and Heuristics)
  * Calls the MoveCalculation to return the bestAction.
  */
-@CustomLog
+@Log4j2
 public class EvaluationBoard {
 
     @Getter
@@ -127,9 +128,11 @@ public class EvaluationBoard {
         int speed = player.getSpeed();
         int iD = player.getId();
         setCells(x, y, iD);
-        var xy = Common.generateXY(player.getDirection(), x, y, speed-1);
+        var xy = Common.generateXY(player.getDirection(), x, y, -(speed - 1));
         setCells(xy.getX(), xy.getY(), iD);
     }
+
+
     private void setCells(int x, int y, int iD) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
             cells[x][y].setId(iD);
@@ -157,7 +160,7 @@ public class EvaluationBoard {
             if (round % 6 == 0 && speed >= 3) {
                 updateJumpingPlayerCells(tmpPlayer);
             } else {
-                for (var xy : Common.generateAllXYUpTo(tmpPlayer.getDirection(), x, y, speed)) {
+                for (var xy : Common.generateAllXYUpTo(tmpPlayer.getDirection(), x, y, -speed)) {
                     setCells(xy.getX(), xy.getY(), iD);
                 }
             }

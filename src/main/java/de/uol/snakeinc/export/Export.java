@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.uol.snakeinc.entities.Game;
 import de.uol.snakeinc.entities.Player;
-import lombok.CustomLog;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-@CustomLog
+@Log4j2
 public class Export {
 
     private Game game;

@@ -5,14 +5,14 @@ import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
 import lombok.AllArgsConstructor;
-import lombok.CustomLog;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.HashSet;
 
 import static de.uol.snakeinc.Common.*;
 
-@CustomLog
+@Log4j2
 public class MoveCalculation {
 
     private Cell[][] cells;

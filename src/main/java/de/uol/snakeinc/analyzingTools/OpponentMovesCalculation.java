@@ -5,11 +5,12 @@ import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
 import lombok.CustomLog;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@CustomLog
+@Log4j2
 public class OpponentMovesCalculation {
 
     private BoardAnalyzer boardAnalyzer;
