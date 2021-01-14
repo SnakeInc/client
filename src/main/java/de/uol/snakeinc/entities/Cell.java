@@ -122,6 +122,6 @@ public class Cell extends PathCell {
     }
 
     public void setKillIncentive() {
-        this.killIncentive = 0.8;
+        this.killIncentive = 0.3;
     }
 }
