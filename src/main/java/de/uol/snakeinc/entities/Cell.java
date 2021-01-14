@@ -83,6 +83,18 @@ public class Cell extends PathCell {
         this.areaRisk = risk;
     }
 
+    public double getAreaRisk() {
+        return this.areaRisk;
+    }
+
+    public double getDeadEndRisk() {
+        return this.deadEndRisk;
+    }
+
+    public double getKillAlgorithmRisk() {
+        return this.killIncentive;
+    }
+
     public void setDeadEndRisk(double riskValue) {
         if((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;

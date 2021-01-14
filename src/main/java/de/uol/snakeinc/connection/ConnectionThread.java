@@ -1,5 +1,6 @@
 package de.uol.snakeinc.connection;
 
+import de.uol.snakeinc.SnakeInc;
 import de.uol.snakeinc.export.ExportManager;
 import lombok.CustomLog;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +28,14 @@ public class ConnectionThread extends Thread {
     public ConnectionThread(String apiKey) {
         this.running = true;
         this.exportManager = new ExportManager();
+        while (!SnakeInc.isGuiReady()) {
+            try {
+                log.info("Waiting for GUI");
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             //wss://msoll.de/spe_ed?key=
             url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
