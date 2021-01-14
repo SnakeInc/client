@@ -249,6 +249,17 @@ public abstract class KillAlgorithm {
         killingCells.add(cell);
     }
 
+    /**
+     * Decides the better AttackDirection if both options are deadends.
+     * @param op opponent
+     * @param cells cells
+     * @param evaluatedCells evaluatedCells
+     * @param dir Direction
+     * @param width width
+     * @param height height
+     * @param floodVarIf floodVar
+     * @param floodVarElse floodVar
+     */
     private static void decideAttackDirection(Player op, Cell[][] cells, Set<Cell> evaluatedCells, Direction dir,
                                                int width, int height, FloodVar floodVarIf, FloodVar floodVarElse) {
         if (floodVarIf.floodTerminationCount > floodVarElse.floodTerminationCount) {
