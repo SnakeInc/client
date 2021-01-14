@@ -74,7 +74,7 @@ class MoveOrderTest {
                 switch (act) {
                     case TURN_LEFT: return true;
                     case TURN_RIGHT: return false;
-                    default: continue;
+                    default: //continue;
                 }
             }
         } else {
@@ -82,11 +82,11 @@ class MoveOrderTest {
                 switch (act) {
                     case TURN_LEFT: return false;
                     case TURN_RIGHT: return true;
-                    default: continue;
+                    default: //continue;
                 }
             }
         }
-        return false; // should not com to this
+        return false; // should not come to this
     }
 
     /**
@@ -122,7 +122,7 @@ class MoveOrderTest {
                 switch (act) {
                     case TURN_LEFT: return false;
                     case TURN_RIGHT: return true;
-                    default: continue;
+                    default: //continue;
                 }
             }
         } else {
@@ -130,7 +130,7 @@ class MoveOrderTest {
                 switch (act) {
                     case TURN_LEFT: return true;
                     case TURN_RIGHT: return false;
-                    default: continue;
+                    default: //continue;
                 }
             }
         }
@@ -165,9 +165,10 @@ class MoveOrderTest {
             for (var act : res) {
                 switch (act) {
                     case CHANGE_NOTHING: return true;
-                    case SPEED_UP: return false;
-                    case SLOW_DOWN: return  false;
-                    default: continue;
+                    case SPEED_UP:
+                    case SLOW_DOWN:
+                        return false;
+                    default: //continue;
                 }
             }
         }
@@ -175,10 +176,11 @@ class MoveOrderTest {
         if (speed < idealSpeedMin) {
             for (var act : res) {
                 switch (act) {
-                    case CHANGE_NOTHING: return false;
+                    case CHANGE_NOTHING:
+                    case SLOW_DOWN:
+                        return false;
                     case SPEED_UP: return true;
-                    case SLOW_DOWN: return  false;
-                    default: continue;
+                    default: //continue;
                 }
             }
         }
@@ -186,13 +188,14 @@ class MoveOrderTest {
         if (speed > idealSpeedMax) {
             for (var act : res) {
                 switch (act) {
-                    case CHANGE_NOTHING: return false;
-                    case SPEED_UP: return false;
+                    case CHANGE_NOTHING:
+                    case SPEED_UP:
+                        return false;
                     case SLOW_DOWN: return true;
-                    default: continue;
+                    default: //continue;
                 }
             }
         }
-        return false; // should not com to this
+        return false; // should not come to this
     }
 }

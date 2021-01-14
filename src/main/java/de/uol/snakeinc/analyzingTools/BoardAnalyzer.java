@@ -3,6 +3,7 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Player;
 import lombok.CustomLog;
+import lombok.Getter;
 
 import java.util.Set;
 
@@ -12,7 +13,10 @@ import java.util.Set;
 @CustomLog
 public class BoardAnalyzer {
 
+    @Getter
     private Set<Cell> evaluatedCells;
+
+    @Getter
     private int round = 0;
 
     private SectionCalculator sectionCalculator;
@@ -25,7 +29,7 @@ public class BoardAnalyzer {
      * Is called once per round and initiates the analyzing.
      * The method to initiate other heuristics
      * @param us us
-     * @param players active opponents
+     * @param players active players
      * @param cells cells
      */
     public void analyze(Cell[][] cells, Player[] players, Player us) {
@@ -35,18 +39,20 @@ public class BoardAnalyzer {
         evaluatedCells = calc.evaluate(cells, players, us);
         DeadEndRecognition deadEndRecognition = new DeadEndRecognition(cells, us,this);
         deadEndRecognition.findDeadEnds();
+        evaluatedCells.addAll(KillAlgorithm.killAlgorithm(cells, players, us));
     }
 
     /**
      * Checks if players are in a defined reachable distance.
      * @param player1 player 1
      * @param player2 player 2
+     * @param inRounds rounds till possible collision
      * @return True - inDistance
      */
-    public static Boolean inDistance(Player player1, Player player2) {
+    public static Boolean inDistance(Player player1, Player player2, int inRounds) {
         int distance = Math.abs(player1.getX() - player2.getX()) + Math.abs(player1.getY() - player2.getY());
         //TODO: Implement and use pathfinder-algorithm to check if the players can reach each other in max three rounds.
-        return distance <= (player1.getSpeed() * 3) + (player2.getSpeed() * 3) + 6 && distance != 0;
+        return distance <= (player1.getSpeed() * inRounds) + (player2.getSpeed() * inRounds) && distance != 0;
     }
 
     /**

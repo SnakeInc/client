@@ -58,7 +58,7 @@ public class Player {
                 }
                 return;
             default:
-                return;
+                //return;
         }
     }
 

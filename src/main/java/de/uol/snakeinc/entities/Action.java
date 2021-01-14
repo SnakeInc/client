@@ -4,7 +4,7 @@ public enum Action {
 
     SLOW_DOWN,
     TURN_LEFT,
-    TURN_RIGHT,
     CHANGE_NOTHING,
+    TURN_RIGHT,
     SPEED_UP,
 }

@@ -1,6 +1,7 @@
 package de.uol.snakeinc.entities;
 
 import com.google.gson.JsonObject;
+import de.uol.snakeinc.Common;
 import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
 import de.uol.snakeinc.analyzingTools.MoveCalculation;
 import lombok.CustomLog;
@@ -25,7 +26,7 @@ public class EvaluationBoard {
     private Player us;
     @Getter
     private int round;
-
+    @Getter
     private BoardAnalyzer boardAnalyzer;
 
 
@@ -112,9 +113,7 @@ public class EvaluationBoard {
             }
         }
         Player[] playersArray = new Player[count];
-        for (int i = 0; i < count; i++) {
-            playersArray[i] = playersArrayTmp[i];
-        }
+        if (count >= 0) System.arraycopy(playersArrayTmp, 0, playersArray, 0, count);
         return  playersArray;
     }
 
@@ -127,26 +126,9 @@ public class EvaluationBoard {
         int y = player.getY();
         int speed = player.getSpeed();
         int iD = player.getId();
-        switch (player.getDirection()) {
-            case UP:
-                setCells(x, y, iD);
-                setCells(x, y + speed - 1, iD);
-                break;
-            case DOWN:
-                setCells(x, y, iD);
-                setCells(x, y - speed + 1, iD);
-                break;
-            case LEFT:
-                setCells(x, y, iD);
-                setCells(x + speed - 1, y, iD);
-                break;
-            case RIGHT:
-                setCells(x, y, iD);
-                setCells(x - speed + 1, y, iD);
-                break;
-            default:
-                throw new IllegalStateException();
-        }
+        setCells(x, y, iD);
+        var xy = Common.generateXY(player.getDirection(), x, y, speed-1);
+        setCells(xy.getX(), xy.getY(), iD);
     }
     private void setCells(int x, int y, int iD) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
@@ -169,37 +151,14 @@ public class EvaluationBoard {
             x = playerHashMap.get(i).getX();
             y = playerHashMap.get(i).getY();
             speed = playerHashMap.get(i).getSpeed();
-            Cell tmp;
             tmpPlayer = playerHashMap.get(i);
 
             //Checking for jumping
             if (round % 6 == 0 && speed >= 3) {
                 updateJumpingPlayerCells(tmpPlayer);
             } else {
-                //Updating Cells without jumping. Implements an iteration-logic for snakes
-                switch (tmpPlayer.getDirection()) {
-                    case UP:
-                        for (int j = 0; j < speed; j++) {
-                            setCells(x, y + j, iD);
-                        }
-                        break;
-                    case DOWN:
-                        for (int j = 0; j < speed; j++) {
-                            setCells(x, y - j, iD);
-                        }
-                        break;
-                    case LEFT:
-                        for (int j = 0; j < speed; j++) {
-                            setCells(x + j, y, iD);
-                        }
-                        break;
-                    case RIGHT:
-                        for (int j = 0; j < speed; j++) {
-                            setCells(x - j, y, iD);
-                        }
-                        break;
-                    default:
-                        throw new IllegalStateException();
+                for (var xy : Common.generateAllXYUpTo(tmpPlayer.getDirection(), x, y, speed)) {
+                    setCells(xy.getX(), xy.getY(), iD);
                 }
             }
         }
@@ -250,11 +209,6 @@ public class EvaluationBoard {
             playersArray[count] = players.get(position);
             count++;
         }
-
-        //Gson gson = new Gson();
-
-        //log.debug(json.get("cells").toString());
-        //int[][] cells = gson.fromJson(json.get("cells").toString(), int[][].class);
 
         return new EvaluationBoard(width, height, playersArray, us, 0);
     }

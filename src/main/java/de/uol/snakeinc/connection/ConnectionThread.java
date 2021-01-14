@@ -50,7 +50,7 @@ public class ConnectionThread extends Thread {
             }
             try {
                 sslContext.init( null, null, null );
-            } catch (KeyManagementException e) {
+            } catch (KeyManagementException | NullPointerException e) {
                 e.printStackTrace();
             }
             SSLSocketFactory factory = sslContext.getSocketFactory();
@@ -62,6 +62,7 @@ public class ConnectionThread extends Thread {
                 e.printStackTrace();
             }
             while (webSocket.isOpen() || !this.callback) {
+                //todo: should this be empty
             }
         }
     }

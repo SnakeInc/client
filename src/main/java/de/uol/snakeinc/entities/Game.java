@@ -66,15 +66,10 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
-        if (!us.isActive()) {
-            socket.sendAction(Action.CHANGE_NOTHING);
-        }
-        if (round < 0) {
-            socket.sendAction(EvaluationBoard.startingStrategy());
-        } else {
+        if (us.isActive()) {
             socket.sendAction(EvaluationBoard.getAction());
+            EvaluationBoard.prepareNextPhase();
         }
-        EvaluationBoard.prepareNextPhase();
         round++;
     }
 

@@ -17,6 +17,8 @@ public class Cell extends PathCell implements Cloneable {
     //The risk that another agent will move to this cell
     private double opponentMovementRisk;
 
+    private double killIncentive;
+
     //Area-risk
     private double areaRisk;
 
@@ -36,6 +38,7 @@ public class Cell extends PathCell implements Cloneable {
         opponentMovementRisk = 1;
         tmpMoveCalcValue = 1;
         areaRisk = 1;
+        killIncentive = 1;
         deadEndRisk = 1;
         hardDeadly = false;
         tmpDeadly = false;
@@ -64,15 +67,12 @@ public class Cell extends PathCell implements Cloneable {
         switch (depth) {
             case 1:
                 opponentMovementRisk = opponentMovementRisk * 1.25;
-                //TODO here was fallthrough
                 break;
             case 2:
                 opponentMovementRisk = opponentMovementRisk * 1.0625;
-                //TODO here was fallthrough
                 break;
             case 3:
                 opponentMovementRisk = opponentMovementRisk * 1.015625;
-                //TODO here was fallthrough
                 break;
             default:
                 throw new IllegalStateException();
@@ -95,11 +95,12 @@ public class Cell extends PathCell implements Cloneable {
 
     public double getRisks() {
         //Not calculated: Speed-Up.
+        //Not calculated: Interaction between players.
         //Not calculated: Interinteraktion between players.
         if (hardDeadly || tmpDeadly) {
             return DEATH_VALUE;
         }
-        return getValue() * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk;
+        return getValue()  * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk * killIncentive;
     }
 
     public void clearPseudoValue() {
@@ -112,8 +113,16 @@ public class Cell extends PathCell implements Cloneable {
         tmpDeadly = true;
     }
 
+    /**
+     * Prepare the next phase.
+     */
     public void prepareNextPhase() {
         this.opponentMovementRisk = 1;
+        this.killIncentive = 1;
+    }
+
+    public void setKillIncentive() {
+        this.killIncentive = 0.8;
     }
 
     @Override
