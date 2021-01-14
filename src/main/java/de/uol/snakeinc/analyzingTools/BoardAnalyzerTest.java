@@ -1,31 +1,3 @@
-package de.uol.snakeinc.analyzingTools;
-
-import de.uol.snakeinc.entities.Cell;
-import de.uol.snakeinc.entities.Direction;
-import de.uol.snakeinc.entities.Player;
-import static org.junit.jupiter.api.Assertions.*;
-
-
-class BoardAnalyzerTest {
-
-    @org.junit.jupiter.api.Test
-    void analyze() {
-        BoardAnalyzer boardAnalyzer = new BoardAnalyzer(10, 10);
-        Cell[][] cells = new Cell[10][10];
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                cells[i][j] = new Cell(i, j);
-            }
-        }
-        Player us = new Player(1, 0, 0, Direction.DOWN, 1, true, "player1");
-        Player[] players = {new Player(3, 5, 5, Direction.DOWN, 1, true, "player3"),
-            new Player(2, 5, 5, Direction.DOWN, 1, true, "player2")};
-
-        boardAnalyzer.analyze(cells, players, us);
-
-        cells[0][0].setId(1);
-        cells[5][5].setId(2);
-        us = new Player(1, 1 , 1, Direction.DOWN, 1, true, "player3");
 
         boardAnalyzer.analyze(cells, players, us);
         assertEquals(2, boardAnalyzer.getRound());
