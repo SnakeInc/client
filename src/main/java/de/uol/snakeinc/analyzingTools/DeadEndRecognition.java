@@ -18,7 +18,6 @@ public class DeadEndRecognition {
     Cell[][] cells;
     Player us;
     BoardAnalyzer boardAnalyzer;
-    ArrayList<Gate> gates;
     int width;
     int height;
     double mapCellCount;
@@ -30,123 +29,62 @@ public class DeadEndRecognition {
         this.width = cells.length;
         this.height = cells[1].length;
         this.mapCellCount = width * height;
-        this.gates = new ArrayList<>();
     }
 
     public void findDeadEnds() {
-        Direction dir = us.getDirection();
-        int x = us.getX();
-        int y = us.getY();
-        int speed = us.getSpeed();
-        calculateRisk(x, y, 1, speed, dir);
-        calcDeadEndSize();
+        Direction usDir = us.getDirection();
+        int usX = us.getX();
+        int usY = us.getY();
+        int usSpeed = us.getSpeed();
+        testPossibleMoves(usDir, usX, usY, usSpeed);
     }
 
-    private void calculateRisk(int x, int y, int depth, int speed, Direction dir) {
-        if (depth <= 3) {
-            //Recursive call
-            recursiveRiskByDirection(x, y, depth, speed, dir);
-            recursiveRiskByDirection(x, y, depth, speed, turnLeft(dir));
-            recursiveRiskByDirection(x, y, depth, speed, turnRight(dir));
-            if(speed + 1 < 10) {
-                recursiveRiskByDirection(x, y, depth, speed + 1, dir);
-            }
-            if(speed - 1 > 0) {
-                recursiveRiskByDirection(x, y, depth, speed - 1, dir);
-            }
-        }
+    private void testPossibleMoves(Direction direction, int x, int y, int speed) {
+
     }
 
-    private void recursiveRiskByDirection(int x, int y, int depth, int speed, Direction dir) {
-        boolean abort = false;
-        switch (dir) {
+    private void testMove(Direction direction, int x, int y, int speed) {
+        switch (direction) {
             case UP:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x, y - j)) {
-                        abort = true;
-                        break;
-                    } else {
-                        if(testForGate(x, y - j, dir, depth)) {
-                            abort = true;
-                        }
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x, y - speed, depth + 1, speed, dir);
-                }
+
                 break;
-            case DOWN:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x, y + j)) {
-                        abort = true;
-                        break;
-                    } else {
-                        if(testForGate(x, y + j, dir, depth)) {
-                            abort = true;
-                        }
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x, y + speed, depth + 1, speed, dir);
-                }
-                break;
-            case RIGHT:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x + j, y)) {
-                        abort = true;
-                        break;
-                    } else {
-                        if(testForGate(x + j, y, dir, depth)) {
-                            abort = true;
-                        }
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x + speed, y, depth + 1, speed, dir);
-                }
-                break;
-            case LEFT:
-                for (int j = 1; j  < speed + 1; j++) {
-                    if (offBoardOrDeadly(x - j, y)) {
-                        abort = true;
-                        break;
-                    } else {
-                        if(testForGate(x - j, y, dir, depth)) {
-                            abort = true;
-                        }
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x - speed, y, depth + 1, speed, dir);
-                }
-                break;
-            default:
-                throw new IllegalStateException();
         }
     }
 
-    private boolean testForGate(int x, int y, Direction dir, int depth) {
-        switch (dir) {
-            case UP:
-            case DOWN:
-                if(offBoardOrDeadly(x - 1, y) && offBoardOrDeadly(x + 1, y)) {
-                    gates.add(new Gate(dir, x, y));
-                    gates.add(new Gate(turnLeft(turnLeft(dir)), x, y));
-                    return true;
-                } else
-                    return false;
-            case LEFT:
-            case RIGHT:
-                if(offBoardOrDeadly(x, y - 1) && offBoardOrDeadly(x, y + 1)) {
-                    gates.add(new Gate(dir, x, y));
-                    gates.add(new Gate(turnLeft(turnLeft(dir)), x, y));
-                    return true;
-                } else {
-                    return false;
-                }
-            default:
-                throw new IllegalStateException();
+    private void testRoundOfLine() {
+
+    }
+
+    private void testRoundOfCell() {
+
+    }
+
+    private Cell[][] getDeepCopyOfMap() {
+        Cell[][] newCells = new Cell[cells.length][cells[0].length];
+        for(int i = 0; i < cells.length; i++) {
+            for(int j = 0; j < cells[0].length; j++) {
+                newCells[i][j] = cells[i][j].clone();
+            }
         }
+        return newCells;
+    }
+
+    @Getter
+    class HistoryMap {
+
+        private Cell[][] map;
+        private Set<Cell> changedCells;
+
+        public HistoryMap(Cell[][] map) {
+            this.map = map;
+            changedCells = new HashSet<>();
+        }
+
+        public void setDeadly(int x, int y) {
+            map[x][y].setId(-1);
+
+        }
+
     }
 
     /**
@@ -163,46 +101,26 @@ public class DeadEndRecognition {
         }
     }
 
-    @AllArgsConstructor
-    @Getter
-    private class Gate {
-        private Direction dir;
-        private int x;
-        private int y;
+    /**
+     * finds the start point for each gate.
+     */
+    private void calcDeadEndSize(Cell[][] map, Stack<Cell> cellsToTest, int startX, int startY) {
+        if(!offBoardOrDeadly(startX, startY)) {
+            findNeighbours(startX, startY, cellsToTest, map);
+        }
     }
 
-    private void calcDeadEndSize() {
-        gates.forEach((gate) -> {
-            Set<Cell> cellsTested = new HashSet<>();
-            Stack<Cell> cellsToTest = new Stack<>();
-            int startX = gate.getX();
-            int startY = gate.getY();
-            cellsTested.add(cells[startX][startY]);
-            Direction dir = gate.getDir();
-            switch (dir) {
-                case UP:
-                    startY--;
-                case DOWN:
-                    startY++;
-                case LEFT:
-                    startX--;
-                case RIGHT:
-                    startX++;
-            }
-            if(!offBoardOrDeadly(startX, startY)) {
-                findNeighbours(startX, startY, cellsTested, cellsToTest);
-            }
-        });
-    }
-
-    private void findNeighbours(int x, int y, Set<Cell> cellsTested, Stack<Cell> cellsToTest) {
+    /**
+     * calculates the risk for each gate.
+     * goes from 2 to 1 based on the size of the dead end.
+     */
+    private void findNeighbours(int x, int y, Stack<Cell> cellsToTest, Cell[][] map) {
+        Set<Cell> cellsTested = new HashSet<>();
         log.debug("Calculating Gate: " + x + " - " + y);
         int deadEndCellCount = 1;
-        cellsToTest.add(cells[x][y]);
-        int toTestCount = 1;
-        while(toTestCount > 0 && deadEndCellCount < (mapCellCount / 4)) {
+        cellsToTest.add(map[x][y]);
+        while(!cellsToTest.empty() && deadEndCellCount < (mapCellCount / 4)) {
             Cell cell = cellsToTest.pop();
-            toTestCount--;
             int xCell = cell.getY();
             int yCell = cell.getX();
             if(!(cellsTested.contains(cell) || cellsToTest.contains(cell) || offBoardOrDeadly(xCell, yCell))) {
@@ -210,37 +128,33 @@ public class DeadEndRecognition {
                 deadEndCellCount++;
                 //test up
                 if(!offBoardOrDeadly(xCell, (yCell - 1))) {
-                    var nextCell = cells[xCell][(yCell - 1)];
+                    var nextCell = map[xCell][(yCell - 1)];
                     if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
-                        toTestCount++;
                     }
 
                 }
                 //test right
                 if(!offBoardOrDeadly((xCell + 1), yCell)) {
-                    var nextCell = cells[(xCell + 1)][yCell];
+                    var nextCell = map[(xCell + 1)][yCell];
                     if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
-                        toTestCount++;
                     }
 
                 }
                 //test down
                 if(!offBoardOrDeadly(xCell, (yCell + 1))) {
-                    var nextCell = cells[xCell][(yCell + 1)];
+                    var nextCell = map[xCell][(yCell + 1)];
                     if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
-                        toTestCount++;
                     }
 
                 }
                 //test left
                 if(!offBoardOrDeadly((xCell - 1), yCell)) {
-                    var nextCell = cells[(xCell - 1)][yCell];
+                    var nextCell = map[(xCell - 1)][yCell];
                     if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
-                        toTestCount++;
                     }
                 }
             }
@@ -255,6 +169,11 @@ public class DeadEndRecognition {
         }
     }
 
+    /**
+     * turns the direction to the left.
+     * @param dir Direction
+     * @return Direction
+     */
     private Direction turnLeft(Direction dir) {
         switch (dir) {
             case UP:
@@ -270,6 +189,11 @@ public class DeadEndRecognition {
         }
     }
 
+    /**
+     * turns the direction to the right.
+     * @param dir Direction
+     * @return Direction
+     */
     private Direction turnRight(Direction dir) {
         switch (dir) {
             case UP:

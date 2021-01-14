@@ -3,7 +3,7 @@ package de.uol.snakeinc.entities;
 import de.uol.snakeinc.pathfinding.PathCell;
 import lombok.Getter;
 
-public class Cell extends PathCell {
+public class Cell extends PathCell implements Cloneable {
 
 
     public static final int DEATH_VALUE = 10;
@@ -114,5 +114,19 @@ public class Cell extends PathCell {
 
     public void prepareNextPhase() {
         this.opponentMovementRisk = 1;
+    }
+
+    @Override
+    public Cell clone() {
+        Cell cell = new Cell(getX(), getY());
+        cell.deadEndRisk = this.deadEndRisk;
+        cell.iD = this.iD;
+        cell.value = this.value;
+        cell.hardDeadly = this.hardDeadly;
+        return cell;
+    }
+
+    public void setNoneDeadly() {
+
     }
 }
