@@ -41,15 +41,15 @@ class KillAlgorithmTest {
         for (int x = 0; x < 20; x++) {
             for (int y = 0; y < 20; y++) {
                 cells[x][y] = new Cell(x, y);
-                if (cellValues[x][y] == 10) {
+                if ((double) cellValues[x][y] == 10.0) {
                     cells[x][y].setId(2);
                 }
-                if (cellValues[x][y] == 20) {
+                if ((double) cellValues[x][y] == 20.0) {
                     cells[x][y].setId(1);
                 }
             }
             Player us = new Player(1, 14, 9, Direction.UP, 2, true, "1");
-            Player op = new Player(2, 17, 5, Direction.UP, 1, true, "2");
+            Player op = new Player(2, 17, 5, Direction.DOWN, 1, true, "2");
             Player[] players = new Player[] {op};
             Set<Cell> evaluatedCells = KillAlgorithm.killAlgorithm(cells, players, us);
         }
