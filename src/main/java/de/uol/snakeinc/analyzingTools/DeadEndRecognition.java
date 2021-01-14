@@ -7,10 +7,10 @@ import static de.uol.snakeinc.Common.turnRight;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
-import lombok.CustomLog;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,8 +39,8 @@ public class DeadEndRecognition {
 
     public void findDeadEnds() {
         Direction usDir = us.getDirection();
-        int usX = us.getY();
-        int usY = us.getX();
+        int usX = us.getX();
+        int usY = us.getY();
         int usSpeed = us.getSpeed();
         testPossibleMoves(usDir, usX, usY, usSpeed);
     }
@@ -88,19 +88,19 @@ public class DeadEndRecognition {
         Set<Common.Tuple> tuplesToReturn = new HashSet<>();
         Set<Common.Tuple> tuplesAlreadyAdded = new HashSet<>();
         for(Common.Tuple t : tuples) {
-            Set<Common.Tuple> tmpTuple = testRoundOfCellReturnSet(t.getX(), t.getY());
-            for(Common.Tuple tTmp : tmpTuple) {
+            ArrayList<Common.Tuple> tmpTuple = testRoundOfCellReturn(t.getX(), t.getY());
+            tmpTuple.forEach((tTmp) -> {
                 if(!tuplesAlreadyAdded.contains(tTmp) && !tuples.contains(tTmp)) {
                     tuplesToReturn.add(tTmp);
                     tuplesAlreadyAdded.add(tTmp);
                 }
-            }
+            });
         }
         return tuplesToReturn;
     }
 
-    private Set<Common.Tuple> testRoundOfCellReturnSet(int x, int y) {
-        Set<Common.Tuple> setToReturn = new HashSet<>();
+    private ArrayList<Common.Tuple> testRoundOfCellReturn(int x, int y) {
+        ArrayList<Common.Tuple> setToReturn = new ArrayList<>();
         for(int i = 0; i <= 7; i++) {
             if(!isOffBoard(x, y)) {
                 Common.Tuple tuple = getRoundOfPosition(x, y, i);
@@ -246,8 +246,8 @@ public class DeadEndRecognition {
         cellsToTest.add(map[x][y]);
         while(!cellsToTest.empty() && deadEndCellCount < (mapCellCount / 4)) {
             Cell cell = cellsToTest.pop();
-            int xCell = cell.getY();
-            int yCell = cell.getX();
+            int xCell = cell.getX();
+            int yCell = cell.getY();
             if(!(cellsTested.contains(cell) || cellsToTest.contains(cell) || offBoardOrDeadly(xCell, yCell))) {
                 cellsTested.add(cell);
                 deadEndCellCount++;
