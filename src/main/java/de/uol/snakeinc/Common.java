@@ -46,9 +46,17 @@ public abstract class Common {
     }
 
     static public Tuple[] generateAllXYUpTo(Direction direction, int x, int y, int amount) {
-        Tuple[] res = new Tuple[amount - 1];
-        for (int i = 1; i < amount; i++) {
-            res[i-1] = generateXY(direction, x,y, i);
+        Tuple[] res;
+        if(amount < 0) {
+            res = new Tuple[-amount];
+            for (int i = 0; i > amount; i--) {
+                res[-i] = generateXY(direction, x,y, i);
+            }
+        } else {
+            res = new Tuple[amount];
+            for (int i = 0; i < amount; i++) {
+                res[i] = generateXY(direction, x, y, i);
+            }
         }
         return res;
     }

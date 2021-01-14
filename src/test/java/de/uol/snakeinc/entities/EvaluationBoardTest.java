@@ -50,6 +50,7 @@ class EvaluationBoardTest {
 
         evaluationBoard.updatePlayersCells(playerHashMap);
         assertEquals(10, evaluationBoard.getCells()[2][1].getRisks());
+        assertEquals(1, evaluationBoard.getCells()[2][0].getRisks());
         assertEquals(10, evaluationBoard.getCells()[1][0].getRisks());
         assertEquals(1, evaluationBoard.getCells()[4][9].getRisks());
         assertEquals(10, evaluationBoard.getCells()[4][8].getRisks());

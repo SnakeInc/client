@@ -127,9 +127,11 @@ public class EvaluationBoard {
         int speed = player.getSpeed();
         int iD = player.getId();
         setCells(x, y, iD);
-        var xy = Common.generateXY(player.getDirection(), x, y, speed-1);
+        var xy = Common.generateXY(player.getDirection(), x, y, -(speed - 1));
         setCells(xy.getX(), xy.getY(), iD);
     }
+
+
     private void setCells(int x, int y, int iD) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
             cells[x][y].setId(iD);
@@ -157,7 +159,7 @@ public class EvaluationBoard {
             if (round % 6 == 0 && speed >= 3) {
                 updateJumpingPlayerCells(tmpPlayer);
             } else {
-                for (var xy : Common.generateAllXYUpTo(tmpPlayer.getDirection(), x, y, speed)) {
+                for (var xy : Common.generateAllXYUpTo(tmpPlayer.getDirection(), x, y, -speed)) {
                     setCells(xy.getX(), xy.getY(), iD);
                 }
             }
