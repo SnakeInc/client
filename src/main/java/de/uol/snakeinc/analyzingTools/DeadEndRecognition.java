@@ -1,14 +1,16 @@
 package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.Common;
+import static de.uol.snakeinc.Common.generateAllXYUpTo;
+import static de.uol.snakeinc.Common.turnLeft;
+import static de.uol.snakeinc.Common.turnRight;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
-import de.uol.snakeinc.entities.Tuple;
-import lombok.AllArgsConstructor;
 import lombok.CustomLog;
 import lombok.Getter;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -17,6 +19,7 @@ import java.util.Stack;
 public class DeadEndRecognition {
 
     Cell[][] cells;
+    HistoryMap historyMap;
     Player us;
     BoardAnalyzer boardAnalyzer;
     int width;
@@ -30,43 +33,100 @@ public class DeadEndRecognition {
         this.width = cells.length;
         this.height = cells[1].length;
         this.mapCellCount = width * height;
+        this.historyMap = new HistoryMap(getDeepCopyOfMap());
     }
 
     public void findDeadEnds() {
         Direction usDir = us.getDirection();
-        int usX = us.getX();
-        int usY = us.getY();
+        int usX = us.getY();
+        int usY = us.getX();
         int usSpeed = us.getSpeed();
         testPossibleMoves(usDir, usX, usY, usSpeed);
     }
 
     private void testPossibleMoves(Direction direction, int x, int y, int speed) {
-
+        testMove(direction, x, y, speed);
+        testMove(turnLeft(direction), x, y, speed);
+        testMove(turnRight(direction), x, y, speed);
+        if(speed > 1) {
+            testMove(direction, x, y, speed - 1);
+        }
+        if(speed < 9) {
+            testMove(direction, x, y, speed + 1);
+        }
     }
 
     private void testMove(Direction direction, int x, int y, int speed) {
-
+        Common.Tuple[] tuple = generateAllXYUpTo(direction, x, y, speed);
+        for(Common.Tuple t: tuple) {
+            if(!isOffBoard(t.getX(), t.getY())) {
+                historyMap.setDeadly(t.getX(), t.getY());
+            }
+        }
+        testRoundOfLine(tuple);
+        historyMap.resetMap();
     }
 
-    private void testRoundOfLine() {
-
+    private void testRoundOfLine(Common.Tuple[] tuplesInLine) {
+        Set<Common.Tuple> toSet = new HashSet<>(Arrays.asList(tuplesInLine));
+        Set<Common.Tuple> tuples = getLineOffPosition(toSet);
+        boolean alreadyChecked = false;
+        for (Common.Tuple neighbour : tuples) {
+            if (!isOffBoard(neighbour.getX(), neighbour.getY())) {
+                if(!isDeadly(neighbour.getX(), neighbour.getY()) && !alreadyChecked) {
+                    testRoundOfCell(neighbour.getX(), neighbour.getY());
+                    alreadyChecked = true;
+                } else {
+                    alreadyChecked = false;
+                }
+            }
+        }
     }
 
-    private void testRoundOfCell(int x, int y, Cell[][] map) {
+    private Set<Common.Tuple> getLineOffPosition(Set<Common.Tuple> tuples) {
+        Set<Common.Tuple> tuplesToReturn = new HashSet<>();
+        Set<Common.Tuple> tuplesAlreadyAdded = new HashSet<>();
+        for(Common.Tuple t : tuples) {
+            Set<Common.Tuple> tmpTuple = testRoundOfCellReturnSet(t.getX(), t.getY());
+            for(Common.Tuple tTmp : tmpTuple) {
+                if(!tuplesAlreadyAdded.contains(tTmp) && !tuples.contains(tTmp)) {
+                    tuplesToReturn.add(tTmp);
+                    tuplesAlreadyAdded.add(tTmp);
+                }
+            }
+        }
+        return tuplesToReturn;
+    }
+
+    private Set<Common.Tuple> testRoundOfCellReturnSet(int x, int y) {
+        Set<Common.Tuple> setToReturn = new HashSet<>();
+        for(int i = 0; i <= 7; i++) {
+            if(!isOffBoard(x, y)) {
+                Common.Tuple tuple = getRoundOfPosition(x, y, i);
+                setToReturn.add(tuple);
+            }
+        }
+        return setToReturn;
+    }
+
+    private void testRoundOfCell(int x, int y) {
         if(!isOffBoard(x, y)) {
             boolean areaAlreadyTested = false;
             for(int i = 0; i <= 7; i++) {
-                Tuple tuple = getRoundOfPosition(x, y, i);
+                Common.Tuple tuple = getRoundOfPosition(x, y, i);
                 if(!isOffBoard(tuple.getX(), tuple.getY())) {
-                    if(!isDeadly(tuple.getX(), tuple.getY())) {
-                        findNeighbours(tuple.getX(), tuple.getY(), map);
+                    if(!isDeadly(tuple.getX(), tuple.getY()) && !areaAlreadyTested) {
+                        findNeighbours(tuple.getX(), tuple.getY(), historyMap.getMap());
+                        areaAlreadyTested = true;
+                    } else {
+                        areaAlreadyTested = false;
                     }
                 }
             }
         }
     }
 
-    private Tuple getRoundOfPosition(int x, int y, int depth) {
+    private Common.Tuple getRoundOfPosition(int x, int y, int depth) {
         int newX = x;
         int newY = y;
         switch (depth) {
@@ -101,7 +161,7 @@ public class DeadEndRecognition {
             default:
                 throw new IllegalStateException();
         }
-        return new Tuple(newX, newY);
+        return new Common.Tuple(newX, newY);
     }
 
     private Cell[][] getDeepCopyOfMap() {
@@ -127,7 +187,11 @@ public class DeadEndRecognition {
 
         public void setDeadly(int x, int y) {
             map[x][y].setId(-1);
+            changedCells.add(map[x][y]);
+        }
 
+        public void resetMap() {
+            changedCells.forEach(Cell::setNoneDeadly);
         }
 
     }
@@ -142,7 +206,7 @@ public class DeadEndRecognition {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return true;
         } else {
-            return cells[x][y].isDeadly();
+            return historyMap.getMap()[x][y].isDeadly();
         }
     }
 
@@ -153,7 +217,7 @@ public class DeadEndRecognition {
      * @return returns true if deadly
      */
     private boolean isDeadly(int x, int y) {
-        return cells[x][y].isDeadly();
+        return historyMap.getMap()[x][y].isDeadly();
     }
 
     /**
@@ -220,49 +284,9 @@ public class DeadEndRecognition {
         if((deadEndCellCount < (mapCellCount / 4)) && deadEndCellCount > 1) {
                 deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
             cellsTested.forEach((testedCell) -> {
-                testedCell.setDeadEndRisk(deadEndRisk);
+                cells[testedCell.getX()][testedCell.getY()].setDeadEndRisk(deadEndRisk);
             });
             log.debug("Gate size: " + deadEndCellCount + " - Risk: " + deadEndRisk);
-        }
-    }
-
-    /**
-     * turns the direction to the left.
-     * @param dir Direction
-     * @return Direction
-     */
-    private Direction turnLeft(Direction dir) {
-        switch (dir) {
-            case UP:
-                return Direction.LEFT;
-            case DOWN:
-                return Direction.RIGHT;
-            case LEFT:
-                return Direction.DOWN;
-            case RIGHT:
-                return Direction.UP;
-            default:
-                throw new IllegalStateException();
-        }
-    }
-
-    /**
-     * turns the direction to the right.
-     * @param dir Direction
-     * @return Direction
-     */
-    private Direction turnRight(Direction dir) {
-        switch (dir) {
-            case UP:
-                return Direction.RIGHT;
-            case DOWN:
-                return Direction.LEFT;
-            case LEFT:
-                return Direction.UP;
-            case RIGHT:
-                return Direction.DOWN;
-            default:
-                throw new IllegalStateException();
         }
     }
 }

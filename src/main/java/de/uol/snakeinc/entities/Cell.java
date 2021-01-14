@@ -119,6 +119,7 @@ public class Cell extends PathCell implements Cloneable {
     public void prepareNextPhase() {
         this.opponentMovementRisk = 1;
         this.killIncentive = 1;
+        this.deadEndRisk = 1;
     }
 
     public void setKillIncentive() {

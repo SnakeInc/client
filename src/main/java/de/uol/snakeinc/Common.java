@@ -59,4 +59,44 @@ public abstract class Common {
         private final int x;
         private final int y;
     }
+
+    /**
+     * turns the direction to the left.
+     * @param dir Direction
+     * @return Direction
+     */
+    public static Direction turnLeft(Direction dir) {
+        switch (dir) {
+            case UP:
+                return Direction.LEFT;
+            case DOWN:
+                return Direction.RIGHT;
+            case LEFT:
+                return Direction.DOWN;
+            case RIGHT:
+                return Direction.UP;
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * turns the direction to the right.
+     * @param dir Direction
+     * @return Direction
+     */
+    public static Direction turnRight(Direction dir) {
+        switch (dir) {
+            case UP:
+                return Direction.RIGHT;
+            case DOWN:
+                return Direction.LEFT;
+            case LEFT:
+                return Direction.UP;
+            case RIGHT:
+                return Direction.DOWN;
+            default:
+                throw new IllegalStateException();
+        }
+    }
 }
