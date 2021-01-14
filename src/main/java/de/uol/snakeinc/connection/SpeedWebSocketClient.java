@@ -49,7 +49,7 @@ public class SpeedWebSocketClient extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        log.info("Received message: " + message);
+        //log.info("Received message: " + message);
         try {
             JsonElement jsonTree = JsonParser.parseString(message);
             JsonObject jsonObject = jsonTree.getAsJsonObject();
@@ -112,7 +112,7 @@ public class SpeedWebSocketClient extends WebSocketClient {
     private int[][] getRawBoard(JsonObject json) {
         Gson gson = new Gson();
 
-        log.debug(json.get("cells").toString());
+        //log.debug(json.get("cells").toString());
         return gson.fromJson(json.get("cells").toString(), int[][].class);
     }
 }

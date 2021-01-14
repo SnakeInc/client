@@ -85,11 +85,8 @@ class BoardAnalyzerTest {
             new Player(2, 5, 5, Direction.DOWN, 1, true, "player2")};
 
         assertTrue(boardAnalyzer.getEvaluatedCells().isEmpty());
-
         boardAnalyzer.analyze(cells, players, us);
-
         assertFalse(boardAnalyzer.getEvaluatedCells().isEmpty());
-
         boardAnalyzer.prepareNextPhase();
 
         assertTrue(boardAnalyzer.getEvaluatedCells().isEmpty());

@@ -76,7 +76,7 @@ public class OpponentMovesCalculation {
     private void recursiveRiskByDirection(int x, int y, int depth, int speed, Direction dir) {
         boolean abort = false;
 
-        for (var xy : Common.generateAllXYUpTo(dir, x, y, speed)) {
+        for (var xy : Common.generateAllXYUpToFromOne(dir, x, y, speed)) {
             if (offBoardOrDeadly(xy.getX(), xy.getY())) {
                 abort = true;
                 break;

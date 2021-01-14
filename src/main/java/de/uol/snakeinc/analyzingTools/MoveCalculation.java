@@ -1,5 +1,6 @@
 package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.Common;
 import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
@@ -183,7 +184,7 @@ public class MoveCalculation {
             result = evaluateResult(pseudEvaluatedCells, result, cells[xval][yval]);
 
         } else { //Normal Cases
-            for (var xy : generateAllXYUpTo(dir, x, y, speed)) {
+            for (var xy : Common.generateAllXYUpToFromOne(dir, x, y, speed + 1)) {
                 int xval = xy.getX();
                 int yval = xy.getY();
 

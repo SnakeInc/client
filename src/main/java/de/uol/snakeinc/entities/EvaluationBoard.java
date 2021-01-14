@@ -76,9 +76,10 @@ public class EvaluationBoard {
         updatePlayersCells(playerHashMap);
 
         //initiate analyzing process
-        boardAnalyzer.analyze(cells, players, us);
-
-        logCurrentEvaluation(cells);
+        if(us.isActive()) {
+            boardAnalyzer.analyze(cells, players, us);
+            logCurrentEvaluation(cells);
+        }
     }
 
     /**
