@@ -83,6 +83,22 @@ public class Cell extends PathCell implements Cloneable {
         this.areaRisk = risk;
     }
 
+    public double getAreaRisk() {
+        return this.areaRisk;
+    }
+
+    public double getDeadEndRisk() {
+        return this.deadEndRisk;
+    }
+
+    public double getKillAlgorithmRisk() {
+        return this.killIncentive;
+    }
+
+    public double getOpponentMovementRisk() {
+        return this.opponentMovementRisk;
+    }
+
     public void setDeadEndRisk(double riskValue) {
         if((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;

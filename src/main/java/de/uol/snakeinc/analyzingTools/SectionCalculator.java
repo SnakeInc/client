@@ -3,13 +3,12 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.math.interpolation.LinearInterpolator;
 import lombok.CustomLog;
-import lombok.extern.log4j.Log4j2;
 
 /**
  * Calculate 10 x 10 grid with sections of free space.
  * @author Sebastian Diers
  */
-@Log4j2
+@CustomLog
 public class SectionCalculator {
 
     // Sektionen handeln(Board in 4 x 4 Sektionen unterteilen).
@@ -90,11 +89,21 @@ public class SectionCalculator {
                 int sectionX = (int) Math.floor(x / devideWidth);
                 int sectionY = (int) Math.floor(y / devideHeight);
 
-                double range = percentages[sectionY][sectionX] - min;
-                double scale = (range) / (difference); // scale from min/max-percentage
+                double percentage = percentages[sectionY][sectionX];
 
                 // interpolate based on scale. Lower 50 % will get additional risk, upper 50% will lower their risk
-                double value = new LinearInterpolator(1.2, 1.0).getInterpolation(scale);
+                double range = percentage - min;
+                double scale = ((double) range) / ((double) difference); // scale from min/max-percentage
+
+                double value = 1.0D;
+                if (scale > 0.5) {
+                    scale = (scale - 0.5D) * 2.0D;
+                    value = new LinearInterpolator(1.125, 1.0).getInterpolation(scale);
+                } else {
+                    scale = scale * 2.0D;
+                    value = new LinearInterpolator(1.2, 1.125).getInterpolation(scale);
+                }
+
                 //System.out.println("Value: " +  value + " Scale: " + scale + " Range: " + range);
                 // set value here
                 //#end -> In own for-loop for performance
