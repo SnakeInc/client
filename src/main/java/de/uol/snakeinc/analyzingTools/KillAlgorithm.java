@@ -13,6 +13,9 @@ import java.util.Set;
 
 public abstract class KillAlgorithm {
 
+
+    public static final int initialAttackDistance = 2;
+    public static final int initialFloodTerminationCount = 300;
     /**
      * Sets incentives if another Player can be attacked.
      * @param cells     cells
@@ -28,8 +31,8 @@ public abstract class KillAlgorithm {
             if (BoardAnalyzer.inDistance(us, players[i], 4)) {
                 int[][] floodCache = new int [width][height];
                 closeCircle(floodCache, players[i], us);
-                FloodVar floodVarIf = new FloodVar(400, floodCache);
-                FloodVar floodVarElse = new FloodVar(400, floodCache);
+                FloodVar floodVarIf = new FloodVar(initialFloodTerminationCount, floodCache);
+                FloodVar floodVarElse = new FloodVar(initialFloodTerminationCount, floodCache);
                 Player op = players[i];
                 int x = players[i].getX();
                 int y = players[i].getY();
@@ -43,7 +46,7 @@ public abstract class KillAlgorithm {
                         boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse);
                         if (boolIf) {
                             if (boolElse) {
-                                decideAttackDirection(op, cells, evaluatedCells, dir, Direction.LEFT,
+                                decideAttackDirection(op, cells, evaluatedCells, dir,
                                     width, height, floodVarIf, floodVarElse);
                                 break;
                             }
@@ -60,7 +63,7 @@ public abstract class KillAlgorithm {
                         boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse);
                         if (boolIf) {
                             if (boolElse) {
-                                decideAttackDirection(op, cells, evaluatedCells, dir, Direction.LEFT,
+                                decideAttackDirection(op, cells, evaluatedCells, dir,
                                     width, height, floodVarIf, floodVarElse);
                                 break;
                             }
@@ -176,7 +179,7 @@ public abstract class KillAlgorithm {
                                          Direction opDirection, Direction attackDirection, int width, int height) {
         int x = player.getX();
         int y = player.getY();
-        int attackDistance = player.getSpeed() * 3;
+        int attackDistance = player.getSpeed() * initialAttackDistance;
         switch (opDirection) {
             case UP:
             case DOWN:
@@ -246,6 +249,20 @@ public abstract class KillAlgorithm {
         killingCells.add(cell);
     }
 
-    private static void decideAttackDirection(Player op, cells, evaluatedCells, dir, Direction.LEFT,
-                                              width, height, floodVarIf, floodVarElse);
+    private static void decideAttackDirection(Player op, Cell[][] cells, Set<Cell> evaluatedCells, Direction dir,
+                                               int width, int height, FloodVar floodVarIf, FloodVar floodVarElse) {
+        if (floodVarIf.floodTerminationCount > floodVarElse.floodTerminationCount) {
+            if (dir == Direction.UP || dir == Direction.DOWN) {
+                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
+            } else {
+                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
+            }
+        } else {
+            if (dir == Direction.UP || dir == Direction.DOWN) {
+                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
+            } else {
+                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
+            }
+        }
+    }
 }
