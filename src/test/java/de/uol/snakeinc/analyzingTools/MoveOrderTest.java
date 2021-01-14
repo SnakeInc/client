@@ -74,7 +74,7 @@ class MoveOrderTest {
                 switch (act) {
                     case TURN_LEFT: return true;
                     case TURN_RIGHT: return false;
-                    default: continue;
+                    default: //continue;
                 }
             }
         } else {
@@ -82,7 +82,7 @@ class MoveOrderTest {
                 switch (act) {
                     case TURN_LEFT: return false;
                     case TURN_RIGHT: return true;
-                    default: continue;
+                    default: //continue;
                 }
             }
         }
@@ -122,7 +122,7 @@ class MoveOrderTest {
                 switch (act) {
                     case TURN_LEFT: return false;
                     case TURN_RIGHT: return true;
-                    default: continue;
+                    default: //continue;
                 }
             }
         } else {
@@ -130,7 +130,7 @@ class MoveOrderTest {
                 switch (act) {
                     case TURN_LEFT: return true;
                     case TURN_RIGHT: return false;
-                    default: continue;
+                    default: //continue;
                 }
             }
         }
@@ -168,7 +168,7 @@ class MoveOrderTest {
                     case SPEED_UP:
                     case SLOW_DOWN:
                         return false;
-                    default: continue;
+                    default: //continue;
                 }
             }
         }
@@ -180,7 +180,7 @@ class MoveOrderTest {
                     case SLOW_DOWN:
                         return false;
                     case SPEED_UP: return true;
-                    default: continue;
+                    default: //continue;
                 }
             }
         }
@@ -192,7 +192,7 @@ class MoveOrderTest {
                     case SPEED_UP:
                         return false;
                     case SLOW_DOWN: return true;
-                    default: continue;
+                    default: //continue;
                 }
             }
         }

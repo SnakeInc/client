@@ -65,8 +65,8 @@ public class SectionCalculatorTest {
             method.invoke(calculator, percentages, cells, min, max);
             for (int x = 0; x < 20; x++) {
                 for (int y = 0; y < 20; y++) {
-                    int sectionX = (int) Math.floor(x / 2);
-                    int sectionY = (int) Math.floor(y / 2);
+                    int sectionX = (int) Math.floor(((double) x) / 2D);
+                    int sectionY = (int) Math.floor(((double) y) / 2D);
 
                     double value = (double) WhiteBox.getInternalState(cells[x][y], "areaRisk");
                     assertEquals(value, values[sectionY][sectionX]);

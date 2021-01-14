@@ -165,14 +165,14 @@ public class DeadEndRecognition {
 
     @AllArgsConstructor
     @Getter
-    private class Gate {
+    private static class Gate {
         private Direction dir;
         private int x;
         private int y;
     }
 
     private void calcDeadEndSize() {
-        gates.forEach((gate) -> {
+        for (Gate gate : gates) {
             Set<Cell> cellsTested = new HashSet<>();
             Stack<Cell> cellsToTest = new Stack<>();
             int startX = gate.getX();
@@ -189,10 +189,10 @@ public class DeadEndRecognition {
                 case RIGHT:
                     startX++;
             }
-            if(!offBoardOrDeadly(startX, startY)) {
+            if (!offBoardOrDeadly(startX, startY)) {
                 findNeighbours(startX, startY, cellsTested, cellsToTest);
             }
-        });
+        }
     }
 
     private void findNeighbours(int x, int y, Set<Cell> cellsTested, Stack<Cell> cellsToTest) {
@@ -248,9 +248,9 @@ public class DeadEndRecognition {
         double deadEndRisk;
         if((deadEndCellCount < (mapCellCount / 4)) && deadEndCellCount > 1) {
                 deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
-            cellsTested.forEach((testedCell) -> {
+            for (Cell testedCell : cellsTested) {
                 testedCell.setDeadEndRisk(deadEndRisk);
-            });
+            }
             log.debug("Gate size: " + deadEndCellCount + " - Risk: " + deadEndRisk);
         }
     }

@@ -112,9 +112,7 @@ public class EvaluationBoard {
             }
         }
         Player[] playersArray = new Player[count];
-        for (int i = 0; i < count; i++) {
-            playersArray[i] = playersArrayTmp[i];
-        }
+        if (count >= 0) System.arraycopy(playersArrayTmp, 0, playersArray, 0, count);
         return  playersArray;
     }
 

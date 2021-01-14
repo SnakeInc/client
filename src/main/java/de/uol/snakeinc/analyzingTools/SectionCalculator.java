@@ -90,7 +90,7 @@ public class SectionCalculator {
                 int sectionY = (int) Math.floor(y / devideHeight);
 
                 double range = percentages[sectionY][sectionX] - min;
-                double scale = (range * 1.0D) / (difference * 1.0D); // scale from min/max-percentage
+                double scale = (range) / (difference); // scale from min/max-percentage
 
                 // interpolate based on scale. Lower 50 % will get additional risk, upper 50% will lower their risk
                 double value = new LinearInterpolator(1.2, 1.0).getInterpolation(scale);
