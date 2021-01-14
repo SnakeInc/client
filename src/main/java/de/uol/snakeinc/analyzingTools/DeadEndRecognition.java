@@ -9,13 +9,14 @@ import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
 import lombok.CustomLog;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-@CustomLog
+@Log4j2
 public class DeadEndRecognition {
 
     Cell[][] cells;
@@ -106,6 +107,9 @@ public class DeadEndRecognition {
                 setToReturn.add(tuple);
             }
         }
+        setToReturn.forEach((c) -> {
+            System.out.println("X: " + c.getX() + " - Y: " + c.getY());
+        });
         return setToReturn;
     }
 
@@ -237,7 +241,7 @@ public class DeadEndRecognition {
     private void findNeighbours(int x, int y, Cell[][] map) {
         Stack<Cell> cellsToTest = new Stack<>();
         Set<Cell> cellsTested = new HashSet<>();
-        log.debug("Calculating Gate: " + x + " - " + y);
+        log.debug("Calculating at: " + x + " - " + y);
         int deadEndCellCount = 1;
         cellsToTest.add(map[x][y]);
         while(!cellsToTest.empty() && deadEndCellCount < (mapCellCount / 4)) {
@@ -284,9 +288,9 @@ public class DeadEndRecognition {
         if((deadEndCellCount < (mapCellCount / 4)) && deadEndCellCount > 1) {
                 deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
             cellsTested.forEach((testedCell) -> {
-                cells[testedCell.getX()][testedCell.getY()].setDeadEndRisk(deadEndRisk);
+                cells[testedCell.getY()][testedCell.getX()].setDeadEndRisk(deadEndRisk);
             });
-            log.debug("Gate size: " + deadEndCellCount + " - Risk: " + deadEndRisk);
+            log.debug("Size: " + deadEndCellCount + " - Risk: " + deadEndRisk);
         }
     }
 }

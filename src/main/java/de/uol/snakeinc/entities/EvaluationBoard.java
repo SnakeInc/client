@@ -87,7 +87,7 @@ public class EvaluationBoard {
      */
     private void logCurrentEvaluation (Cell[][] cells) {
         StringBuilder str = new StringBuilder();
-        DecimalFormat f = new DecimalFormat("##.00");
+        DecimalFormat f = new DecimalFormat("#,##0.00");
         str.append("\n");
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[0].length; j++) {
