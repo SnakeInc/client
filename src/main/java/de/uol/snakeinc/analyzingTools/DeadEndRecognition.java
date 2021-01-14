@@ -6,6 +6,8 @@ import de.uol.snakeinc.entities.Player;
 import lombok.AllArgsConstructor;
 import lombok.CustomLog;
 import lombok.Getter;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,7 +16,7 @@ import java.util.Stack;
 
 import static de.uol.snakeinc.Common.*;
 
-@CustomLog
+@Log4j2
 public class DeadEndRecognition {
 
     Cell[][] cells;

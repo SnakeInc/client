@@ -6,6 +6,7 @@ import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
 import de.uol.snakeinc.analyzingTools.MoveCalculation;
 import lombok.CustomLog;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.HashMap;
  * Uses the boardAnalyzer to delegate the valuation of the cells. (f.e. OpponentMovesCalculation and Heuristics)
  * Calls the MoveCalculation to return the bestAction.
  */
-@CustomLog
+@Log4j2
 public class EvaluationBoard {
 
     @Getter
