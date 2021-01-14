@@ -14,8 +14,6 @@ import java.util.Set;
 
 public abstract class KillAlgorithm {
 
-
-
     /**
      * Sets incentives if another Player can be attacked.
      * @param cells     cells

@@ -21,7 +21,7 @@ public class GUICell extends Rectangle {
         this.setOpacity(1.0);
     }
 
-    public void setOption(Color color, double risk, boolean single, boolean positive) {
+    public void setOption(Color color, double risk, boolean single, boolean positive, double range) {
         this.setFill(color);
         if (risk <= 0) {
             this.setOpacity(0);
@@ -31,7 +31,7 @@ public class GUICell extends Rectangle {
                 if (positive) {
                     opacity = (risk * (-1.0D)) + 1.0D;
                 } else {
-                    opacity = (risk - 1.0D) * 5.0D;
+                    opacity = (risk - 1.0D) * (1.0D / range);
                 }
                 this.setOpacity(opacity);
             } else {
