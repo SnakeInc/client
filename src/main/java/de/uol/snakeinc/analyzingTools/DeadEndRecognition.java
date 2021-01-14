@@ -249,7 +249,7 @@ public class DeadEndRecognition {
         }
         double deadEndRisk;
         if ((deadEndCellCount < (mapCellCount / 4)) && deadEndCellCount > 1) {
-                deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
+            deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
             cellsTested.forEach((testedCell) -> {
                 testedCell.setDeadEndRisk(deadEndRisk);
             });
