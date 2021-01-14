@@ -1,6 +1,5 @@
 package de.uol.snakeinc.analyzingTools;
 
-import de.uol.snakeinc.Common;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
@@ -13,6 +12,8 @@ import java.util.Set;
 
 public abstract class KillAlgorithm {
 
+    private static final int initialFloodTerminationCount = 400;
+    private static final int initialAttackDistance = 2;
     /**
      * Sets incentives if another Player can be attacked.
      * @param cells     cells
@@ -25,11 +26,11 @@ public abstract class KillAlgorithm {
         int width = cells.length;
         int height = cells[1].length;
         for (int i = 0; i < players.length; i++) {
-            if (BoardAnalyzer.inDistance(us, players[i], 4)) {
-                int[][] floodCache = new int [width][height];
-                closeCircle(floodCache, players[i], us);
-                FloodVar floodVarIf = new FloodVar(400, floodCache);
-                FloodVar floodVarElse = new FloodVar(400, floodCache);
+            if (BoardAnalyzer.inDistance(us, players[i], 3)) {
+                int[][][] floodCache = new int [width][height][1];
+                floodCache = closeCircle(floodCache, players[i], us);
+                FloodVar floodVarIf = new FloodVar(initialFloodTerminationCount, floodCache);
+                FloodVar floodVarElse = new FloodVar(initialFloodTerminationCount, floodCache);
                 Player op = players[i];
                 int x = players[i].getX();
                 int y = players[i].getY();
@@ -37,18 +38,22 @@ public abstract class KillAlgorithm {
                 switch (dir) {
                     case DOWN:
                     case UP:
-                        if (checkForDeadEnd(x - 1, y, cells, floodVarIf)) {
-                            raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
-                        } else if (checkForDeadEnd(x + 1, y, cells, floodVarElse)) {
-                            raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
+                        if (checkForDeadEnd(x - 1, y, width, height, cells, floodVarIf)) {
+                            evaluatedCells =
+                                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
+                        } else if (checkForDeadEnd(x + 1, y, width, height, cells, floodVarElse)) {
+                            evaluatedCells =
+                                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
                         }
                         break;
                     case RIGHT:
                     case LEFT:
-                        if (checkForDeadEnd(x, y - 1, cells, floodVarIf)) {
-                            raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
-                        } else if (checkForDeadEnd(x, y + 1, cells, floodVarElse)) {
-                            raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
+                        if (checkForDeadEnd(x, y - 1, width, height, cells, floodVarIf)) {
+                            evaluatedCells =
+                                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
+                        } else if (checkForDeadEnd(x, y + 1, width, height, cells, floodVarElse)) {
+                            evaluatedCells =
+                                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
                         }
                         break;
                     default:
@@ -65,7 +70,7 @@ public abstract class KillAlgorithm {
     public static class FloodVar {
 
         int floodTerminationCount;
-        int[][] floodCache;
+        int[][][] floodCache;
     }
 
     /**
@@ -73,11 +78,13 @@ public abstract class KillAlgorithm {
      * @param floodVar  floodVariables
      * @param x         x coordinate
      * @param y         y coordinate
+     * @param width     width
+     * @param height    height
      * @param cells     cells
      * @return          true if theres a dead end
      */
-    private static boolean checkForDeadEnd(int x, int y, Cell[][] cells, FloodVar floodVar) {
-        return flood(floodVar, x, y, cells).getFloodTerminationCount() > 0;
+    private static boolean checkForDeadEnd(int x, int y, int width, int height, Cell[][] cells, FloodVar floodVar) {
+        return flood(floodVar, x, y, width, height, cells).getFloodTerminationCount() > 0;
     }
 
     /**
@@ -85,15 +92,17 @@ public abstract class KillAlgorithm {
      * @param floodVar  floodVar
      * @param x x coordinate
      * @param y y coordinate
+     * @param width width
+     * @param height height
      * @param cells cells
      * @return floodVar
      */
-    private static FloodVar flood(FloodVar floodVar , int x, int y, Cell[][] cells) {
-        if (!Common.offBoardOrDeadly(x, y, cells) && floodVar.getFloodTerminationCount() > 0
-                && floodVar.getFloodCache()[x][y] != 1) {
+    private static FloodVar flood(FloodVar floodVar , int x, int y, int width, int height, Cell[][] cells) {
+        if (x >= 0 && x < width && y >= 0 && y < height && !cells[x][y].isDeadly()
+            && floodVar.getFloodTerminationCount() > 0 && floodVar.getFloodCache()[x][y][0] != 1) {
 
             floodVar.floodTerminationCount--;
-            floodVar.floodCache[x][y] = 1;
+            floodVar.floodCache[x][y][0] = 1;
 
             for(var xy : Common.generateXYAllDirections(x,y,1)) {
                 floodVar = flood(floodVar, xy, cells);
@@ -113,7 +122,7 @@ public abstract class KillAlgorithm {
      * @param us          us
      * @return           floodCache
      */
-    private static int[][] closeCircle(int[][] floodCache, Player op, Player us) {
+    private static int[][][] closeCircle(int[][][] floodCache, Player op, Player us) {
         int usX = us.getX();
         int usY = us.getY();
         int opX = op.getX();
@@ -122,20 +131,20 @@ public abstract class KillAlgorithm {
         int diffY = usY - opY;
         if (diffX >= 0) {
             for (int i = 0; i < diffX; i++) {
-                floodCache[usX - i][usY] = 1;
+                floodCache[usX - i][usY][0] = 1;
             }
         } else { //if (diffX < 0) {
             for (int i = 0; i < - diffX; i++) {
-                floodCache[usX + i][usY] = 1;
+                floodCache[usX + i][usY][0] = 1;
             }
         }
         if (diffY >= 0) {
             for (int i = 0; i < diffY; i++) {
-                floodCache[opX][opY + i] = 1;
+                floodCache[opX][opY + i][0] = 1;
             }
         } else { // if (diffY < 0)
             for (int i = 0; i < - diffY; i++) {
-                floodCache[opX][opY - i] = 1;
+                floodCache[opX][opY - i][0] = 1;
             }
         }
         return floodCache;
@@ -156,7 +165,7 @@ public abstract class KillAlgorithm {
                                          Direction opDirection, Direction attackDirection, int width, int height) {
         int x = player.getX();
         int y = player.getY();
-        int attackDistance = player.getSpeed() * 3;
+        int attackDistance = player.getSpeed() * initialAttackDistance;
         switch (opDirection) {
             case UP:
             case DOWN:
