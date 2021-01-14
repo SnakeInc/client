@@ -3,6 +3,7 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
+import de.uol.snakeinc.entities.Tuple;
 import lombok.AllArgsConstructor;
 import lombok.CustomLog;
 import lombok.Getter;
@@ -44,19 +45,63 @@ public class DeadEndRecognition {
     }
 
     private void testMove(Direction direction, int x, int y, int speed) {
-        switch (direction) {
-            case UP:
 
-                break;
-        }
     }
 
     private void testRoundOfLine() {
 
     }
 
-    private void testRoundOfCell() {
+    private void testRoundOfCell(int x, int y, Cell[][] map) {
+        if(!isOffBoard(x, y)) {
+            boolean areaAlreadyTested = false;
+            for(int i = 0; i <= 7; i++) {
+                Tuple tuple = getRoundOfPosition(x, y, i);
+                if(!isOffBoard(tuple.getX(), tuple.getY())) {
+                    if(!isDeadly(tuple.getX(), tuple.getY())) {
+                        findNeighbours(tuple.getX(), tuple.getY(), map);
+                    }
+                }
+            }
+        }
+    }
 
+    private Tuple getRoundOfPosition(int x, int y, int depth) {
+        int newX = x;
+        int newY = y;
+        switch (depth) {
+            case 0:
+                newY--;
+                break;
+            case 1:
+                newY--;
+                newX++;
+                break;
+            case 2:
+                newX++;
+                break;
+            case 3:
+                newX++;
+                newY++;
+                break;
+            case 4:
+                newY++;
+                break;
+            case 5:
+                newY++;
+                newX--;
+                break;
+            case 6:
+                newX--;
+                break;
+            case 7:
+                newY--;
+                newX--;
+                break;
+            default:
+                throw new IllegalStateException();
+        }
+        return new Tuple(newX, newY);
     }
 
     private Cell[][] getDeepCopyOfMap() {
@@ -102,19 +147,31 @@ public class DeadEndRecognition {
     }
 
     /**
-     * finds the start point for each gate.
+     * tests if coordinates are deadly.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return returns true if deadly
      */
-    private void calcDeadEndSize(Cell[][] map, Stack<Cell> cellsToTest, int startX, int startY) {
-        if(!offBoardOrDeadly(startX, startY)) {
-            findNeighbours(startX, startY, cellsToTest, map);
-        }
+    private boolean isDeadly(int x, int y) {
+        return cells[x][y].isDeadly();
+    }
+
+    /**
+     * tests if coordinates are on the board.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return returns true if not on the board
+     */
+    private boolean isOffBoard(int x, int y) {
+        return x < 0 || x >= width || y < 0 || y >= height;
     }
 
     /**
      * calculates the risk for each gate.
      * goes from 2 to 1 based on the size of the dead end.
      */
-    private void findNeighbours(int x, int y, Stack<Cell> cellsToTest, Cell[][] map) {
+    private void findNeighbours(int x, int y, Cell[][] map) {
+        Stack<Cell> cellsToTest = new Stack<>();
         Set<Cell> cellsTested = new HashSet<>();
         log.debug("Calculating Gate: " + x + " - " + y);
         int deadEndCellCount = 1;
