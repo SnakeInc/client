@@ -9,7 +9,7 @@ import de.uol.snakeinc.entities.EvaluationBoard;
 import de.uol.snakeinc.entities.Game;
 import de.uol.snakeinc.entities.Player;
 import de.uol.snakeinc.export.ExportManager;
-import lombok.CustomLog;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -21,7 +21,7 @@ import java.util.HashMap;
  * Websocket for Spe_ed - the game.
  * @author Sebastian Diers
  */
-@CustomLog
+@Log4j2
 public class SpeedWebSocketClient extends WebSocketClient {
 
     private ConnectionThread thread;

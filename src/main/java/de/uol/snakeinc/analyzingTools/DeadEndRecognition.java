@@ -6,15 +6,17 @@ import de.uol.snakeinc.entities.Player;
 import lombok.AllArgsConstructor;
 import lombok.CustomLog;
 import lombok.Getter;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import static de.uol.snakeinc.Common.offBoardOrDeadly;
+import static de.uol.snakeinc.Common.*;
 
-@CustomLog
+@Log4j2
 public class DeadEndRecognition {
 
     Cell[][] cells;
@@ -61,73 +63,28 @@ public class DeadEndRecognition {
 
     private void recursiveRiskByDirection(int x, int y, int depth, int speed, Direction dir) {
         boolean abort = false;
-        switch (dir) {
-            case UP:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x, y - j, cells)) {
-                        abort = true;
-                        break;
-                    } else {
-                        if(testForGate(x, y - j, dir, depth)) {
-                            abort = true;
-                        }
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x, y - speed, depth + 1, speed, dir);
-                }
+        for (int j = 1; j < speed + 1; j++) {
+            var tuple = generateXY(dir, x, y, j);
+            int xval = tuple.getX();
+            int yval = tuple.getY();
+
+            if (offBoardOrDeadly(xval, yval, cells)) {
+                abort = true;
                 break;
-            case DOWN:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x, y + j, cells)) {
-                        abort = true;
-                        break;
-                    } else {
-                        if(testForGate(x, y + j, dir, depth)) {
-                            abort = true;
-                        }
-                    }
+            } else {
+                if (testForGate(xval, yval, dir)) {
+                    abort = true;
                 }
-                if (!abort) {
-                    calculateRisk(x, y + speed, depth + 1, speed, dir);
-                }
-                break;
-            case RIGHT:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x + j, y, cells)) {
-                        abort = true;
-                        break;
-                    } else {
-                        if(testForGate(x + j, y, dir, depth)) {
-                            abort = true;
-                        }
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x + speed, y, depth + 1, speed, dir);
-                }
-                break;
-            case LEFT:
-                for (int j = 1; j  < speed + 1; j++) {
-                    if (offBoardOrDeadly(x - j, y, cells)) {
-                        abort = true;
-                        break;
-                    } else {
-                        if(testForGate(x - j, y, dir, depth)) {
-                            abort = true;
-                        }
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x - speed, y, depth + 1, speed, dir);
-                }
-                break;
-            default:
-                throw new IllegalStateException();
+            }
+        }
+        var tuple = generateXY(dir, x, y, speed);
+
+        if (!abort) {
+            calculateRisk(tuple.getX(), tuple.getY(), depth + 1, speed, dir);
         }
     }
 
-    private boolean testForGate(int x, int y, Direction dir, int depth) {
+    private boolean testForGate(int x, int y, Direction dir) {
         switch (dir) {
             case UP:
             case DOWN:
@@ -199,38 +156,14 @@ public class DeadEndRecognition {
                 deadEndCellCount++;
                 //test up
 
-                if(!offBoardOrDeadly(xCell, (yCell - 1), cells)) {
-                    var nextCell = cells[xCell][(yCell - 1)];
-                    if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
-                        cellsToTest.add(nextCell);
-                        toTestCount++;
-                    }
+                for(var tuple : generateXYAllDirections(xCell,yCell,1)) {
+                    if(!offBoardOrDeadly(tuple.getX(), tuple.getY(), cells)) {
+                        var nextCell = cells[tuple.getX()][tuple.getY()];
+                        if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
+                            cellsToTest.add(nextCell);
+                            toTestCount++;
+                        }
 
-                }
-                //test right
-                if(!offBoardOrDeadly((xCell + 1), yCell, cells)) {
-                    var nextCell = cells[(xCell + 1)][yCell];
-                    if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
-                        cellsToTest.add(nextCell);
-                        toTestCount++;
-                    }
-
-                }
-                //test down
-                if(!offBoardOrDeadly(xCell, (yCell + 1), cells)) {
-                    var nextCell = cells[xCell][(yCell + 1)];
-                    if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
-                        cellsToTest.add(nextCell);
-                        toTestCount++;
-                    }
-
-                }
-                //test left
-                if(!offBoardOrDeadly((xCell - 1), yCell, cells)) {
-                    var nextCell = cells[(xCell - 1)][yCell];
-                    if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
-                        cellsToTest.add(nextCell);
-                        toTestCount++;
                     }
                 }
             }

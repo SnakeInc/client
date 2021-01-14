@@ -2,6 +2,7 @@ package de.uol.snakeinc.connection;
 
 import de.uol.snakeinc.export.ExportManager;
 import lombok.CustomLog;
+import lombok.extern.log4j.Log4j2;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -14,7 +15,7 @@ import java.security.NoSuchAlgorithmException;
  * Thread handling Connection to Websocket.
  * @author Sebastian Diers
  */
-@CustomLog
+@Log4j2
 public class ConnectionThread extends Thread {
 
     private SpeedWebSocketClient webSocket;

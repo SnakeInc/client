@@ -3,12 +3,13 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.math.interpolation.LinearInterpolator;
 import lombok.CustomLog;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Calculate 10 x 10 grid with sections of free space.
  * @author Sebastian Diers
  */
-@CustomLog
+@Log4j2
 public class SectionCalculator {
 
     // Sektionen handeln(Board in 4 x 4 Sektionen unterteilen).

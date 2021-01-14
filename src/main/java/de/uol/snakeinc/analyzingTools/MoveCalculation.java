@@ -5,14 +5,14 @@ import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
 import lombok.AllArgsConstructor;
-import lombok.CustomLog;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.HashSet;
 
-import static de.uol.snakeinc.Common.offBoardOrDeadly;
+import static de.uol.snakeinc.Common.*;
 
-@CustomLog
+@Log4j2
 public class MoveCalculation {
 
     private Cell[][] cells;
@@ -162,101 +162,39 @@ public class MoveCalculation {
     private double calculateDirection(Direction dir, int x, int y, int speed,
                                       int depth, HashSet<Cell> pseudEvaluatedCells, boolean jumping, double deathValue) {
         double result = 1;
-        switch (dir) {
-            case LEFT:
-                //Jumping-Cases
-                if (jumping) {
-                    if (offBoardOrDeadly(x - 1, y, cells)) {
-                        return deathValue;
-                    }
-                    result = evaluateResult(pseudEvaluatedCells, result, cells[x - 1][y]);
 
-                    if (offBoardOrDeadly(x - speed, y, cells)) {
-                        return deathValue;
-                    }
-                    result = evaluateResult(pseudEvaluatedCells, result, cells[x - speed][y]);
+        if (jumping) {
+            var xy = generateXY(dir, x, y, 1);
+            int xval = xy.getX();
+            int yval = xy.getY();
 
-                } else { //Normal Cases
-                    for (int i = 1; i < speed + 1; i++) {
-                        if (offBoardOrDeadly(x - i, y, cells)) {
-                            return deathValue;
-                        }
-                        result = evaluateResult(pseudEvaluatedCells, result, cells[x - i][y]);
-                    }
+            if (offBoardOrDeadly(xval, yval, cells)) {
+                return deathValue;
+            }
+            result = evaluateResult(pseudEvaluatedCells, result, cells[xval][yval]);
+
+            xy = generateXY(dir, x, y, speed);
+            xval = xy.getX();
+            yval = xy.getY();
+
+            if (offBoardOrDeadly(xval, yval, cells)) {
+                return deathValue;
+            }
+            result = evaluateResult(pseudEvaluatedCells, result, cells[xval][yval]);
+
+        } else { //Normal Cases
+            for (var xy : generateAllXYUpTo(dir, x, y, speed)) {
+                int xval = xy.getX();
+                int yval = xy.getY();
+
+                if (offBoardOrDeadly(xval, yval, cells)) {
+                    return deathValue;
                 }
-                return result * calculateAction(Direction.LEFT, x - speed, y, speed, depth + 1);
-
-            case RIGHT:
-                //Jumping-Cases
-                if (jumping) {
-                    if (offBoardOrDeadly(x + 1, y, cells)) {
-                        return deathValue;
-                    }
-                    result = evaluateResult(pseudEvaluatedCells, result, cells[x + 1][y]);
-
-                    if (offBoardOrDeadly(x + speed, y, cells)) {
-                        return deathValue;
-                    }
-                    result = evaluateResult(pseudEvaluatedCells, result, cells[x + speed][y]);
-
-                } else { //Normal Cases
-                    for (int i = 1; i < speed + 1; i++) {
-                        if (offBoardOrDeadly(x + i, y, cells)) {
-                            return deathValue;
-                        }
-                        result = evaluateResult(pseudEvaluatedCells, result, cells[x + i][y]);
-                    }
-                }
-                return result * calculateAction(Direction.RIGHT, x + speed, y, speed, depth + 1);
-
-            case DOWN:
-                //Jumping-Cases
-                if (jumping) {
-                    if (offBoardOrDeadly(x, y + 1, cells)) {
-                        return deathValue(depth);
-                    }
-                    result = evaluateResult(pseudEvaluatedCells, result, cells[x][y + 1]);
-
-                    if (offBoardOrDeadly(x, y + speed, cells)) {
-                        return deathValue;
-                    }
-                    result = evaluateResult(pseudEvaluatedCells, result, cells[x][y + speed]);
-
-                } else { //Normal Cases
-                    for (int i = 1; i < speed + 1; i++) {
-                        if (offBoardOrDeadly(x, y + i, cells)) {
-                            return deathValue;
-                        }
-                        result = evaluateResult(pseudEvaluatedCells, result, cells[x][y + i]);
-                    }
-                }
-                return result * calculateAction(Direction.DOWN, x, y + speed, speed, depth + 1);
-
-            case UP:
-                //Jumping-Cases
-                if (jumping) {
-                    if (offBoardOrDeadly(x, y - 1, cells)) {
-                        return deathValue;
-                    }
-                    result = evaluateResult(pseudEvaluatedCells, result,cells[x][y - 1]);
-
-                    if (offBoardOrDeadly(x, y - speed, cells)) {
-                        return deathValue;
-                    }
-                    result = evaluateResult(pseudEvaluatedCells, result, cells[x][y - speed]);
-
-                } else { //Normal Cases
-                    for (int i = 1; i < speed + 1; i++) {
-                        if (offBoardOrDeadly(x, y - i, cells)) {
-                            return deathValue;
-                        }
-                        result = evaluateResult(pseudEvaluatedCells, result, cells[x][y - i]);
-                    }
-                }
-                return result * calculateAction(Direction.UP, x, y - speed, speed, depth + 1);
-            default:
-                throw new IllegalStateException();
+                result = evaluateResult(pseudEvaluatedCells, result, cells[xval][yval]);
+            }
         }
+        var xy = generateXY(dir, x, y, 1);
+        return result * calculateAction(Direction.LEFT, xy.getX(), xy.getY(), speed, depth + 1);
     }
 
     private double deathValue(int depth) {

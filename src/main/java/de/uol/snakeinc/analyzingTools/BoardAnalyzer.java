@@ -2,15 +2,15 @@ package de.uol.snakeinc.analyzingTools;
 
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Player;
-import lombok.CustomLog;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Set;
 
 /**
  * Class that analyzes board configurations.
  */
-@CustomLog
+@Log4j2
 public class BoardAnalyzer {
 
     @Getter
