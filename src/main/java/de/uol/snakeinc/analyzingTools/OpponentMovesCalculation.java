@@ -1,5 +1,6 @@
 package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.Common;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
@@ -73,61 +74,18 @@ public class OpponentMovesCalculation {
 
     private void recursiveRiskByDirection(int x, int y, int depth, int speed, Direction dir) {
         boolean abort = false;
-        switch (dir) {
-            case UP:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x, y - j)) {
-                        abort = true;
-                        break;
-                    } else {
-                        evaluateCells(x, y - j, depth);
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x, y - speed, depth + 1, speed);
-                }
+
+        for (var xy : Common.generateAllXYUpTo(dir, x, y, speed)) {
+            if (offBoardOrDeadly(xy.getX(), xy.getY())) {
+                abort = true;
                 break;
-            case DOWN:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x, y + j)) {
-                        abort = true;
-                        break;
-                    } else {
-                        evaluateCells(x, y + j, depth);
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x, y + speed, depth + 1, speed);
-                }
-                break;
-            case RIGHT:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x + j, y)) {
-                        abort = true;
-                        break;
-                    } else {
-                        evaluateCells(x + j, y, depth);
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x + speed, y, depth + 1, speed);
-                }
-                break;
-            case LEFT:
-                for (int j = 1; j  < speed + 1; j++) {
-                    if (offBoardOrDeadly(x - j, y)) {
-                        abort = true;
-                        break;
-                    } else {
-                        evaluateCells(x - j, y, depth);
-                    }
-                }
-                if (!abort) {
-                    calculateRisk(x - speed, y, depth + 1, speed);
-                }
-                break;
-            default:
-                throw new IllegalStateException();
+            } else {
+                evaluateCells(xy.getX(), xy.getY(), depth);
+            }
+        }
+        if (!abort) {
+            var xy = Common.generateXY(dir, x, y, speed);
+            calculateRisk(xy.getX(), xy.getY(), depth + 1, speed);
         }
     }
 

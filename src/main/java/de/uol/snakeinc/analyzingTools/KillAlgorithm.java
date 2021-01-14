@@ -95,12 +95,15 @@ public abstract class KillAlgorithm {
             floodVar.floodTerminationCount--;
             floodVar.floodCache[x][y] = 1;
 
-            floodVar = flood(floodVar, x - 1, y, cells);
-            floodVar = flood(floodVar, x + 1, y, cells);
-            floodVar = flood(floodVar, x, y + 1, cells);
-            floodVar = flood(floodVar, x, y - 1, cells);
+            for(var xy : Common.generateXYAllDirections(x,y,1)) {
+                floodVar = flood(floodVar, xy, cells);
+            }
         }
         return floodVar;
+    }
+
+    private static FloodVar flood(FloodVar floodVar, Common.Tuple tuple, Cell[][] cells) {
+        return flood(floodVar, tuple.getX(), tuple.getY(), cells);
     }
 
     /**
