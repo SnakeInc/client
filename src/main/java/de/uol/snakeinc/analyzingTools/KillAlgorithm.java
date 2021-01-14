@@ -34,20 +34,40 @@ public abstract class KillAlgorithm {
                 int x = players[i].getX();
                 int y = players[i].getY();
                 Direction dir = players[i].getDirection();
+                Boolean boolIf;
+                Boolean boolElse;
                 switch (dir) {
                     case DOWN:
                     case UP:
-                        if (checkForDeadEnd(x - 1, y, cells, floodVarIf)) {
+                        boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf);
+                        boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse);
+                        if (boolIf) {
+                            if (boolElse) {
+                                decideAttackDirection(op, cells, evaluatedCells, dir, Direction.LEFT,
+                                    width, height, floodVarIf, floodVarElse);
+                                break;
+                            }
                             raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
-                        } else if (checkForDeadEnd(x + 1, y, cells, floodVarElse)) {
+                            break;
+                        }
+                        if (boolElse) {
                             raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
                         }
                         break;
                     case RIGHT:
                     case LEFT:
-                        if (checkForDeadEnd(x, y - 1, cells, floodVarIf)) {
+                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf);
+                        boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse);
+                        if (boolIf) {
+                            if (boolElse) {
+                                decideAttackDirection(op, cells, evaluatedCells, dir, Direction.LEFT,
+                                    width, height, floodVarIf, floodVarElse);
+                                break;
+                            }
                             raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
-                        } else if (checkForDeadEnd(x, y + 1, cells, floodVarElse)) {
+                            break;
+                        }
+                        if (boolElse) {
                             raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
                         }
                         break;
@@ -225,4 +245,7 @@ public abstract class KillAlgorithm {
         cell.setKillIncentive();
         killingCells.add(cell);
     }
+
+    private static void decideAttackDirection(Player op, cells, evaluatedCells, dir, Direction.LEFT,
+                                              width, height, floodVarIf, floodVarElse);
 }
