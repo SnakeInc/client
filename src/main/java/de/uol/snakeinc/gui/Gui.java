@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -19,6 +20,7 @@ public class Gui extends Application {
     Boolean isActive = false;
     Pane roundsPane;
     GUIBoard board;
+    Button stopUi = new Button();
     ComboBox riskType = new ComboBox(FXCollections.observableArrayList(
         RiskType.values()
     ));
@@ -53,6 +55,8 @@ public class Gui extends Application {
         );
         root.getChildren().add(riskType);
 
+        stopUi.setText("Stop UI");
+
         Scene scene = new Scene(root, 1500, 1000, Color.BLACK);
         stage.setScene(scene);
         stage.show();
@@ -63,5 +67,4 @@ public class Gui extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
 }
