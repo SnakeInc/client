@@ -110,6 +110,36 @@ public abstract class Common {
         private final int y;
     }
 
+    public static Direction turnLeft(Direction dir) {
+        switch (dir) {
+            case UP:
+                return Direction.LEFT;
+            case DOWN:
+                return Direction.RIGHT;
+            case LEFT:
+                return Direction.DOWN;
+            case RIGHT:
+                return Direction.UP;
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    public static Direction turnRight(Direction dir) {
+        switch (dir) {
+            case UP:
+                return Direction.RIGHT;
+            case DOWN:
+                return Direction.LEFT;
+            case LEFT:
+                return Direction.UP;
+            case RIGHT:
+                return Direction.DOWN;
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
     /**
      * Assert Cell.
      * @param x position X

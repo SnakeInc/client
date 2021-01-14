@@ -1,5 +1,6 @@
 package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.Common;
 import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
@@ -53,59 +54,30 @@ public class DeadEndFlooding {
     private Cell getCell(Cell[][] cells, Player us, Action action) {
         int x = us.getX();
         int y = us.getY();
-        if (us.getDirection() == Direction.DOWN) {
-            switch(action) {
-                case SPEED_UP:
-                    y = y - (us.getSpeed() + 1);
-                case SLOW_DOWN:
-                    y = y - (us.getSpeed() - 1);
-                case CHANGE_NOTHING:
-                    y = y - us.getSpeed();
-                case TURN_LEFT:
-                    x = x + us.getSpeed();
-                case TURN_RIGHT:
-                    x = x - us.getSpeed();
-            }
-        } else if (us.getDirection() == Direction.UP) {
-            switch(action) {
-                case SPEED_UP:
-                    y = y + (us.getSpeed() + 1);
-                case SLOW_DOWN:
-                    y = y + (us.getSpeed() - 1);
-                case CHANGE_NOTHING:
-                    y = y + us.getSpeed();
-                case TURN_LEFT:
-                    x = x - us.getSpeed();
-                case TURN_RIGHT:
-                    x = x + us.getSpeed();
-            }
-        } else if (us.getDirection() == Direction.RIGHT) {
-            switch(action) {
-                case SPEED_UP:
-                    x = x + (us.getSpeed() + 1);
-                case SLOW_DOWN:
-                    x = x + (us.getSpeed() - 1);
-                case CHANGE_NOTHING:
-                    x = x + us.getSpeed();
-                case TURN_LEFT:
-                    y = y + us.getSpeed();
-                case TURN_RIGHT:
-                    y = y - us.getSpeed();
-            }
-        } else if (us.getDirection() == Direction.LEFT) {
-            switch(action) {
-                case SPEED_UP:
-                    x = x - (us.getSpeed() + 1);
-                case SLOW_DOWN:
-                    x = x - (us.getSpeed() - 1);
-                case CHANGE_NOTHING:
-                    x = x - us.getSpeed();
-                case TURN_LEFT:
-                    y = y - us.getSpeed();
-                case TURN_RIGHT:
-                    y = y + us.getSpeed();
-            }
+        Direction dir = us.getDirection();
+        Common.Tuple xy;
+        switch(action) {
+            case SPEED_UP:
+                xy = Common.generateXY(dir, x, y, us.getSpeed() + 1);
+                break;
+            case SLOW_DOWN:
+                xy = Common.generateXY(dir, x, y, us.getSpeed() - 1);
+                break;
+            case CHANGE_NOTHING:
+                xy = Common.generateXY(dir, x, y, us.getSpeed());
+                break;
+            case TURN_LEFT:
+                xy = Common.generateXY(Common.turnLeft(dir), x, y, us.getSpeed());
+                break;
+            case TURN_RIGHT:
+                xy = Common.generateXY(Common.turnRight(dir), x, y, us.getSpeed());
+                break;
+            default:
+                throw new IllegalStateException();
         }
+        x = xy.getX();
+        y = xy.getY();
+
         if (x >= 0 && x < this.width) {
             if (y >= 0 && y < this.height) {
                 Cell cell = cells[x][y];
@@ -149,23 +121,9 @@ public class DeadEndFlooding {
     private List<Cell> getPossibleNeighbours(Cell[][] cells, Cell position, Direction direction, boolean all) {
         List<Cell> neighbours = new ArrayList<Cell>();
         if (!all) {
-            if (direction == Direction.DOWN) {
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.LEFT));
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.DOWN));
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.RIGHT));
-            } else if (direction == Direction.LEFT) {
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.LEFT));
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.DOWN));
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.UP));
-            } else if (direction == Direction.UP) {
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.LEFT));
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.RIGHT));
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.UP));
-            } else if (direction == Direction.RIGHT) {
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.RIGHT));
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.DOWN));
-                this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.UP));
-            }
+            this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, direction));
+            this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Common.turnLeft(direction)));
+            this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Common.turnRight(direction)));
         } else {
             this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.RIGHT));
             this.addIfNotNull(neighbours, this.getPossibleNeighbour(cells, position, Direction.DOWN));
@@ -178,16 +136,9 @@ public class DeadEndFlooding {
     private Cell getPossibleNeighbour(Cell[][] cells, Cell position, Direction direction) {
         int x = position.getX();
         int y = position.getY();
-        switch(direction) {
-            case DOWN:
-                y--;
-            case UP:
-                y++;
-            case LEFT:
-                x--;
-            default:
-                x++;
-        }
+        var xy = Common.generateXY(direction,x,y,1);
+        x = xy.getX();
+        y = xy.getY();
         if (x >= 0 && x < this.width) {
             if (y >= 0 && y < this.height) {
                 Cell cell = cells[x][y];

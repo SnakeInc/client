@@ -193,34 +193,4 @@ public class DeadEndRecognition {
             log.debug("Gate size: " + deadEndCellCount + " - Risk: " + deadEndRisk);
         }
     }
-
-    private Direction turnLeft(Direction dir) {
-        switch (dir) {
-            case UP:
-                return Direction.LEFT;
-            case DOWN:
-                return Direction.RIGHT;
-            case LEFT:
-                return Direction.DOWN;
-            case RIGHT:
-                return Direction.UP;
-            default:
-                throw new IllegalStateException();
-        }
-    }
-
-    private Direction turnRight(Direction dir) {
-        switch (dir) {
-            case UP:
-                return Direction.RIGHT;
-            case DOWN:
-                return Direction.LEFT;
-            case LEFT:
-                return Direction.UP;
-            case RIGHT:
-                return Direction.DOWN;
-            default:
-                throw new IllegalStateException();
-        }
-    }
 }

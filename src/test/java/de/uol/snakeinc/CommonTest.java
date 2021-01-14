@@ -2,6 +2,7 @@ package de.uol.snakeinc;
 
 
 import de.uol.snakeinc.entities.Cell;
+import de.uol.snakeinc.entities.Direction;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import net.jqwik.api.constraints.IntRange;
@@ -52,6 +53,14 @@ class CommonTest {
         } else {
             return false;
         }
+    }
+
+    @Property
+    boolean turnTests(@ForAll Direction dir) {
+        return Common.turnRight(Common.turnLeft(dir)) == dir
+        && Common.turnLeft(Common.turnRight(dir)) == dir
+        && Common.turnLeft(Common.turnLeft(Common.turnLeft(Common.turnLeft(dir)))) == dir
+        && Common.turnRight(Common.turnRight(Common.turnRight(Common.turnRight(dir)))) == dir;
     }
 
 }
