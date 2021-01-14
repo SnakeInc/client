@@ -5,6 +5,7 @@ public enum RiskType {
     GLOBAL,
     SECTION,
     DEADEND,
-    KILLALGORITHM;
+    KILLALGORITHM,
+    OPPONENTMOVERISK;
 
 }

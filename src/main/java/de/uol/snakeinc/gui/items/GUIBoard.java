@@ -76,6 +76,9 @@ public class GUIBoard extends GridPane {
                     risks = cell.getKillAlgorithmRisk();
                     single = true;
                     positive = true;
+                } else if (riskType == RiskType.OPPONENTMOVERISK) {
+                    risks = cell.getOpponentMovementRisk();
+                    single = true;
                 } else {
                     risks = globalRisk;
                 }

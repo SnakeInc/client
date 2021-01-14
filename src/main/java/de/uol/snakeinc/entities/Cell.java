@@ -95,6 +95,10 @@ public class Cell extends PathCell {
         return this.killIncentive;
     }
 
+    public double getOpponentMovementRisk() {
+        return this.opponentMovementRisk;
+    }
+
     public void setDeadEndRisk(double riskValue) {
         if((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;
