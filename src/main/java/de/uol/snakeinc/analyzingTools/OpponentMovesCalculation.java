@@ -4,7 +4,6 @@ import de.uol.snakeinc.Common;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
-import lombok.CustomLog;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.HashSet;
@@ -94,56 +93,30 @@ public class OpponentMovesCalculation {
         boolean abort = false;
         switch (dir) {
             case UP:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x, y - j)) {
-                        abort = true;
-                        break;
-                    } else if (j == 1 || j == speed) {
-                        evaluateCells(x, y - j, depth);
-                    }
-                }
-                if (!abort) {
+                if (!offBoardOrDeadly(x, y - 1) && !offBoardOrDeadly(x, y - speed)) {
+                    evaluateCells(x, y - 1, depth);
+                    evaluateCells(x, y - speed, depth);
                     calculateRisk(x, y - speed, depth + 1, speed);
                 }
                 break;
             case DOWN:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x, y + j)) {
-                        abort = true;
-                        break;
-                    } else if (j == 1 || j == speed) {
-                        evaluateCells(x, y + j, depth);
-
-                    }
-                }
-                if (!abort) {
+                if (!offBoardOrDeadly(x, y + 1) && !offBoardOrDeadly(x, y + speed)) {
+                    evaluateCells(x, y + 1, depth);
+                    evaluateCells(x, y + speed, depth);
                     calculateRisk(x, y + speed, depth + 1, speed);
                 }
                 break;
             case RIGHT:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x + j, y)) {
-                        abort = true;
-                        break;
-                    } else if (j == 1 || j == speed) {
-                        evaluateCells(x + j, y, depth);
-
-                    }
-                }
-                if (!abort) {
+                if (!offBoardOrDeadly(x + 1, y) && !offBoardOrDeadly(x + speed, y)) {
+                    evaluateCells(x + 1, y, depth);
+                    evaluateCells(x + speed, y, depth);
                     calculateRisk(x + speed, y, depth + 1, speed);
                 }
                 break;
             case LEFT:
-                for (int j = 1; j < speed + 1; j++) {
-                    if (offBoardOrDeadly(x - j, y)) {
-                        abort = true;
-                        break;
-                    } else if (j == 1 || j == speed) {
-                        evaluateCells(x - j, y, depth);
-                    }
-                }
-                if (!abort) {
+                if (!offBoardOrDeadly(x - 1, y) && !offBoardOrDeadly(x - speed, y)) {
+                    evaluateCells(x - 1, y, depth);
+                    evaluateCells(x - speed, y, depth);
                     calculateRisk(x - speed, y, depth + 1, speed);
                 }
                 break;
