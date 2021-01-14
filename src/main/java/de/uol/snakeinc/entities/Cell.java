@@ -118,7 +118,7 @@ public class Cell extends PathCell {
     }
 
     /**
-     * Clear pseudo-values
+     * Clear pseudo-values.
      */
     public void clearPseudoValue() {
         tmpMoveCalcValue = 1;
