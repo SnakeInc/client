@@ -7,6 +7,6 @@ public enum RiskType {
     DEADEND,
     KILLALGORITHM,
     OPPONENTMOVERISK,
-    PATHHIGHLIGHT
+    PATHHIGHLIGHT;
 
 }

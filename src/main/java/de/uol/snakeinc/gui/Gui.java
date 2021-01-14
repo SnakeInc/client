@@ -60,7 +60,6 @@ public class Gui extends Application {
         SnakeInc.setGui(this);
     }
 
-
     public static void main(String[] args) {
         launch(args);
     }
