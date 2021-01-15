@@ -53,7 +53,7 @@ public class SectionCalculator {
                 if (cells[x][y].getValue() < 10) {
                     sections[sectionY][sectionX]++;
                 }
-                options[sectionY][sectionX]++;
+                options[sectionX][sectionY]++;
             }
         }
 
@@ -68,7 +68,7 @@ public class SectionCalculator {
         // Calculate percentages of free space in the sections
         for (int x = 0; x < resolution; x++) {
             for (int y = 0; y < resolution; y++) {
-                double percentage = ((double) sections[y][x]) / ((double) options[y][x]);
+                double percentage = ((double) sections[x][y]) / ((double) options[x][y]);
                 if (percentage > max) {
                     max = percentage;
                     bestX = x;
@@ -77,7 +77,7 @@ public class SectionCalculator {
                 if (percentage < min) {
                     min = percentage;
                 }
-                percentages[y][x] = percentage;
+                percentages[x][y] = percentage;
             }
         }
 
@@ -113,7 +113,7 @@ public class SectionCalculator {
         if (optionX != -1 && optionY != -1 && us.getX() != -1 && us.getY() != -1) {
             int sectionX = (int) Math.floor(us.getX() / devideWidth);
             int sectionY = (int) Math.floor(us.getY() / devideHeight);
-            double range = percentages[sectionY][sectionX] - min;
+            double range = percentages[sectionX][sectionY] - min;
             double scale = range / difference;
 
             double value = new LinearInterpolator(1.0, 1.2).getInterpolation(scale);
@@ -147,7 +147,7 @@ public class SectionCalculator {
                 int sectionX = (int) Math.floor(x / devideWidth);
                 int sectionY = (int) Math.floor(y / devideHeight);
 
-                double range = percentages[sectionY][sectionX] - min;
+                double range = percentages[sectionX][sectionY] - min;
                 double scale = range / difference; // scale from min/max-percentage
 
                 // interpolate based on scale. Lower 50 % will get additional risk, upper 50% will lower their risk
