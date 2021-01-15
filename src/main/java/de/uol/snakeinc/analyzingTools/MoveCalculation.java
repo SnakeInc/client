@@ -1,6 +1,7 @@
 package de.uol.snakeinc.analyzingTools;
 
 import de.uol.snakeinc.Common;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
@@ -21,7 +22,7 @@ public class MoveCalculation {
     int width;
     int height;
     BoardAnalyzer boardAnalyzer;
-    private int searchingDepth = 10;
+    private final int searchingDepth = Config.SEARCHING_DEPTH;
 
     public MoveCalculation(Cell[][] cells, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
@@ -39,11 +40,11 @@ public class MoveCalculation {
         log.info("calculating BestAction!");
         log.info("Speed = " + us.getSpeed());
         //log.info("jumping in " );
-        double bestActionTmp = 100 * deathValue(1);
-        Action bestAction = Action.CHANGE_NOTHING;
+        double bestActionTmp = Config.BEST_ACTION_MULTIPLIER * deathValue(1);
+        Action bestAction = Config.DEFAULT_BEST_ACTION;
         double tmp;
         Action[] actions =
-                MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(), 1,2, MoveOrder.SpiralForm.NoSpiral);
+                MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(), Config.IDEAL_MIN_SPEED, Config.IDEAL_MAX_SPEED, Config.IDEAL_SPIRAL_FORM);
         for (Action act : actions) {
             HashSet<Cell> pseudoEvaluatedCells = new HashSet<>();
             tmp = calculate(act, us.getDirection(), us.getX(), us.getY(), us.getSpeed(), 1, pseudoEvaluatedCells);
@@ -67,7 +68,7 @@ public class MoveCalculation {
         if (this.searchingDepth == depth) {
             return 1;
         }
-        double bestAction = 100 * deathValue(1);
+        double bestAction = Config.BEST_ACTION_MULTIPLIER * deathValue(1);
         double tmp;
         for (Action act : Action.values()) {
             HashSet<Cell> pseudoEvaluatedCellsNextDepth = new HashSet<>();
@@ -89,7 +90,7 @@ public class MoveCalculation {
         dir = dirSpeedDepth.direction;
         speed = dirSpeedDepth.speed;
 
-        if (speed < 1 || speed > 10) {
+        if (speed < Config.SPEED_MIN || speed > Config.SPEED_MAX) {
             return deathValue(depth);
         } else {
             return calculateDirection(dir, x, y, speed, depth, pseudoEvaluatedCells, boardAnalyzer.checkForJumping(depth), deathValue(depth));
@@ -164,7 +165,7 @@ public class MoveCalculation {
                                       int depth, HashSet<Cell> pseudEvaluatedCells, boolean jumping, double deathValue) {
         double result = 1;
 
-        if (jumping && speed >= 3) {
+        if (jumping && speed >= Config.MINIMUM_JUMP_SPEED) {
             var xy = generateXY(dir, x, y, 1);
             int xval = xy.getX();
             int yval = xy.getY();
@@ -199,7 +200,7 @@ public class MoveCalculation {
     }
 
     private double deathValue(int depth) {
-        return Cell.DEATH_VALUE * Math.pow(3,(this.searchingDepth - depth) + 1);
+        return Config.DEATH_VALUE * Math.pow(Config.DEATH_VALUE_BASE,(this.searchingDepth - depth) + 1);
     }
 
     private double evaluateResult(HashSet<Cell> pseudEvaluatedCells, double result, Cell cell) {
