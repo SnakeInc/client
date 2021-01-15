@@ -27,13 +27,13 @@ public class GUICell extends Rectangle {
             this.setOpacity(0);
         } else {
             if (single) {
+                double opacity;
                 if (positive) {
-                    double opacity = (risk * (-1.0D)) + 1.0D;
-                    this.setOpacity(opacity);
+                    opacity = (risk * (-1.0D)) + 1.0D;
                 } else {
-                    double opacity = (risk - 1.0D) * 5.0D;
-                    this.setOpacity(opacity);
+                    opacity = (risk - 1.0D) * 5.0D;
                 }
+                this.setOpacity(opacity);
             } else {
                 double opacity = (risk - 1.0D) / 9.0D;
                 this.setOpacity(opacity);

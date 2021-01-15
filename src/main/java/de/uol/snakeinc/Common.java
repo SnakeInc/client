@@ -6,13 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Class for common small Calculation
+ * Class for common small Calculation.
  */
 public abstract class Common {
     /**
      * tests if coordinates are on the board or the cell is deadly.
      * @param x x coordinate
      * @param y y coordinate
+     * @param cells Board represented as Cell Array
      * @return returns the test value
      */
     static public boolean offBoardOrDeadly(int x, int y, Cell[][] cells) {
@@ -23,6 +24,14 @@ public abstract class Common {
         }
     }
 
+    /**
+     * Generates a new Tuple of x y coordinates off set from the x y position in a direction.
+     * @param dir the direction to off set in
+     * @param x the x coordinate of the start Position
+     * @param y the y coordinate of the start Position
+     * @param amount the offset
+     * @return new Coordinates
+     */
     static public Tuple generateXY(Direction dir, int x, int y, int amount) {
         switch (dir) {
             case UP:
@@ -38,6 +47,13 @@ public abstract class Common {
         }
     }
 
+    /**
+     * Generates a new Tuple of x y coordinates off set from the x y position for all directions.
+     * @param x the x coordinate of the start Position
+     * @param y the y coordinate of the start Position
+     * @param amount the offset
+     * @return Array Coordinates
+     */
     static public Tuple[] generateXYAllDirections(int x, int y, int amount) {
         return new Tuple[] {generateXY(Direction.DOWN, x, y, amount),
                             generateXY(Direction.UP, x, y, amount),
@@ -45,9 +61,17 @@ public abstract class Common {
                             generateXY(Direction.RIGHT, x, y, amount)};
     }
 
+    /**
+     * Generates all Tuples of x y coordinates off set from the x y position up to the off set in a direction.
+     * @param direction the direction to off set in
+     * @param x the x coordinate of the start Position
+     * @param y the y coordinate of the start Position
+     * @param amount the offset
+     * @return new Coordinates
+     */
     static public Tuple[] generateAllXYUpTo(Direction direction, int x, int y, int amount) {
         Tuple[] res;
-        if(amount < 0) {
+        if (amount < 0) {
             res = new Tuple[-amount];
             for (int i = 0; i > amount; i--) {
                 res[-i] = generateXY(direction, x,y, i);
@@ -61,11 +85,20 @@ public abstract class Common {
         return res;
     }
 
+    /**
+     * Generates all Tuples of x y coordinates off set from the x y position up to the off set in a direction,
+     * but excludes the starting position.
+     * @param direction the direction to off set in
+     * @param x the x coordinate of the start Position
+     * @param y the y coordinate of the start Position
+     * @param amount the offset
+     * @return new Coordinates
+     */
     static public Tuple[] generateAllXYUpToFromOne(Direction direction, int x, int y, int amount) {
         Tuple[] res;
-        res = new Tuple[amount-1];
+        res = new Tuple[amount - 1];
         for (int i = 1; i < amount; i++) {
-            res[i-1] = generateXY(direction, x, y, i);
+            res[i - 1] = generateXY(direction, x, y, i);
         }
         return res;
     }

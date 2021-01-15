@@ -31,6 +31,11 @@ public class GUIBoard extends GridPane {
         this.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
+    /**
+     * todo.
+     * @param width todo
+     * @param height todo
+     */
     public void initializeCells(int width, int height) {
         Platform.runLater(() -> {
             this.getChildren().clear();
@@ -50,6 +55,11 @@ public class GUIBoard extends GridPane {
     }
 
 
+    /**
+     * todo.
+     * @param cells todo
+     * @param us todo
+     */
     public void updateBoard(Cell[][] cells, Player us) {
         Platform.runLater(() -> {
             ObservableList<Node> children = this.getChildren();

@@ -88,22 +88,22 @@ public class AStarSearch extends Pathfinder {
                 }
                 int mazePositionY = this.now.getCell().getY() + y;
                 int mazePositionX = this.now.getCell().getX() + x;
-                if (mazePositionY >= this.maze.length || mazePositionY < 0 ||
-                    mazePositionX >= this.maze[0].length || mazePositionX < 0) {
+                if (mazePositionY >= this.maze[0].length || mazePositionY < 0 || //changed
+                    mazePositionX >= this.maze.length || mazePositionX < 0) { //changed
                     continue; // skip if diagonal movement is not allowed
                 }
                 AStarNode node = new AStarNode(
-                    this.now, maze[mazePositionY][mazePositionX],
+                    this.now, maze[mazePositionX][mazePositionY],
                     this.now.getCost(),
                     this.distance(x, y)
                 );
                 if ((x != 0 || y != 0) // not this.now
                     && this.now.getCell().getX() + x >= 0
-                    && this.now.getCell().getX() + x < this.maze[0].length // check maze boundaries
+                    && this.now.getCell().getX() + x < this.maze.length // check maze boundaries //changed
                     && this.now.getCell().getY() + y >= 0
-                    && this.now.getCell().getY() + y < this.maze.length
+                    && this.now.getCell().getY() + y < this.maze[0].length //changed
                     // check if square is walkable
-                    && !this.maze[this.now.getCell().getY() + y][this.now.getCell().getX() + x].isInUse()
+                    && !this.maze[this.now.getCell().getX() + x][this.now.getCell().getY() + y].isInUse() //changed
                     // if not already done
                     && !findNeighborInList(this.open, node) && !findNeighborInList(this.closed, node)) {
                     node.setCost(node.getParent().getCost() + 1.); // Horizontal/vertical cost = 1.0

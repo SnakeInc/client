@@ -1,7 +1,6 @@
 package de.uol.snakeinc.pathfinding;
 
 import de.uol.snakeinc.pathfinding.astar.AStarSearch;
-import lombok.CustomLog;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
@@ -14,12 +13,13 @@ public class PathfindTester {
      * Method to test pathfinding.
      */
     public void testPathfinding() {
-        int size = 80;
-        PathCell[][] field = this.createField(size, 3);
+        int width = 80;
+        int height = 20;
+        PathCell[][] field = this.createField(width, height, 5);
         Pathfinder finder = new AStarSearch(field);
 
-        PathCell start = field[new Random().nextInt(size)][new Random().nextInt(size)];
-        PathCell end = field[new Random().nextInt(size)][new Random().nextInt(size)];
+        PathCell start = field[new Random().nextInt(width)][new Random().nextInt(height)];
+        PathCell end = field[new Random().nextInt(width)][new Random().nextInt(height)];
 
         log.info("Start: " + start.getY() + " " + start.getX());
         log.info("End: " + end.getY() + " " + end.getX());
@@ -35,15 +35,15 @@ public class PathfindTester {
         this.printField(chars);
     }
 
-    private PathCell[][] createField(int size, int chance) {
-        PathCell[][] cells = new PathCell[size][size];
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
+    private PathCell[][] createField(int width, int height, int chance) {
+        PathCell[][] cells = new PathCell[width][height];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
                 boolean inUse = false;
                 if (new Random().nextInt(chance) == 0) {
                     inUse = true;
                 }
-                cells[y][x] = new DefaultPathCell(inUse, x, y);
+                cells[x][y] = new DefaultPathCell(inUse, x, y);
             }
         }
         return cells;
@@ -51,20 +51,20 @@ public class PathfindTester {
 
     private char[][] getChars(PathCell[][] cells, List<PathCell> path) {
         char[][] chars = new char[cells.length][cells[0].length];
-        for (int x = 0; x < cells[0].length; x++) {
-            for (int y = 0; y < cells.length; y++) {
-                chars[y][x] = ' ';
+        for (int x = 0; x < cells.length; x++) {
+            for (int y = 0; y < cells[0].length; y++) {
+                chars[x][y] = ' ';
             }
         }
         if (path != null) {
             for (PathCell cell : path) {
-                chars[cell.getY()][cell.getX()] = '*';
+                chars[cell.getX()][cell.getY()] = '*';
             }
         }
-        for (int x = 0; x < cells[0].length; x++) {
-            for (int y = 0; y < cells.length; y++) {
-                if (cells[y][x].isInUse()) {
-                    chars[y][x] = '#';
+        for (int x = 0; x < cells.length; x++) {
+            for (int y = 0; y < cells[0].length; y++) {
+                if (cells[x][y].isInUse()) {
+                    chars[x][y] = '#';
                 }
             }
         }

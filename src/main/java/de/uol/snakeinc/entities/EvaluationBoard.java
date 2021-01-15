@@ -2,11 +2,11 @@ package de.uol.snakeinc.entities;
 
 import com.google.gson.JsonObject;
 import de.uol.snakeinc.Common;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.SnakeInc;
 import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
 import de.uol.snakeinc.analyzingTools.MoveCalculation;
 import de.uol.snakeinc.gui.Gui;
-import lombok.CustomLog;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -78,26 +78,27 @@ public class EvaluationBoard {
         updatePlayersCells(playerHashMap);
 
         //initiate analyzing process
-        if(us.isActive()) {
+        if (us.isActive()) {
             boardAnalyzer.analyze(cells, players, us);
-            logCurrentEvaluation(cells);
         }
+        logCurrentEvaluation(cells, us.isActive());
     }
 
     /**
      * logs the compute values for each cell.
      * @param cells cells
+     * @param active todo
      */
-    private void logCurrentEvaluation (Cell[][] cells) {
+    private void logCurrentEvaluation (Cell[][] cells, boolean active) {
         if (SnakeInc.hasGui()) {
             Gui gui = SnakeInc.getGui();
             if (!gui.getGuiBoard().isWidthAndHeight(cells.length, cells[0].length)) {
                 gui.getGuiBoard().initializeCells(cells.length, cells[0].length);
             }
             gui.getGuiBoard().updateBoard(cells, this.us);
-        } else {
+        } else if (active) {
             StringBuilder str = new StringBuilder();
-            DecimalFormat f = new DecimalFormat("#,##0.00");
+            DecimalFormat f = new DecimalFormat("##.00");
             str.append("\n");
             for (int i = 0; i < cells.length; i++) {
                 for (int j = 0; j < cells[0].length; j++) {
@@ -125,7 +126,9 @@ public class EvaluationBoard {
             }
         }
         Player[] playersArray = new Player[count];
-        if (count >= 0) System.arraycopy(playersArrayTmp, 0, playersArray, 0, count);
+        if (count >= 0) {
+            System.arraycopy(playersArrayTmp, 0, playersArray, 0, count);
+        }
         return  playersArray;
     }
 
@@ -168,7 +171,7 @@ public class EvaluationBoard {
             tmpPlayer = playerHashMap.get(i);
 
             //Checking for jumping
-            if (round % 6 == 0 && speed >= 3) {
+            if (round % Config.ROUNDS_PER_JUMP == 0 && speed >= 3) {
                 updateJumpingPlayerCells(tmpPlayer);
             } else {
                 for (var xy : Common.generateAllXYUpTo(tmpPlayer.getDirection(), x, y, -speed)) {
@@ -195,16 +198,6 @@ public class EvaluationBoard {
         MoveCalculation moveCalculation = new MoveCalculation(cells, us, boardAnalyzer);
         return moveCalculation.calculateBestAction();
     }
-
-    /**
-     * Todo javadoc.
-     * @return todo this
-     */
-    public Action startingStrategy() {
-        //TODO: Implement this.
-        return Action.CHANGE_NOTHING;
-    }
-
 
     /**
      * Parse board based on json-format.

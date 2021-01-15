@@ -1,5 +1,6 @@
 package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.math.interpolation.LinearInterpolator;
 import lombok.extern.log4j.Log4j2;
@@ -26,11 +27,11 @@ public class SectionCalculator {
     private int height;
     private int width;
 
-    public static int resolution = 10;
+    public static int resolution = Config.RESOLUTION;
 
     public SectionCalculator(int width, int height) {
-        this.devideHeight = height / 10.0D;
-        this.devideWidth = width  / 10.0D;
+        this.devideHeight = height / Config.DIVISOR;
+        this.devideWidth = width  / Config.DIVISOR;
 
         this.height = height;
         this.width = width;
@@ -57,8 +58,8 @@ public class SectionCalculator {
             }
         }
 
-        double min = 100.0D;
-        double max = 0.0D;
+        double min = Config.CALCULATE_MIN;
+        double max = Config.CALCULATE_MAX;
         double[][] percentages = new double[resolution][resolution];
         // Calculate percentages of free space in the sections
         for (int x = 0; x < resolution; x++) {
@@ -89,21 +90,13 @@ public class SectionCalculator {
                 int sectionX = (int) Math.floor(x / devideWidth);
                 int sectionY = (int) Math.floor(y / devideHeight);
 
-                double percentage = percentages[sectionY][sectionX];
+                double range = percentages[sectionY][sectionX] - min;
+                double scale = (range) / (difference); // scale from min/max-percentage
 
                 // interpolate based on scale. Lower 50 % will get additional risk, upper 50% will lower their risk
-                double range = percentage - min;
-                double scale = ((double) range) / ((double) difference); // scale from min/max-percentage
-
-                double value = 1.0D;
-                if (scale > 0.5) {
-                    scale = (scale - 0.5D) * 2.0D;
-                    value = new LinearInterpolator(1.125, 1.0).getInterpolation(scale);
-                } else {
-                    scale = scale * 2.0D;
-                    value = new LinearInterpolator(1.2, 1.125).getInterpolation(scale);
-                }
-
+                double value = new
+                        LinearInterpolator(Config.AREA_RISK_INTERPOLATION_MAX, Config.AREA_RISK_INTERPOLATION_MIN)
+                        .getInterpolation(scale);
                 //System.out.println("Value: " +  value + " Scale: " + scale + " Range: " + range);
                 // set value here
                 //#end -> In own for-loop for performance
