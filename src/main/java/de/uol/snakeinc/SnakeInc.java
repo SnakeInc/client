@@ -1,9 +1,9 @@
 package de.uol.snakeinc;
 
 import de.uol.snakeinc.connection.ConnectionThread;
-import lombok.extern.log4j.Log4j2;
 import de.uol.snakeinc.gui.Gui;
 import de.uol.snakeinc.gui.GuiThread;
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class SnakeInc {
