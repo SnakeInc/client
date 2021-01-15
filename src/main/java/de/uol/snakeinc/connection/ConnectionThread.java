@@ -60,7 +60,7 @@ public class ConnectionThread extends Thread {
             webSocket.setSocketFactory(factory);
             webSocket.connect();
             while (webSocket.isOpen() || !this.webSocket.isStopped()) {
-                //todo: should this be empty
+               //Busy Waiting
             }
         }
     }

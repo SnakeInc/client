@@ -133,7 +133,7 @@ public class OpponentMovesCalculation {
      */
     public void evaluateCells (int x, int y, int depth) {
         evaluatedCells.add(cells[x][y]);
-        cells[x][y].raiseActionRisk(depth);
+        cells[x][y].raiseOpponentMovementRisk(depth);
     }
 
     /**

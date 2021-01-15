@@ -42,7 +42,7 @@ public class Game {
     /**
      * todo javadoc.
      * @param evaluationBoard todo this
-     * @param rawBoard        todo this
+     * @param rawBoard        the raw board for logging
      */
     public void informIntelligentBoard(EvaluationBoard evaluationBoard, int[][] rawBoard) {
         EvaluationBoard = evaluationBoard;
@@ -53,7 +53,7 @@ public class Game {
 
     /**
      * todo javadoc.
-     * @param rawBoard todo
+     * @param rawBoard the raw board for logging
      */
     public void informIntelligentBoard(int[][] rawBoard) {
         EvaluationBoard.update(players, us, round);
