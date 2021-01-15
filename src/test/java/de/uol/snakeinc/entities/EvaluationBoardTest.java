@@ -122,8 +122,4 @@ class EvaluationBoardTest {
         evaluationBoard.update(playerHashMap, usU, 1);
         assertEquals(Action.class, evaluationBoard.getAction().getClass());
     }
-
-    @Test
-    void startingStrategy() {
-    }
 }

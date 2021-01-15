@@ -37,8 +37,8 @@ public abstract class KillAlgorithm {
                 int x = players[i].getX();
                 int y = players[i].getY();
                 Direction dir = players[i].getDirection();
-                Boolean boolIf;
-                Boolean boolElse;
+                boolean boolIf;
+                boolean boolElse;
                 switch (dir) {
                     case DOWN:
                     case UP:

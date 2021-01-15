@@ -69,10 +69,6 @@ public class ConnectionThread extends Thread {
         }
     }
 
-    public SpeedWebSocketClient getWebSocket() {
-        return this.webSocket;
-    }
-
     /**
      * Stop connection with socket.
      */
