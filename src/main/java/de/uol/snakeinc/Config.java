@@ -17,4 +17,10 @@ public abstract class Config {
     public static final int SEARCHING_DEPTH = 10;
     public static final double BEST_ACTION_MULTIPLIER = 100D;
     public static final Action DEFAULT_BEST_ACTION = Action.CHANGE_NOTHING;
+
+    /********
+     * Opponent Moves Calculation
+     *******/
+    public static final int OPPONENT_MOVES_DEPTH = 3;
+
 }

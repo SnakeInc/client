@@ -1,6 +1,7 @@
 package de.uol.snakeinc.analyzingTools;
 
 import de.uol.snakeinc.Common;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
@@ -52,7 +53,7 @@ public class OpponentMovesCalculation {
         if (boardAnalyzer.checkForJumping(depth)) {
             calculateRiskWithJumping(x, y, depth, speed);
         } else {
-            if (depth <= 3) {
+            if (depth <= Config.OPPONENT_MOVES_DEPTH) {
                 //Recursive call
                 recursiveRiskByDirection(x, y, depth, speed, Direction.UP);
                 recursiveRiskByDirection(x, y, depth, speed, Direction.DOWN);
@@ -63,7 +64,7 @@ public class OpponentMovesCalculation {
     }
 
     private void calculateRiskWithJumping(int x, int y, int depth, int speed) {
-        if (depth <= 3) {
+        if (depth <= Config.OPPONENT_MOVES_DEPTH) {
             //Recursive call
             recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.UP);
             recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.DOWN);
@@ -90,7 +91,6 @@ public class OpponentMovesCalculation {
     }
 
     private void recursiveRiskByDirectionWithJumping(int x, int y, int depth, int speed, Direction dir) {
-        boolean abort = false;
         switch (dir) {
             case UP:
                 if (!offBoardOrDeadly(x, y - 1) && !offBoardOrDeadly(x, y - speed)) {
