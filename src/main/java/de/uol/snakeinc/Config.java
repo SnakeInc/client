@@ -5,6 +5,8 @@ import de.uol.snakeinc.entities.Direction;
 
 public abstract class Config {
 
+    public static final int ROUNDS_PER_JUMP = 6;
+
     /********
      * Kill Algorithm
      *******/

@@ -2,9 +2,9 @@ package de.uol.snakeinc.entities;
 
 import com.google.gson.JsonObject;
 import de.uol.snakeinc.Common;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
 import de.uol.snakeinc.analyzingTools.MoveCalculation;
-import lombok.CustomLog;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -115,7 +115,9 @@ public class EvaluationBoard {
             }
         }
         Player[] playersArray = new Player[count];
-        if (count >= 0) System.arraycopy(playersArrayTmp, 0, playersArray, 0, count);
+        if (count >= 0) {
+            System.arraycopy(playersArrayTmp, 0, playersArray, 0, count);
+        }
         return  playersArray;
     }
 
@@ -158,7 +160,7 @@ public class EvaluationBoard {
             tmpPlayer = playerHashMap.get(i);
 
             //Checking for jumping
-            if (round % 6 == 0 && speed >= 3) {
+            if (round % Config.ROUNDS_PER_JUMP == 0 && speed >= 3) {
                 updateJumpingPlayerCells(tmpPlayer);
             } else {
                 for (var xy : Common.generateAllXYUpTo(tmpPlayer.getDirection(), x, y, -speed)) {
