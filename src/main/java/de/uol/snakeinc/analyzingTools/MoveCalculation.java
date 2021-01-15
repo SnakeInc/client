@@ -1,5 +1,6 @@
 package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.Common;
 import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
@@ -163,7 +164,7 @@ public class MoveCalculation {
                                       int depth, HashSet<Cell> pseudEvaluatedCells, boolean jumping, double deathValue) {
         double result = 1;
 
-        if (jumping) {
+        if (jumping && speed >= 3) {
             var xy = generateXY(dir, x, y, 1);
             int xval = xy.getX();
             int yval = xy.getY();
@@ -183,7 +184,7 @@ public class MoveCalculation {
             result = evaluateResult(pseudEvaluatedCells, result, cells[xval][yval]);
 
         } else { //Normal Cases
-            for (var xy : generateAllXYUpTo(dir, x, y, speed)) {
+            for (var xy : Common.generateAllXYUpToFromOne(dir, x, y, speed + 1)) {
                 int xval = xy.getX();
                 int yval = xy.getY();
 
@@ -198,7 +199,7 @@ public class MoveCalculation {
     }
 
     private double deathValue(int depth) {
-        return Cell.DEATH_VALUE * Math.pow(5,(this.searchingDepth - depth) + 1);
+        return Cell.DEATH_VALUE * Math.pow(3,(this.searchingDepth - depth) + 1);
     }
 
     private double evaluateResult(HashSet<Cell> pseudEvaluatedCells, double result, Cell cell) {

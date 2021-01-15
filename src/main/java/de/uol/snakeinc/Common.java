@@ -61,6 +61,15 @@ public abstract class Common {
         return res;
     }
 
+    static public Tuple[] generateAllXYUpToFromOne(Direction direction, int x, int y, int amount) {
+        Tuple[] res;
+        res = new Tuple[amount-1];
+        for (int i = 1; i < amount; i++) {
+            res[i-1] = generateXY(direction, x, y, i);
+        }
+        return res;
+    }
+
     @AllArgsConstructor
     @Getter
     public static class Tuple {
