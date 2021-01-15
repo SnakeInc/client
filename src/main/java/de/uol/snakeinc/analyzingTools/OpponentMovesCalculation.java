@@ -38,7 +38,7 @@ public class OpponentMovesCalculation {
         int y;
         int speed;
         for (int i = 0; i < players.length; i++) {
-            if (BoardAnalyzer.inDistance(us, players[i], 4)) {
+            if (BoardAnalyzer.inDistance(us, players[i], Config.OPPONENT_MOVES_DEPTH + 1)) {
                 log.info("Computing Opponent Moves.");
                 x = players[i].getX();
                 y = players[i].getY();
