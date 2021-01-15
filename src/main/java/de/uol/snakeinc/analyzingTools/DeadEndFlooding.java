@@ -25,7 +25,7 @@ public class DeadEndFlooding {
         int countCells = 0;
         for (int x = 0; x < this.width; x++) {
             for (int y = 0; y < this.height; y++) {
-                cells[x][y].setDeadEndFlooding(1.0);
+                cells[x][y].setDeadEndFloodingReset(1.0);
                 cells[x][y].setDeadEndJumping(1.0);
                 cells[x][y].setFlooded(false);
                 countCells++;
@@ -131,7 +131,15 @@ public class DeadEndFlooding {
 
         if (count < 500) {
             for (Cell cell : checkCells) {
-                cell.setDeadEndJumping(0.8);
+                cell.setDeadEndJumping(0.8D);
+            }
+            for (int x = 0; x < this.width; x++) {
+                for (int y = 0; y < this.height; y++) {
+                    Cell option = cells[x][y];
+                    if (!checkCells.contains(option)) {
+                        option.setDeadEndJumping(0.1D);
+                    }
+                }
             }
             return true;
         }
@@ -175,7 +183,8 @@ public class DeadEndFlooding {
         if (count < blocks) {
             double scale = ((double) count) / ((double) blocks);
 
-            value = new LinearInterpolator(2.5, 1.0).getInterpolation(scale);
+            value = new LinearInterpolator(2.0, 1.0).getInterpolation(scale);
+            position.setDeadEndFlooding(value + 1.5D);
         }
         for (Cell cell : checkCells) {
             cell.setDeadEndFlooding(value);

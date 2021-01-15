@@ -121,6 +121,12 @@ public class Cell extends PathCell implements DeadCell {
     }
 
     public void setDeadEndFlooding(double deadEndFlooding) {
+        if (deadEndFlooding > this.deadEndFlooding) {
+            this.deadEndFlooding = deadEndFlooding;
+        }
+    }
+
+    public void setDeadEndFloodingReset(double deadEndFlooding) {
         this.deadEndFlooding = deadEndFlooding;
     }
 
