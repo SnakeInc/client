@@ -1,9 +1,9 @@
 package de.uol.snakeinc.analyzingTools;
 
 import de.uol.snakeinc.Common;
-import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
+import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.pathfinding.PathCell;
 import de.uol.snakeinc.pathfinding.Pathfinder;
 import de.uol.snakeinc.pathfinding.astar.AStarSearch;
