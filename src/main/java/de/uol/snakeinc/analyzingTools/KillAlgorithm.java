@@ -33,8 +33,6 @@ public abstract class KillAlgorithm {
         int width = cells.length;
         int height = cells[1].length;
         Direction usDirection = us.getDirection();
-        int usX = us.getX();
-        int usY = us.getY();
         for (int i = 0; i < players.length; i++) {
             if (BoardAnalyzer.inDistance(us, players[i], 4)) {
                 int[][] floodCache = new int [width][height];
