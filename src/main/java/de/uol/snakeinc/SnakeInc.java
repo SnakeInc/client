@@ -26,6 +26,8 @@ public class SnakeInc {
         String apiKey = "4J6JBGVMWOPZCSDJ273T4PLBFATDNTVSWUJ7BEB6C3EPMDXZVKDYLUUU";
         ConnectionThread thread = new ConnectionThread(apiKey);
         thread.start();
+        /*PathfindTester tester = new PathfindTester();
+        tester.testPathfinding();*/
     }
 
     public static void setGui(Gui gui) {
