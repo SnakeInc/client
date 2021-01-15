@@ -8,7 +8,8 @@ import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.EvaluationBoard;
 import de.uol.snakeinc.entities.Game;
 import de.uol.snakeinc.entities.Player;
-import de.uol.snakeinc.export.ExportManager;
+import de.uol.snakeinc.export.Export;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.java_websocket.client.WebSocketClient;
@@ -28,16 +29,13 @@ public class SpeedWebSocketClient extends WebSocketClient {
     private Game game;
     private String serverId;
     private boolean initialMessage = true;
+    @Getter
     private boolean stopped = false;
 
-    private ExportManager exportManager;
-
-    public SpeedWebSocketClient(ConnectionThread thread, URI url, ExportManager exportManager) {
+    public SpeedWebSocketClient(ConnectionThread thread, URI url) {
         super(url);
         this.thread = thread;
         this.serverId = DigestUtils.md5Hex(url.getHost()).substring(0, 4);
-
-        this.exportManager = exportManager;
     }
 
     @Override
@@ -78,7 +76,8 @@ public class SpeedWebSocketClient extends WebSocketClient {
         if (this.game != null) {
             try {
                 log.info("Logging game");
-                this.exportManager.generateExport(game);
+                var export = new Export(game);
+                export.generateFile();
             } catch (Exception exception) {
                 log.error("Error while logging the game");
                 exception.printStackTrace();
@@ -92,10 +91,6 @@ public class SpeedWebSocketClient extends WebSocketClient {
     public void onError(Exception exception) {
         log.info("Got an exception: " + exception.getMessage());
         exception.printStackTrace();
-    }
-
-    public boolean isStopped() {
-        return this.stopped;
     }
 
     /**
