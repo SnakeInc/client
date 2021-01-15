@@ -49,24 +49,4 @@ public class SnakeInc {
     public static boolean isGuiReady() {
         return SnakeInc.guiReady;
     }
-
-    public static void setGui(Gui gui) {
-        SnakeInc.gui = gui;
-    }
-
-    public static boolean hasGui() {
-        return SnakeInc.gui != null;
-    }
-
-    public static Gui getGui() {
-        return SnakeInc.gui;
-    }
-
-    public static void setGuiReady(boolean guiReady) {
-        SnakeInc.guiReady = guiReady;
-    }
-
-    public static boolean isGuiReady() {
-        return SnakeInc.guiReady;
-    }
 }

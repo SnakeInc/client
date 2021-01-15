@@ -8,7 +8,6 @@ public class Cell extends PathCell implements Cloneable {
 
 
     //Basic Value.
-    @Getter
     private double value;
 
     //Value that is calculated temporarily
