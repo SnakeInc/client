@@ -24,17 +24,11 @@ public class SectionCalculator {
     private double devideWidth;
     private double devideHeight;
 
-    private int height;
-    private int width;
-
     public static int resolution = Config.RESOLUTION;
 
     public SectionCalculator(int width, int height) {
         this.devideHeight = height / Config.DIVISOR;
         this.devideWidth = width  / Config.DIVISOR;
-
-        this.height = height;
-        this.width = width;
     }
 
     /**

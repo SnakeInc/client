@@ -3,6 +3,7 @@ package de.uol.snakeinc.entities;
 import de.uol.snakeinc.Config;
 import de.uol.snakeinc.pathfinding.PathCell;
 import lombok.Getter;
+import lombok.Setter;
 
 public class Cell extends PathCell {
 
@@ -15,14 +16,17 @@ public class Cell extends PathCell {
     private double tmpMoveCalcValue;
 
     //The risk that another agent will move to this cell
+    @Getter
     private double opponentMovementRisk;
 
+    @Getter
     private double killIncentive;
 
     //Area-risk
+    @Getter @Setter
     private double areaRisk;
 
-    //
+    @Getter
     private double deadEndRisk;
 
     private boolean hardDeadly;
@@ -79,34 +83,10 @@ public class Cell extends PathCell {
         }
     }
 
-    public void setAreaRisk(double risk) {
-        this.areaRisk = risk;
-    }
-
-    public double getAreaRisk() {
-        return this.areaRisk;
-    }
-
-    public double getDeadEndRisk() {
-        return this.deadEndRisk;
-    }
-
-    public double getKillAlgorithmRisk() {
-        return this.killIncentive;
-    }
-
-    public double getOpponentMovementRisk() {
-        return this.opponentMovementRisk;
-    }
-
     public void setDeadEndRisk(double riskValue) {
         if ((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;
         }
-    }
-
-    public double getValue() {
-        return value;
     }
 
     public double getRisks() {

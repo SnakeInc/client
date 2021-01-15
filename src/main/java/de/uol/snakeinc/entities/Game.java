@@ -12,10 +12,13 @@ public class Game {
     @Getter
     private HashMap<Integer, int[][]> boards;
     private EvaluationBoard EvaluationBoard;
+    @Getter
     private Player us;
 
+    @Getter
     private int round = 0;
 
+    @Getter
     private String gameId;
 
     public Game(String serverId) {
@@ -57,10 +60,6 @@ public class Game {
         boards.put(round, rawBoard);
     }
 
-    public EvaluationBoard getEvaluationBoard() {
-        return this.EvaluationBoard;
-    }
-
     /**
      * Run action after messages are parsed to calculate next step.
      * @param socket currently connected socket
@@ -71,18 +70,6 @@ public class Game {
             EvaluationBoard.prepareNextPhase();
         }
         round++;
-    }
-
-    public Player getUs() {
-        return this.us;
-    }
-
-    public int getRounds() {
-        return this.round;
-    }
-
-    public String getGameId() {
-        return this.gameId;
     }
 
     private String generateGameId(long time) {

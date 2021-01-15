@@ -32,7 +32,7 @@ public class Export {
         Gson gson = new Gson();
 
         JsonObject objects = new JsonObject();
-        objects.addProperty("rounds", game.getRounds());
+        objects.addProperty("rounds", game.getRound());
         objects.addProperty("date", new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date()));
 
         objects.addProperty("us", game.getUs().getId());

@@ -1,8 +1,12 @@
 package de.uol.snakeinc.pathfinding;
 
+import lombok.Getter;
+
 public abstract class PathCell {
 
+    @Getter
     private int x;
+    @Getter
     private int y;
 
     public PathCell(int x, int y) {
@@ -11,13 +15,4 @@ public abstract class PathCell {
     }
 
     public abstract boolean isInUse();
-
-    public int getX() {
-        return this.x;
-    }
-
-    public int getY() {
-        return this.y;
-    }
-
 }
