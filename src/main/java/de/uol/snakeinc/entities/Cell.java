@@ -64,10 +64,10 @@ public class Cell extends PathCell {
     }
 
     /**
-     * Todo this.
-     * @param depth Todo this
+     * Raises the opponent movement risk according to the depth.
+     * @param depth the depth
      */
-    public void raiseActionRisk(int depth) {
+    public void raiseOpponentMovementRisk(int depth) {
         switch (depth) {
             case 1:
                 opponentMovementRisk = opponentMovementRisk * Config.MOVE_RISK_1;
@@ -100,9 +100,9 @@ public class Cell extends PathCell {
     }
 
     /**
-     * TODO this and rename.
+     * Clears the temporary move calculation value.
      */
-    public void clearPseudoValue() {
+    public void clearTmpMoveCalcValue() {
         tmpMoveCalcValue = 1;
         tmpDeadly = false;
     }

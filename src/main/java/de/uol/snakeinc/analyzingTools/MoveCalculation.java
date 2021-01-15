@@ -34,8 +34,8 @@ public class MoveCalculation {
     }
 
     /**
-     * todo this.
-     * @return todo
+     * Calculates the best Action. That is the least penalized Action by the factors on the Board.
+     * @return the selected Action
      */
     public Action calculateBestAction() {
         log.info("calculating BestAction!");
@@ -50,7 +50,7 @@ public class MoveCalculation {
             HashSet<Cell> pseudoEvaluatedCells = new HashSet<>();
             tmp = calculate(act, us.getDirection(), us.getX(), us.getY(), us.getSpeed(), 1, pseudoEvaluatedCells);
             for (Cell cell : pseudoEvaluatedCells) {
-                cell.clearPseudoValue();
+                cell.clearTmpMoveCalcValue();
             }
             log.debug("Action eval.: " + act + "with: " + tmp);
             if (tmp < bestActionTmp) {
@@ -75,7 +75,7 @@ public class MoveCalculation {
             HashSet<Cell> pseudoEvaluatedCellsNextDepth = new HashSet<>();
             tmp = calculate(act, dir, x, y, speed, depth, pseudoEvaluatedCellsNextDepth);
             for (Cell cell : pseudoEvaluatedCellsNextDepth) {
-                cell.clearPseudoValue();
+                cell.clearTmpMoveCalcValue();
             }
             if (tmp < bestAction) {
                 bestAction = tmp;
@@ -108,11 +108,11 @@ public class MoveCalculation {
     }
 
     /**
-     * todo this.
-     * @param act   todo
-     * @param dir   todo
-     * @param speed todo
-     * @return todo
+     * Calculates the Direction and Speed from the action.
+     * @param act   the Action
+     * @param dir   the current Direction
+     * @param speed the current Speed
+     * @return the new Direction and Speed
      */
     public DirSpeed preCalculate(Action act, Direction dir, int speed) {
         switch (act) {
