@@ -21,7 +21,6 @@ public class ConnectionThread extends Thread {
     private SpeedWebSocketClient webSocket;
     private URI url;
     private boolean running;
-    private boolean callback;
 
     private ExportManager exportManager;
 
@@ -30,8 +29,8 @@ public class ConnectionThread extends Thread {
         this.exportManager = new ExportManager();
         try {
             //wss://msoll.de/spe_ed?key=
-            //url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
-            url = new URI("wss://yellowphoenix18.de:554/Joost");
+            url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
+            //url = new URI("wss://yellowphoenix18.de:554/Joost");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -41,7 +40,6 @@ public class ConnectionThread extends Thread {
     public void run() {
         log.debug("Starting Connection-Thread");
         while (running) {
-            callback = false;
             webSocket = new SpeedWebSocketClient(this, url, exportManager);
             SSLContext sslContext = null;
             try {
@@ -57,12 +55,7 @@ public class ConnectionThread extends Thread {
             SSLSocketFactory factory = sslContext.getSocketFactory();
             webSocket.setSocketFactory(factory);
             webSocket.connect();
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            while (webSocket.isOpen() || !this.callback) {
+            while (webSocket.isOpen() || !this.webSocket.isStopped()) {
                 //todo: should this be empty
             }
         }
@@ -70,10 +63,6 @@ public class ConnectionThread extends Thread {
 
     public SpeedWebSocketClient getWebSocket() {
         return this.webSocket;
-    }
-
-    public void callBack() {
-        this.callback = true;
     }
 
     /**
