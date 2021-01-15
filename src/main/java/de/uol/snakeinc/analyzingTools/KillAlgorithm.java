@@ -118,7 +118,7 @@ public abstract class KillAlgorithm {
             floodVar.floodTerminationCount--;
             floodVar.floodCache[x][y] = 1;
 
-            for(var xy : Common.generateXYAllDirections(x,y,1)) {
+            for (var xy : Common.generateXYAllDirections(x,y,1)) {
                 floodVar = flood(floodVar, xy, cells);
             }
         }

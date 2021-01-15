@@ -100,7 +100,7 @@ public class Cell extends PathCell {
     }
 
     public void setDeadEndRisk(double riskValue) {
-        if((! hardDeadly) && this.deadEndRisk < riskValue) {
+        if ((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;
         }
     }
@@ -119,6 +119,9 @@ public class Cell extends PathCell {
         return getValue()  * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk * killIncentive;
     }
 
+    /**
+     * TODO this and rename.
+     */
     public void clearPseudoValue() {
         tmpMoveCalcValue = 1;
         tmpDeadly = false;

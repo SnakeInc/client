@@ -1,16 +1,16 @@
 package de.uol.snakeinc.analyzingTools;
 
-import de.uol.snakeinc.entities.Cell;
-import de.uol.snakeinc.entities.Direction;
-import de.uol.snakeinc.entities.Player;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+//import de.uol.snakeinc.entities.Cell;
+//import de.uol.snakeinc.entities.Direction;
+//import de.uol.snakeinc.entities.Player;
+//import static org.junit.jupiter.api.Assertions.*;
+//import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+//import java.util.HashSet;
+//import java.util.Set;
 
 class KillAlgorithmTest {
-/**
+/*
     @Test
     void killAlgorithm() {
 
