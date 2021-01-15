@@ -164,8 +164,10 @@ public abstract class KillAlgorithm {
         int opX = op.getX();
         int opY = op.getY();
         List<PathCell> pathCells = new AStarSearch(cells).findPath(cells[opX][opY], cells[usX][usY]);
-        for (PathCell pathCell : pathCells) {
-            floodCache[pathCell.getX()][pathCell.getY()] = 1;
+        if (pathCells != null) {
+            for (PathCell pathCell : pathCells) {
+                floodCache[pathCell.getX()][pathCell.getY()] = 1;
+            }
         }
         return floodCache;
     }
