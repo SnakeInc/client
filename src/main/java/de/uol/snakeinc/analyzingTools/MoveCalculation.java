@@ -198,7 +198,7 @@ public class MoveCalculation {
             }
         }
         var xy = generateXY(dir, x, y, 1);
-        return result * calculateAction(Direction.LEFT, xy.getX(), xy.getY(), speed, depth + 1);
+        return result * calculateAction(dir, xy.getX(), xy.getY(), speed, depth + 1);
     }
 
     private double deathValue(int depth) {

@@ -200,16 +200,6 @@ public class EvaluationBoard {
     }
 
     /**
-     * Todo javadoc.
-     * @return todo this
-     */
-    public Action startingStrategy() {
-        //TODO: Implement this.
-        return Action.CHANGE_NOTHING;
-    }
-
-
-    /**
      * Parse board based on json-format.
      * @param json    json from websocket
      * @param players parsed players
