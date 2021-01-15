@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 class KillAlgorithmTest {
-
+/**
     @Test
     void killAlgorithm() {
 
@@ -51,8 +51,8 @@ class KillAlgorithmTest {
             Player us = new Player(1, 14, 9, Direction.UP, 2, true, "1");
             Player op = new Player(2, 17, 5, Direction.DOWN, 1, true, "2");
             Player[] players = new Player[] {op};
-            Set<Cell> evaluatedCells = KillAlgorithm.killAlgorithm(cells, players, us);
         }
 
     }
+    **/
 }
