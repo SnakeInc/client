@@ -3,7 +3,6 @@ package de.uol.snakeinc;
 import de.uol.snakeinc.connection.ConnectionThread;
 import de.uol.snakeinc.gui.Gui;
 import de.uol.snakeinc.gui.GuiThread;
-import de.uol.snakeinc.pathfinding.PathfindTester;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
