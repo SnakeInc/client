@@ -1,6 +1,7 @@
 package de.uol.snakeinc.analyzingTools;
 
 import de.uol.snakeinc.Common;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
@@ -21,7 +22,7 @@ public class MoveCalculation {
     int width;
     int height;
     BoardAnalyzer boardAnalyzer;
-    private int searchingDepth = 10;
+    private final int searchingDepth = Config.SEARCHING_DEPTH;
 
     public MoveCalculation(Cell[][] cells, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
@@ -39,8 +40,8 @@ public class MoveCalculation {
         log.info("calculating BestAction!");
         log.info("Speed = " + us.getSpeed());
         //log.info("jumping in " );
-        double bestActionTmp = 100 * deathValue(1);
-        Action bestAction = Action.CHANGE_NOTHING;
+        double bestActionTmp = Config.BEST_ACTION_MULTIPLIER * deathValue(1);
+        Action bestAction = Config.DEFAULT_BEST_ACTION;
         double tmp;
         Action[] actions =
                 MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(), 1,2, MoveOrder.SpiralForm.NoSpiral);
@@ -67,7 +68,7 @@ public class MoveCalculation {
         if (this.searchingDepth == depth) {
             return 1;
         }
-        double bestAction = 100 * deathValue(1);
+        double bestAction = Config.BEST_ACTION_MULTIPLIER * deathValue(1);
         double tmp;
         for (Action act : Action.values()) {
             HashSet<Cell> pseudoEvaluatedCellsNextDepth = new HashSet<>();
