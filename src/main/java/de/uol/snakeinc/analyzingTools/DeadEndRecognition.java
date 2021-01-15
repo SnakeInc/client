@@ -33,9 +33,6 @@ public class DeadEndRecognition {
         this.gates = new ArrayList<>();
     }
 
-    /**
-     * Search for dead ends.
-     */
     public void findDeadEnds() {
         Direction dir = us.getDirection();
         int x = us.getX();
@@ -51,10 +48,10 @@ public class DeadEndRecognition {
             recursiveRiskByDirection(x, y, depth, speed, dir);
             recursiveRiskByDirection(x, y, depth, speed, turnLeft(dir));
             recursiveRiskByDirection(x, y, depth, speed, turnRight(dir));
-            if (speed + 1 < 10) {
+            if(speed + 1 < 10) {
                 recursiveRiskByDirection(x, y, depth, speed + 1, dir);
             }
-            if (speed - 1 > 0) {
+            if(speed - 1 > 0) {
                 recursiveRiskByDirection(x, y, depth, speed - 1, dir);
             }
         }
@@ -64,12 +61,12 @@ public class DeadEndRecognition {
         boolean abort = false;
         switch (dir) {
             case UP:
-                for (int j = 1; j < speed + 1; j++) { // TODO: Abfragen immer sehr ähnlich, vereinheitlichen
+                for (int j = 1; j < speed + 1; j++) {
                     if (offBoardOrDeadly(x, y - j)) {
                         abort = true;
                         break;
                     } else {
-                        if (testForGate(x, y - j, dir, depth)) {
+                        if(testForGate(x, y - j, dir, depth)) {
                             abort = true;
                         }
                     }
@@ -84,7 +81,7 @@ public class DeadEndRecognition {
                         abort = true;
                         break;
                     } else {
-                        if (testForGate(x, y + j, dir, depth)) {
+                        if(testForGate(x, y + j, dir, depth)) {
                             abort = true;
                         }
                     }
@@ -99,7 +96,7 @@ public class DeadEndRecognition {
                         abort = true;
                         break;
                     } else {
-                        if (testForGate(x + j, y, dir, depth)) {
+                        if(testForGate(x + j, y, dir, depth)) {
                             abort = true;
                         }
                     }
@@ -114,7 +111,7 @@ public class DeadEndRecognition {
                         abort = true;
                         break;
                     } else {
-                        if (testForGate(x - j, y, dir, depth)) {
+                        if(testForGate(x - j, y, dir, depth)) {
                             abort = true;
                         }
                     }
@@ -132,20 +129,22 @@ public class DeadEndRecognition {
         switch (dir) {
             case UP:
             case DOWN:
-                if (offBoardOrDeadly(x - 1, y) && offBoardOrDeadly(x + 1, y)) {
+                if(offBoardOrDeadly(x - 1, y) && offBoardOrDeadly(x + 1, y)) {
                     gates.add(new Gate(dir, x, y));
                     gates.add(new Gate(turnLeft(turnLeft(dir)), x, y));
                     return true;
+                } else
+                    return false;
                 }
-                return false;
             case LEFT:
             case RIGHT:
-                if (offBoardOrDeadly(x, y - 1) && offBoardOrDeadly(x, y + 1)) {
+                if(offBoardOrDeadly(x, y - 1) && offBoardOrDeadly(x, y + 1)) {
                     gates.add(new Gate(dir, x, y));
                     gates.add(new Gate(turnLeft(turnLeft(dir)), x, y));
                     return true;
+                } else {
+                    return false;
                 }
-                return false;
             default:
                 throw new IllegalStateException();
         }
@@ -181,7 +180,7 @@ public class DeadEndRecognition {
             int startY = gate.getY();
             cellsTested.add(cells[startX][startY]);
             Direction dir = gate.getDir();
-            switch (dir) { // TODO: Implement default case
+            switch (dir) {
                 case UP:
                     startY--;
                 case DOWN:
@@ -191,7 +190,7 @@ public class DeadEndRecognition {
                 case RIGHT:
                     startX++;
             }
-            if (!offBoardOrDeadly(startX, startY)) {
+            if(!offBoardOrDeadly(startX, startY)) {
                 findNeighbours(startX, startY, cellsTested, cellsToTest);
             }
         });
@@ -202,16 +201,16 @@ public class DeadEndRecognition {
         int deadEndCellCount = 1;
         cellsToTest.add(cells[x][y]);
         int toTestCount = 1;
-        while (toTestCount > 0 && deadEndCellCount < (mapCellCount / 4)) {
+        while(toTestCount > 0 && deadEndCellCount < (mapCellCount / 4)) {
             Cell cell = cellsToTest.pop();
             toTestCount--;
             int xCell = cell.getY();
             int yCell = cell.getX();
-            if (!(cellsTested.contains(cell) || cellsToTest.contains(cell) || offBoardOrDeadly(xCell, yCell))) {
+            if(!(cellsTested.contains(cell) || cellsToTest.contains(cell) || offBoardOrDeadly(xCell, yCell))) {
                 cellsTested.add(cell);
                 deadEndCellCount++;
                 //test up
-                if (!offBoardOrDeadly(xCell, (yCell - 1))) {
+                if(!offBoardOrDeadly(xCell, (yCell - 1))) {
                     var nextCell = cells[xCell][(yCell - 1)];
                     if (!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
@@ -220,7 +219,7 @@ public class DeadEndRecognition {
 
                 }
                 //test right
-                if (!offBoardOrDeadly((xCell + 1), yCell)) {
+                if(!offBoardOrDeadly((xCell + 1), yCell)) {
                     var nextCell = cells[(xCell + 1)][yCell];
                     if (!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
@@ -229,7 +228,7 @@ public class DeadEndRecognition {
 
                 }
                 //test down
-                if (!offBoardOrDeadly(xCell, (yCell + 1))) {
+                if(!offBoardOrDeadly(xCell, (yCell + 1))) {
                     var nextCell = cells[xCell][(yCell + 1)];
                     if (!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
@@ -238,7 +237,7 @@ public class DeadEndRecognition {
 
                 }
                 //test left
-                if (!offBoardOrDeadly((xCell - 1), yCell)) {
+                if(!offBoardOrDeadly((xCell - 1), yCell)) {
                     var nextCell = cells[(xCell - 1)][yCell];
                     if (!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
@@ -248,7 +247,7 @@ public class DeadEndRecognition {
             }
         }
         double deadEndRisk;
-        if ((deadEndCellCount < (mapCellCount / 4)) && deadEndCellCount > 1) {
+        if((deadEndCellCount < (mapCellCount / 4)) && deadEndCellCount > 1) {
             deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
             cellsTested.forEach((testedCell) -> {
                 testedCell.setDeadEndRisk(deadEndRisk);
