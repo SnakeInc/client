@@ -1,12 +1,12 @@
 package de.uol.snakeinc.entities;
 
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.pathfinding.PathCell;
 import lombok.Getter;
 
 public class Cell extends PathCell {
 
 
-    public static final int DEATH_VALUE = 10;
     //Basic Value.
     @Getter
     private double value;
@@ -51,7 +51,7 @@ public class Cell extends PathCell {
 
     public void setId(int id) {
         this.iD = id;
-        value = DEATH_VALUE;
+        value = Config.DEATH_VALUE;
         this.hardDeadly = true;
     }
 
@@ -66,13 +66,13 @@ public class Cell extends PathCell {
     public void raiseActionRisk(int depth) {
         switch (depth) {
             case 1:
-                opponentMovementRisk = opponentMovementRisk * 1.25;
+                opponentMovementRisk = opponentMovementRisk * Config.MOVE_RISK_1;
                 break;
             case 2:
-                opponentMovementRisk = opponentMovementRisk * 1.0625;
+                opponentMovementRisk = opponentMovementRisk * Config.MOVE_RISK_2;
                 break;
             case 3:
-                opponentMovementRisk = opponentMovementRisk * 1.015625;
+                opponentMovementRisk = opponentMovementRisk * Config.MOVE_RISK_3;
                 break;
             default:
                 throw new IllegalStateException();
@@ -98,7 +98,7 @@ public class Cell extends PathCell {
         //Not calculated: Interaction between players.
         //Not calculated: Interinteraktion between players.
         if (hardDeadly || tmpDeadly) {
-            return DEATH_VALUE;
+            return Config.DEATH_VALUE;
         }
         return getValue()  * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk * killIncentive;
     }
@@ -109,7 +109,7 @@ public class Cell extends PathCell {
     }
 
     public void setTmpMoveCalcValue() {
-        tmpMoveCalcValue = DEATH_VALUE;
+        tmpMoveCalcValue = Config.DEATH_VALUE;
         tmpDeadly = true;
     }
 
@@ -122,6 +122,6 @@ public class Cell extends PathCell {
     }
 
     public void setKillIncentive() {
-        this.killIncentive = 0.8;
+        this.killIncentive = Config.KILL_INCENTIVE;
     }
 }
