@@ -35,19 +35,19 @@ public class DeadEndFlooding {
         Cell turnRight = this.getCell(cells, us, Action.TURN_RIGHT);
 
         if (speedUp != null) {
-            speedUp.setDeadEndFlooding(this.floodRound(cells, speedUp, us.getDirection(), us));
+            this.floodRound(cells, speedUp, us.getDirection(), us);
         }
         if (slowDown != null) {
-            slowDown.setDeadEndFlooding(this.floodRound(cells, slowDown, us.getDirection(), us));
+            this.floodRound(cells, slowDown, us.getDirection(), us);
         }
         if (changeNothing != null) {
-            changeNothing.setDeadEndFlooding(this.floodRound(cells, changeNothing, us.getDirection(), us));
+            this.floodRound(cells, changeNothing, us.getDirection(), us);
         }
         if (turnLeft != null) {
-            turnLeft.setDeadEndFlooding(this.floodRound(cells, turnLeft, us.getDirection().getLeft(), us));
+            this.floodRound(cells, turnLeft, us.getDirection().getLeft(), us);
         }
         if (turnRight != null) {
-            turnRight.setDeadEndFlooding(this.floodRound(cells, turnRight, us.getDirection().getRight(), us));
+            this.floodRound(cells, turnRight, us.getDirection().getRight(), us);
         }
     }
 
@@ -89,17 +89,21 @@ public class DeadEndFlooding {
         return null;
     }
 
-    private double floodRound(Cell[][] cells, Cell position, Direction direction, Player us) {
+    private void floodRound(Cell[][] cells, Cell position, Direction direction, Player us) {
         List<Cell> way = this.getCellsBetween(cells, us.getX(), position.getX(), us.getY(), position.getY());
         for (Cell cell : way) {
             cell.setHit(true);
         }
         position.setHit(true);
+        List<Cell> checkCells = new ArrayList<Cell>();
         List<Cell> neighbours = this.getPossibleNeighbours(cells, position, direction, false);
         List<Cell> newNeighbours = new ArrayList<Cell>();
-        int count = neighbours.size();
 
-        while (count < 200) {
+        int count = neighbours.size();
+        checkCells.add(position);
+        checkCells.addAll(neighbours);
+
+        while (count < 250) {
             for (Cell cell : neighbours) {
                 newNeighbours.addAll(this.getPossibleNeighbours(cells, cell, direction, true));
             }
@@ -107,6 +111,7 @@ public class DeadEndFlooding {
                 break;
             }
             count += newNeighbours.size();
+            checkCells.addAll(newNeighbours);
             neighbours = newNeighbours;
             newNeighbours = new ArrayList<Cell>();
         }
@@ -117,9 +122,15 @@ public class DeadEndFlooding {
             }
         }
 
-        double scale = ((double) count) / 200.0D;
+        double value = 1.0D;
+        if (count < 250) {
+            double scale = ((double) count) / 250.0D;
 
-        return new LinearInterpolator(2.0, 1.0).getInterpolation(scale);
+            value = new LinearInterpolator(3.0, 1.0).getInterpolation(scale);
+        }
+        for (Cell cell : checkCells) {
+            cell.setDeadEndFlooding(value);
+        }
     }
 
     private List<Cell> getPossibleNeighbours(Cell[][] cells, Cell position, Direction direction, boolean all) {

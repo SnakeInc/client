@@ -102,7 +102,7 @@ public class GUIBoard extends GridPane {
                 } else if (riskType == RiskType.DEADENDFLOODING) {
                     risks = cell.getDeadEndFlooding();
                     single = true;
-                    range = 1.0;
+                    range = 2.0;
                 } else {
                     risks = globalRisk;
                 }
