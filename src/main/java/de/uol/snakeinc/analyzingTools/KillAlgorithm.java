@@ -5,14 +5,11 @@ import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
-import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.pathfinding.PathCell;
-import de.uol.snakeinc.pathfinding.Pathfinder;
 import de.uol.snakeinc.pathfinding.astar.AStarSearch;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import net.sf.saxon.expr.Component;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +34,7 @@ public abstract class KillAlgorithm {
         for (int i = 0; i < players.length; i++) {
             if (BoardAnalyzer.inDistance(us, players[i], 4)) {
                 int[][] floodCache = new int [width][height];
-                closeCircle(floodCache, players[i], us);
+                floodCache = closeCircle(cells, floodCache, players[i], us);
                 FloodVar floodVarIf = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache);
                 FloodVar floodVarElse = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache);
                 Player op = players[i];
@@ -141,7 +138,7 @@ public abstract class KillAlgorithm {
             floodVar.floodTerminationCount--;
             floodVar.floodCache[x][y] = 1;
 
-            for (var xy : Common.generateXYAllDirections(x,y,1)) {
+            for(var xy : Common.generateXYAllDirections(x,y,1)) {
                 floodVar = flood(floodVar, xy, cells);
             }
         }
