@@ -3,6 +3,7 @@ package de.uol.snakeinc.entities;
 import de.uol.snakeinc.Config;
 import de.uol.snakeinc.pathfinding.PathCell;
 import lombok.Getter;
+import lombok.Setter;
 
 public class Cell extends PathCell implements Cloneable {
 
@@ -24,6 +25,10 @@ public class Cell extends PathCell implements Cloneable {
     //
     private double deadEndRisk;
 
+    @Getter
+    @Setter
+    private double markedForDeadEndFlooding;
+
     private boolean hardDeadly;
 
     private boolean tmpDeadly;
@@ -39,6 +44,7 @@ public class Cell extends PathCell implements Cloneable {
         areaRisk = 1;
         killIncentive = 1;
         deadEndRisk = 1;
+        markedForDeadEndFlooding = 1;
         hardDeadly = false;
         tmpDeadly = false;
     }
