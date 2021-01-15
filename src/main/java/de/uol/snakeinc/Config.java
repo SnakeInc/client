@@ -1,11 +1,15 @@
 package de.uol.snakeinc;
 
+import de.uol.snakeinc.analyzingTools.MoveOrder;
 import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Direction;
 
 public abstract class Config {
 
     public static final int ROUNDS_PER_JUMP = 6;
+    public static final int SPEED_MIN = 1;
+    public static final int SPEED_MAX = 10;
+    public static final int MINIMUM_JUMP_SPEED = 3;
 
     /********
      * Kill Algorithm
@@ -19,6 +23,7 @@ public abstract class Config {
     public static final int SEARCHING_DEPTH = 10;
     public static final double BEST_ACTION_MULTIPLIER = 100D;
     public static final Action DEFAULT_BEST_ACTION = Action.CHANGE_NOTHING;
+    public static final double DEATH_VALUE_BASE = 3D;
 
     /********
      * Opponent Moves Calculation
@@ -48,6 +53,9 @@ public abstract class Config {
      * MoveOrder
      *******/
     public static final int LEFT_RIGHT_BALANCE_MAX = 3;
+    public static final int IDEAL_MIN_SPEED = 1;
+    public static final int IDEAL_MAX_SPEED = 2;
+    public static final MoveOrder.SpiralForm IDEAL_SPIRAL_FORM = MoveOrder.SpiralForm.NoSpiral;
 
 
 
