@@ -35,7 +35,7 @@ public class DeadEndFlooding {
             }
         }
         double percentage = ((double) countFreeCells) / ((double) countCells);
-        int blocks = (int) (500 + Math.floor(200.0D * percentage));
+        //int blocks = (int) (500 + Math.floor(200.0D * percentage));
 
         if (!checkInDeadEnd(cells, cells[us.getX()][us.getY()], us.getDirection())) {
             Cell speedUp = this.getCell(cells, us, Action.SPEED_UP);
@@ -45,19 +45,19 @@ public class DeadEndFlooding {
             Cell turnRight = this.getCell(cells, us, Action.TURN_RIGHT);
 
             if (speedUp != null) {
-                this.floodRound(cells, speedUp, us.getDirection(), us, blocks);
+                this.floodRound(cells, speedUp, us.getDirection(), us, 500);
             }
             if (slowDown != null) {
-                this.floodRound(cells, slowDown, us.getDirection(), us, blocks);
+                this.floodRound(cells, slowDown, us.getDirection(), us, 500);
             }
             if (changeNothing != null) {
-                this.floodRound(cells, changeNothing, us.getDirection(), us, blocks);
+                this.floodRound(cells, changeNothing, us.getDirection(), us, 500);
             }
             if (turnLeft != null) {
-                this.floodRound(cells, turnLeft, us.getDirection().getLeft(), us, blocks);
+                this.floodRound(cells, turnLeft, us.getDirection().getLeft(), us, 500);
             }
             if (turnRight != null) {
-                this.floodRound(cells, turnRight, us.getDirection().getRight(), us, blocks);
+                this.floodRound(cells, turnRight, us.getDirection().getRight(), us, 500);
             }
         }
     }
