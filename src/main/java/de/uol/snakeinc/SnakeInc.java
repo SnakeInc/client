@@ -3,6 +3,7 @@ package de.uol.snakeinc;
 import de.uol.snakeinc.connection.ConnectionThread;
 import de.uol.snakeinc.gui.Gui;
 import de.uol.snakeinc.gui.GuiThread;
+import de.uol.snakeinc.pathfinding.PathfindTester;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -26,6 +27,8 @@ public class SnakeInc {
         String apiKey = "4J6JBGVMWOPZCSDJ273T4PLBFATDNTVSWUJ7BEB6C3EPMDXZVKDYLUUU";
         ConnectionThread thread = new ConnectionThread(apiKey);
         thread.start();
+        /*PathfindTester tester = new PathfindTester();
+        tester.testPathfinding();*/
     }
 
     public static void setGui(Gui gui) {
