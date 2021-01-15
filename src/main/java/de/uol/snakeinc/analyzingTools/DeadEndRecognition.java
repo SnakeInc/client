@@ -246,8 +246,8 @@ public class DeadEndRecognition {
         cellsToTest.add(map[x][y]);
         while(!cellsToTest.empty() && deadEndCellCount < (mapCellCount / 4)) {
             Cell cell = cellsToTest.pop();
-            int xCell = cell.getX();
-            int yCell = cell.getY();
+            int xCell = cell.getY();
+            int yCell = cell.getX();
             if(!(cellsTested.contains(cell) || cellsToTest.contains(cell) || offBoardOrDeadly(xCell, yCell))) {
                 cellsTested.add(cell);
                 deadEndCellCount++;
@@ -257,7 +257,6 @@ public class DeadEndRecognition {
                     if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
                     }
-
                 }
                 //test right
                 if(!offBoardOrDeadly((xCell + 1), yCell)) {
@@ -265,7 +264,6 @@ public class DeadEndRecognition {
                     if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
                     }
-
                 }
                 //test down
                 if(!offBoardOrDeadly(xCell, (yCell + 1))) {
@@ -273,7 +271,6 @@ public class DeadEndRecognition {
                     if(!(cellsTested.contains(cell) || cellsToTest.contains(cell))) {
                         cellsToTest.add(nextCell);
                     }
-
                 }
                 //test left
                 if(!offBoardOrDeadly((xCell - 1), yCell)) {
@@ -285,8 +282,8 @@ public class DeadEndRecognition {
             }
         }
         double deadEndRisk;
-        if((deadEndCellCount < (mapCellCount / 4)) && deadEndCellCount > 1) {
-                deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
+        if((deadEndCellCount < (mapCellCount / 4))) {
+            deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
             cellsTested.forEach((testedCell) -> {
                 cells[testedCell.getY()][testedCell.getX()].setDeadEndRisk(deadEndRisk);
             });

@@ -2,8 +2,10 @@ package de.uol.snakeinc.entities;
 
 import com.google.gson.JsonObject;
 import de.uol.snakeinc.Common;
+import de.uol.snakeinc.SnakeInc;
 import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
 import de.uol.snakeinc.analyzingTools.MoveCalculation;
+import de.uol.snakeinc.gui.Gui;
 import lombok.CustomLog;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -86,17 +88,25 @@ public class EvaluationBoard {
      * @param cells cells
      */
     private void logCurrentEvaluation (Cell[][] cells) {
-        StringBuilder str = new StringBuilder();
-        DecimalFormat f = new DecimalFormat("#,##0.00");
-        str.append("\n");
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                str.append(f.format(cells[i][j].getRisks())).append("\t");
+        if (SnakeInc.hasGui()) {
+            Gui gui = SnakeInc.getGui();
+            if (!gui.getGuiBoard().isWidthAndHeight(cells.length, cells[0].length)) {
+                gui.getGuiBoard().initializeCells(cells.length, cells[0].length);
             }
+            gui.getGuiBoard().updateBoard(cells, this.us);
+        } else {
+            StringBuilder str = new StringBuilder();
+            DecimalFormat f = new DecimalFormat("#,##0.00");
             str.append("\n");
-        }
+            for (int i = 0; i < cells.length; i++) {
+                for (int j = 0; j < cells[0].length; j++) {
+                    str.append(f.format(cells[i][j].getRisks())).append("\t");
+                }
+                str.append("\n");
+            }
 
-        log.debug(str.toString());
+            log.debug(str.toString());
+        }
     }
 
     /**

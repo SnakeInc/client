@@ -153,6 +153,8 @@ public class Cell extends PathCell implements Cloneable {
     }
 
     public void setNoneDeadly() {
-
+        value = 1;
+        tmpDeadly = false;
+        hardDeadly = false;
     }
 }
