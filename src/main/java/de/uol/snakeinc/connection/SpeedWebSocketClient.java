@@ -28,6 +28,7 @@ public class SpeedWebSocketClient extends WebSocketClient {
     private Game game;
     private String serverId;
     private boolean initialMessage = true;
+    private boolean stopped = false;
 
     private ExportManager exportManager;
 
@@ -42,7 +43,6 @@ public class SpeedWebSocketClient extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
         log.info("Connection established");
-        this.thread.callBack();
         this.game = new Game(serverId);
         this.initialMessage = true;
     }
@@ -85,14 +85,17 @@ public class SpeedWebSocketClient extends WebSocketClient {
                 this.thread.stopConnection();
             }
         }
-        this.thread.callBack();
+        this.stopped = true;
     }
 
     @Override
     public void onError(Exception exception) {
         log.info("Got an exception: " + exception.getMessage());
         exception.printStackTrace();
-        this.thread.callBack();
+    }
+
+    public boolean isStopped() {
+        return this.stopped;
     }
 
     /**

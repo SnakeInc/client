@@ -2,6 +2,7 @@ package de.uol.snakeinc.entities;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import de.uol.snakeinc.Config;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -48,12 +49,12 @@ public class Player {
     public void updateLeftRightBalance(Action action) {
         switch (action) {
             case TURN_LEFT:
-                if (leftRightBalance > -3) {
+                if (leftRightBalance > -Config.LEFT_RIGHT_BALANCE_MAX) {
                     leftRightBalance--;
                 }
                 return;
             case TURN_RIGHT:
-                if (leftRightBalance < 3) {
+                if (leftRightBalance < Config.LEFT_RIGHT_BALANCE_MAX) {
                     leftRightBalance++;
                 }
                 return;

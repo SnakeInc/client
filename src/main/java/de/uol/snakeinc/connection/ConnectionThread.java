@@ -1,7 +1,7 @@
 package de.uol.snakeinc.connection;
 
+import de.uol.snakeinc.SnakeInc;
 import de.uol.snakeinc.export.ExportManager;
-import lombok.CustomLog;
 import lombok.extern.log4j.Log4j2;
 
 import javax.net.ssl.SSLContext;
@@ -21,13 +21,20 @@ public class ConnectionThread extends Thread {
     private SpeedWebSocketClient webSocket;
     private URI url;
     private boolean running;
-    private boolean callback;
 
     private ExportManager exportManager;
 
     public ConnectionThread(String apiKey) {
         this.running = true;
         this.exportManager = new ExportManager();
+        while (!SnakeInc.isGuiReady()) {
+            try {
+                log.info("Waiting for GUI");
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             //wss://msoll.de/spe_ed?key=
             //url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
@@ -41,7 +48,6 @@ public class ConnectionThread extends Thread {
     public void run() {
         log.debug("Starting Connection-Thread");
         while (running) {
-            callback = false;
             webSocket = new SpeedWebSocketClient(this, url, exportManager);
             SSLContext sslContext = null;
             try {
@@ -57,23 +63,10 @@ public class ConnectionThread extends Thread {
             SSLSocketFactory factory = sslContext.getSocketFactory();
             webSocket.setSocketFactory(factory);
             webSocket.connect();
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            while (webSocket.isOpen() || !this.callback) {
+            while (webSocket.isOpen() || !this.webSocket.isStopped()) {
                 //todo: should this be empty
             }
         }
-    }
-
-    public SpeedWebSocketClient getWebSocket() {
-        return this.webSocket;
-    }
-
-    public void callBack() {
-        this.callback = true;
     }
 
     /**

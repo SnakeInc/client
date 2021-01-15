@@ -1,6 +1,8 @@
 package de.uol.snakeinc.analyzingTools;
 
 import de.uol.snakeinc.Common;
+import de.uol.snakeinc.Config;
+import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
 import de.uol.snakeinc.entities.Cell;
@@ -19,8 +21,7 @@ import java.util.Set;
 public abstract class KillAlgorithm {
 
 
-    public static final int initialAttackDistance = 2;
-    public static final int initialFloodTerminationCount = 100;
+
     /**
      * Sets incentives if another Player can be attacked.
      * @param cells     cells
@@ -36,9 +37,9 @@ public abstract class KillAlgorithm {
         for (int i = 0; i < players.length; i++) {
             if (BoardAnalyzer.inDistance(us, players[i], 4)) {
                 int[][] floodCache = new int [width][height];
-                floodCache = closeCircle(cells, floodCache, players[i], us);
-                FloodVar floodVarIf = new FloodVar(initialFloodTerminationCount, floodCache);
-                FloodVar floodVarElse = new FloodVar(initialFloodTerminationCount, floodCache);
+                closeCircle(floodCache, players[i], us);
+                FloodVar floodVarIf = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache);
+                FloodVar floodVarElse = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache);
                 Player op = players[i];
                 int x = players[i].getX();
                 int y = players[i].getY();
@@ -140,7 +141,7 @@ public abstract class KillAlgorithm {
             floodVar.floodTerminationCount--;
             floodVar.floodCache[x][y] = 1;
 
-            for(var xy : Common.generateXYAllDirections(x,y,1)) {
+            for (var xy : Common.generateXYAllDirections(x,y,1)) {
                 floodVar = flood(floodVar, xy, cells);
             }
         }
@@ -187,7 +188,7 @@ public abstract class KillAlgorithm {
                                                 Direction opDirection, Direction attackDirection, int width, int height) {
         int x = player.getX();
         int y = player.getY();
-        int attackDistance = player.getSpeed() * initialAttackDistance;
+        int attackDistance = player.getSpeed() * Config.INITIAL_ATTACK_DISTANCE;
         switch (opDirection) {
             case UP:
             case DOWN:

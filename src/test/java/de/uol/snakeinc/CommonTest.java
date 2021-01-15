@@ -1,10 +1,8 @@
 package de.uol.snakeinc;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import de.uol.snakeinc.entities.Cell;
 import net.jqwik.api.ForAll;
-import net.jqwik.api.GenerationMode;
 import net.jqwik.api.Property;
 import net.jqwik.api.constraints.IntRange;
 
@@ -19,9 +17,9 @@ class CommonTest {
          * Swap values, so that CellsX/Y is alwas smaller than x, y;
          */
         if (cellsX > x) {
-                var swap = cellsX;
-                cellsX = x;
-                x = swap;
+            var swap = cellsX;
+            cellsX = x;
+            x = swap;
         }
 
         if (cellsY > y) {

@@ -1,5 +1,6 @@
 package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Player;
 import lombok.Getter;
@@ -61,7 +62,7 @@ public class BoardAnalyzer {
      * @return Todo this
      */
     public boolean checkForJumping(int roundsInFuture) {
-        return (round + roundsInFuture) % 6 == 0;
+        return (round + roundsInFuture) % Config.ROUNDS_PER_JUMP == 0;
     }
 
     /**
