@@ -40,6 +40,8 @@ public class Cell extends PathCell implements DeadCell {
 
     private double deadEndFlooding;
 
+    private double deadEndJumping;
+
     @Getter
     private int iD;
 
@@ -57,6 +59,7 @@ public class Cell extends PathCell implements DeadCell {
         killIncentive = 1;
         deadEndRisk = 1;
         deadEndFlooding = 1;
+        deadEndJumping = 1;
         hardDeadly = false;
         tmpDeadly = false;
         flooded = false;
@@ -125,6 +128,14 @@ public class Cell extends PathCell implements DeadCell {
         return this.deadEndFlooding;
     }
 
+    public void setDeadEndJumping(double deadEndJumping) {
+        this.deadEndJumping = deadEndJumping;
+    }
+
+    public double getDeadEndJumping() {
+        return this.deadEndJumping;
+    }
+
     public void setDeadEndRisk(double riskValue) {
         if ((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;
@@ -145,7 +156,8 @@ public class Cell extends PathCell implements DeadCell {
             deadEndRisk *
             killIncentive *
             pathHighlight *
-            deadEndFlooding;
+            deadEndFlooding *
+            deadEndJumping;
     }
 
     /**

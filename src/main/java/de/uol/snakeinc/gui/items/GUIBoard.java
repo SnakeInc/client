@@ -77,6 +77,7 @@ public class GUIBoard extends GridPane {
                 double globalRisk = cell.getRisks();
                 double risks;
                 double range = 0.2;
+                double defaultValue = 1.0;
                 boolean single = false;
                 boolean positive = false;
                 if (riskType == RiskType.SECTION) {
@@ -102,7 +103,11 @@ public class GUIBoard extends GridPane {
                 } else if (riskType == RiskType.DEADENDFLOODING) {
                     risks = cell.getDeadEndFlooding();
                     single = true;
-                    range = 2.0;
+                    range = 1.5;
+                } else if (riskType == RiskType.DEADENDJUMPING) {
+                    risks = cell.getDeadEndJumping();
+                    single = true;
+                    positive = true;
                 } else {
                     risks = globalRisk;
                 }
@@ -111,7 +116,7 @@ public class GUIBoard extends GridPane {
                     ((GUICell) node).setEnemy(cell.getID() == us.getId());
                     ((GUICell) node).setOpacity(1.0D);
                 } else {
-                    ((GUICell) node).setOption(color, risks, single, positive, range);
+                    ((GUICell) node).setOption(color, risks, single, positive, range, defaultValue);
                 }
                 if (riskType == RiskType.DEADENDFLOODING_FLOODED_CELLS) {
                     if (cell.flooded()) {
