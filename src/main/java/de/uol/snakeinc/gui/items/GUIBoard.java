@@ -91,6 +91,9 @@ public class GUIBoard extends GridPane {
                 } else if (riskType == RiskType.OPPONENTMOVERISK) {
                     risks = cell.getOpponentMovementRisk();
                     single = true;
+                } else if (riskType == RiskType.PATHHIGHLIGHT) {
+                    risks = cell.getPathHighlight();
+                    single = true;
                 } else {
                     risks = globalRisk;
                 }
