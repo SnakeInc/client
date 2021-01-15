@@ -199,7 +199,7 @@ public class MoveCalculation {
     }
 
     private double deathValue(int depth) {
-        return Cell.DEATH_VALUE * Math.pow(3,(this.searchingDepth - depth) + 1);
+        return Cell.DEATH_VALUE * Math.pow(8,(this.searchingDepth - depth) + 1);
     }
 
     private double evaluateResult(HashSet<Cell> pseudEvaluatedCells, double result, Cell cell) {
