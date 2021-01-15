@@ -23,4 +23,14 @@ public abstract class Config {
      *******/
     public static final int OPPONENT_MOVES_DEPTH = 3;
 
+    /********
+     * Section Calculator
+     *******/
+    public static final int RESOLUTION = 10;
+    public static final double DIVISOR = 10D;
+    public static final double CALCULATE_MIN = 100D;
+    public static final double CALCULATE_MAX = 0D;
+    public static final double AREA_RISK_INTERPOLATION_MAX = 1.2D;
+    public static final double AREA_RISK_INTERPOLATION_MIN = 1.0D;
+
 }
