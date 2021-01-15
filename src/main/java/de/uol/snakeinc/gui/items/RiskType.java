@@ -6,6 +6,6 @@ public enum RiskType {
     SECTION,
     DEADEND,
     KILLALGORITHM,
-    OPPONENTMOVERISK;
+    OPPONENTMOVERISK
 
 }

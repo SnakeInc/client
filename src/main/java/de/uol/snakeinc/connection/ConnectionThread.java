@@ -2,7 +2,6 @@ package de.uol.snakeinc.connection;
 
 import de.uol.snakeinc.SnakeInc;
 import de.uol.snakeinc.export.ExportManager;
-import lombok.CustomLog;
 import lombok.extern.log4j.Log4j2;
 
 import javax.net.ssl.SSLContext;
@@ -38,8 +37,8 @@ public class ConnectionThread extends Thread {
         }
         try {
             //wss://msoll.de/spe_ed?key=
-            url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
-            //url = new URI("wss://yellowphoenix18.de:554/Joost");
+            //url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
+            url = new URI("wss://yellowphoenix18.de:554/Joost");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

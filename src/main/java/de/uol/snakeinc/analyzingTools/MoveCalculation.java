@@ -12,7 +12,8 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.HashSet;
 
-import static de.uol.snakeinc.Common.*;
+import static de.uol.snakeinc.Common.generateXY;
+import static de.uol.snakeinc.Common.offBoardOrDeadly;
 
 @Log4j2
 public class MoveCalculation {
@@ -43,8 +44,8 @@ public class MoveCalculation {
         double bestActionTmp = Config.BEST_ACTION_MULTIPLIER * deathValue(1);
         Action bestAction = Config.DEFAULT_BEST_ACTION;
         double tmp;
-        Action[] actions =
-                MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(), Config.IDEAL_MIN_SPEED, Config.IDEAL_MAX_SPEED, Config.IDEAL_SPIRAL_FORM);
+        Action[] actions = MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(),
+                Config.IDEAL_MIN_SPEED, Config.IDEAL_MAX_SPEED, Config.IDEAL_SPIRAL_FORM);
         for (Action act : actions) {
             HashSet<Cell> pseudoEvaluatedCells = new HashSet<>();
             tmp = calculate(act, us.getDirection(), us.getX(), us.getY(), us.getSpeed(), 1, pseudoEvaluatedCells);
@@ -93,7 +94,8 @@ public class MoveCalculation {
         if (speed < Config.SPEED_MIN || speed > Config.SPEED_MAX) {
             return deathValue(depth);
         } else {
-            return calculateDirection(dir, x, y, speed, depth, pseudoEvaluatedCells, boardAnalyzer.checkForJumping(depth), deathValue(depth));
+            return calculateDirection(dir, x, y, speed, depth, pseudoEvaluatedCells,
+                    boardAnalyzer.checkForJumping(depth), deathValue(depth));
         }
     }
 
@@ -161,8 +163,8 @@ public class MoveCalculation {
         }
     }
 
-    private double calculateDirection(Direction dir, int x, int y, int speed,
-                                      int depth, HashSet<Cell> pseudEvaluatedCells, boolean jumping, double deathValue) {
+    private double calculateDirection(Direction dir, int x, int y, int speed, int depth,
+                                      HashSet<Cell> pseudEvaluatedCells, boolean jumping, double deathValue) {
         double result = 1;
 
         if (jumping && speed >= Config.MINIMUM_JUMP_SPEED) {

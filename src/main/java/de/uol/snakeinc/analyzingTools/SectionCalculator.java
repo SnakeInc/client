@@ -3,7 +3,6 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.math.interpolation.LinearInterpolator;
-import lombok.CustomLog;
 import lombok.extern.log4j.Log4j2;
 
 /**

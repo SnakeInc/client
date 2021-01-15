@@ -40,7 +40,7 @@ public class Player {
         this.active = active;
         this.name = name;
         this.leftRightBalance = 0;
-     }
+    }
 
     /**
      * updates the left right balance of the player.

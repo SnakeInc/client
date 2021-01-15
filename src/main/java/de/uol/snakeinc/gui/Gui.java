@@ -4,23 +4,14 @@ import de.uol.snakeinc.SnakeInc;
 import de.uol.snakeinc.gui.items.GUIBoard;
 import de.uol.snakeinc.gui.items.RiskType;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.List;
 
 public class Gui extends Application {
 
@@ -28,37 +19,16 @@ public class Gui extends Application {
     Boolean isActive = false;
     Pane roundsPane;
     GUIBoard board;
-    ObservableList<String> options =
-        FXCollections.observableArrayList(
-            "Option 1",
-            "Option 2",
-            "Option 3"
-        );
     ComboBox riskType = new ComboBox(FXCollections.observableArrayList(
         RiskType.values()
     ));
 
-    static List<Color> colors = List.of(
-        Color.YELLOW,
-        Color.RED,
-        Color.BLUE,
-        Color.ORANGE,
-        Color.GREEN,
-        Color.LIME,
-        Color.PURPLE,
-        Color.WHITE
-    );
-
+    /**
+     * todo.
+     */
     public void initialize() {
         root.setPadding(new Insets(20, 20, 20, 20));
         root.setSpacing(80);
-        ObservableList<String> speedChoices =
-            FXCollections.observableArrayList(
-                "100",
-                "200",
-                "1000",
-                "2000"
-            );
         roundsPane = new Pane();
         roundsPane.setMinHeight(50);
         roundsPane.setMinWidth(100);
@@ -70,29 +40,6 @@ public class Gui extends Application {
     public GUIBoard getGuiBoard() {
         return this.board;
     }
-
-    public void setUpBoard(File file) {
-        if (isActive) {
-            root.getChildren().remove(board);
-        }
-        board = new GUIBoard();
-        root.getChildren().add(board);
-    }
-
-    public void initializeRoundsField() {
-        if (isActive) {
-            roundsPane.getChildren().clear();
-        }
-        Text rounds = new Text();
-        board.actualRoundProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                rounds.setText("Runde: " + board.getActualRound());
-            }
-        });
-        roundsPane.getChildren().add(rounds);
-    }
-
 
     @Override
     public void start(Stage stage) {
@@ -113,13 +60,6 @@ public class Gui extends Application {
         SnakeInc.setGui(this);
     }
 
-    public static Color colorBag(int index) {
-
-        if (index <= 0) {
-            return Color.BLACK;
-        }
-        return colors.get(index);
-    }
 
     public static void main(String[] args) {
         launch(args);

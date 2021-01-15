@@ -87,6 +87,7 @@ public class EvaluationBoard {
     /**
      * logs the compute values for each cell.
      * @param cells cells
+     * @param active todo
      */
     private void logCurrentEvaluation (Cell[][] cells, boolean active) {
         if (SnakeInc.hasGui()) {
