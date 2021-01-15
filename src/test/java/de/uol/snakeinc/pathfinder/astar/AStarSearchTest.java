@@ -3,7 +3,6 @@ package de.uol.snakeinc.pathfinder.astar;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.pathfinding.PathCell;
 import de.uol.snakeinc.pathfinding.astar.AStarSearch;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
