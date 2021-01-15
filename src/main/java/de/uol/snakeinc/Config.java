@@ -44,5 +44,11 @@ public abstract class Config {
     public static final double MOVE_RISK_3 = 1.015625D;
     public static final double KILL_INCENTIVE = 0.8D;
 
+    /********
+     * MoveOrder
+     *******/
+    public static final int LEFT_RIGHT_BALANCE_MAX = 3;
+
+
 
 }
