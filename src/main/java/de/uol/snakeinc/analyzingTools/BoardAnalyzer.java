@@ -37,7 +37,7 @@ public class BoardAnalyzer {
     public void analyze(Cell[][] cells, Player[] players, Player us) {
         TimeTracker timeTracker = new TimeTracker();
         round++;
-        sectionCalculator.calculate(cells);
+        sectionCalculator.calculate(cells, us);
         timeTracker.logTime("Section-Calculation");
         OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
         evaluatedCells = calc.evaluate(cells, players, us);

@@ -26,6 +26,10 @@ public class Cell extends PathCell {
     @Getter @Setter
     private double areaRisk;
 
+    //Highlighted path
+    @Getter
+    private double pathHighlight;
+
     @Getter
     private double deadEndRisk;
 
@@ -42,6 +46,7 @@ public class Cell extends PathCell {
         opponentMovementRisk = 1;
         tmpMoveCalcValue = 1;
         areaRisk = 1;
+        pathHighlight = 1;
         killIncentive = 1;
         deadEndRisk = 1;
         hardDeadly = false;
@@ -50,7 +55,7 @@ public class Cell extends PathCell {
 
     @Override
     public boolean isInUse() {
-        return value != 1;
+        return iD != 0;
     }
 
     public void setId(int id) {
@@ -83,6 +88,10 @@ public class Cell extends PathCell {
         }
     }
 
+    public void setPathHighlight(double risk) {
+        this.pathHighlight = risk;
+    }
+
     public void setDeadEndRisk(double riskValue) {
         if ((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;
@@ -96,7 +105,13 @@ public class Cell extends PathCell {
         if (hardDeadly || tmpDeadly) {
             return Config.DEATH_VALUE;
         }
-        return getValue()  * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk * killIncentive;
+        return getValue() *
+            opponentMovementRisk *
+            tmpMoveCalcValue *
+            areaRisk *
+            deadEndRisk *
+            killIncentive *
+            pathHighlight;
     }
 
     /**

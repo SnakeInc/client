@@ -38,6 +38,8 @@ public abstract class Config {
     public static final double CALCULATE_MAX = 0D;
     public static final double AREA_RISK_INTERPOLATION_MAX = 1.2D;
     public static final double AREA_RISK_INTERPOLATION_MIN = 1.0D;
+    public static final double PATH_HIGHLIGHT_INTERPOLATION_MAX = 1.0D;
+    public static final double PATH_HIGHLIGHT_INTERPOLATION_MIN = 0.8D;
 
     /********
      * Cell.
