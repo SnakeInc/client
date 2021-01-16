@@ -31,49 +31,51 @@ public abstract class KillAlgorithm {
             if (BoardAnalyzer.inDistance(us, players[i], 4)) {
                 int[][] floodCache = new int [width][height];
                 floodCache = connectPlayersFillFloodCache(cells, floodCache, players[i], us);
-                FloodVar floodVarIf = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache.clone());
-                FloodVar floodVarElse = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache.clone());
-                Player op = players[i];
-                int x = players[i].getX();
-                int y = players[i].getY();
-                Direction dir = players[i].getDirection();
-                boolean boolIf = false;
-                boolean boolElse = false;
-                switch (dir) {
-                    case DOWN:
-                        boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf)
-                            || checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
-                        boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse)
-                            || checkForDeadEnd(x + 1, y - 1, cells, floodVarElse);
-                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
-                            floodVarIf, floodVarElse, evaluatedCells);
-                        break;
-                    case UP:
-                        boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf)
-                            || checkForDeadEnd(x - 1, y + 1, cells, floodVarIf);
-                        boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse)
-                            || checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
-                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
-                            floodVarIf, floodVarElse, evaluatedCells);
-                        break;
-                    case RIGHT:
-                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf)
-                            || checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
-                        boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse)
-                            || checkForDeadEnd(x - 1, y + 1, cells, floodVarElse);
-                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
-                            floodVarIf, floodVarElse, evaluatedCells);
-                        break;
-                    case LEFT:
-                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf)
-                            || checkForDeadEnd(x + 1, y - 1, cells, floodVarIf);
-                        boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse)
-                            || checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
-                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
-                            floodVarIf, floodVarElse, evaluatedCells);
-                        break;
-                    default:
-                        throw new IllegalStateException();
+                if (floodCache != null) {
+                    FloodVar floodVarIf = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache.clone());
+                    FloodVar floodVarElse = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache.clone());
+                    Player op = players[i];
+                    int x = players[i].getX();
+                    int y = players[i].getY();
+                    Direction dir = players[i].getDirection();
+                    boolean boolIf = false;
+                    boolean boolElse = false;
+                    switch (dir) {
+                        case DOWN:
+                            boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf)
+                                && checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
+                            boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse)
+                                && checkForDeadEnd(x + 1, y - 1, cells, floodVarElse);
+                            checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
+                                floodVarIf, floodVarElse, evaluatedCells);
+                            break;
+                        case UP:
+                            boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf)
+                                && checkForDeadEnd(x - 1, y + 1, cells, floodVarIf);
+                            boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse)
+                                && checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
+                            checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
+                                floodVarIf, floodVarElse, evaluatedCells);
+                            break;
+                        case RIGHT:
+                            boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf)
+                                && checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
+                            boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse)
+                                && checkForDeadEnd(x - 1, y + 1, cells, floodVarElse);
+                            checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
+                                floodVarIf, floodVarElse, evaluatedCells);
+                            break;
+                        case LEFT:
+                            boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf)
+                                && checkForDeadEnd(x + 1, y - 1, cells, floodVarIf);
+                            boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse)
+                                && checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
+                            checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
+                                floodVarIf, floodVarElse, evaluatedCells);
+                            break;
+                        default:
+                            throw new IllegalStateException();
+                    }
                 }
             }
         }
@@ -140,9 +142,9 @@ public abstract class KillAlgorithm {
     private static boolean checkForDeadEnd(int x, int y, Cell[][] cells, FloodVar floodVar) {
         if (!Common.offBoardOrDeadly(x, y, cells) && floodVar.floodCache[x][y] != 1) {
             int terminationCount = flood(floodVar, x, y, cells).getFloodTerminationCount();
-            return terminationCount > 0 && terminationCount < Config.INITIAL_FLOOD_TERMINATION_COUNT ;
+            return terminationCount > 0;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -203,6 +205,8 @@ public abstract class KillAlgorithm {
             for (PathCell pathCell : pathCells) {
                 floodCache[pathCell.getX()][pathCell.getY()] = 1;
             }
+        } else {
+            return null;
         }
         return floodCache;
     }
