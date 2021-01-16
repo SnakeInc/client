@@ -210,7 +210,7 @@ public class SectionCalculator {
                 }
             }
             percentageIterations.put(iteration, percentagesGrid);
-            divisionAmountSquare *= 4;
+            divisionAmountSquare *= 2 * 2;
             divisionAmount *= 2;
             localResolution /= 2;
         }
