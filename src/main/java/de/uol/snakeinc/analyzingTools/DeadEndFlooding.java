@@ -22,22 +22,16 @@ public class DeadEndFlooding {
     }
 
     /**
-     * Todo.
-     * @param cells TODO
-     * @param us todo
+     * Calculate Field-Value for sections and path-highlight.
+     * @param cells board-cells
+     * @param us player-object for own position-detection
      */
     public void calculate(Cell[][] cells, Player us) {
-        int countFreeCells = 0;
-        int countCells = 0;
         for (int x = 0; x < this.width; x++) {
             for (int y = 0; y < this.height; y++) {
                 cells[x][y].setDeadEndFloodingReset(1.0);
                 cells[x][y].setDeadEndJumping(1.0);
                 cells[x][y].setFlooded(false);
-                countCells++;
-                if (cells[x][y].isInUse()) {
-                    countFreeCells++;
-                }
             }
         }
 

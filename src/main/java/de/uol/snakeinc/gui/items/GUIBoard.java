@@ -34,9 +34,9 @@ public class GUIBoard extends GridPane {
     }
 
     /**
-     * todo.
-     * @param width todo
-     * @param height todo
+     * Initialize GUI-Cell grid for game.
+     * @param width width of game
+     * @param height height of game
      */
     public void initializeCells(int width, int height) {
         Platform.runLater(() -> {
@@ -58,9 +58,9 @@ public class GUIBoard extends GridPane {
 
 
     /**
-     * todo.
-     * @param cells todo
-     * @param us todo
+     * Update gui-board with game-board.
+     * @param cells evaluated risk game-cells.
+     * @param us player-object for our position
      */
     public void updateBoard(Cell[][] cells, Player us) {
         Platform.runLater(() -> {
