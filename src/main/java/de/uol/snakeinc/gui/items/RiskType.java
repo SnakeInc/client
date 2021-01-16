@@ -5,7 +5,6 @@ public enum RiskType {
     GLOBAL,
     SECTION,
     DEADEND,
-    MARKEDFORFLOODING,
     KILLALGORITHM,
     OPPONENTMOVERISK
 

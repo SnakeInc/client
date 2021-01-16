@@ -9,6 +9,7 @@ public class Cell extends PathCell implements Cloneable {
 
 
     //Basic Value.
+    @Getter
     private double value;
 
     //Value that is calculated temporarily
@@ -28,10 +29,6 @@ public class Cell extends PathCell implements Cloneable {
     @Getter
     private double deadEndRisk;
 
-    @Getter
-    @Setter
-    private double markedForDeadEndFlooding;
-
     private boolean hardDeadly;
 
     private boolean tmpDeadly;
@@ -47,7 +44,6 @@ public class Cell extends PathCell implements Cloneable {
         areaRisk = 1;
         killIncentive = 1;
         deadEndRisk = 1;
-        markedForDeadEndFlooding = 1;
         hardDeadly = false;
         tmpDeadly = false;
     }

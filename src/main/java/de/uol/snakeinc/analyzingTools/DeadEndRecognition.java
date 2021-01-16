@@ -2,6 +2,7 @@ package de.uol.snakeinc.analyzingTools;
 
 import de.uol.snakeinc.Common;
 import static de.uol.snakeinc.Common.generateAllXYUpToFromOne;
+import static de.uol.snakeinc.Common.generateXY;
 import static de.uol.snakeinc.Common.turnLeft;
 import static de.uol.snakeinc.Common.turnRight;
 import de.uol.snakeinc.entities.Cell;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Log4j2
 public class DeadEndRecognition {
@@ -43,21 +45,36 @@ public class DeadEndRecognition {
         int usY = us.getY();
         int usSpeed = us.getSpeed();
         testPossibleMoves(usDir, usX, usY, usSpeed);
+        testRandom(usDir, usX, usY);
+    }
+
+    private void testRandom(Direction direction, int x, int y) {
+        Common.Tuple t1 = generateXY(direction, x, y, 6);
+        if(!offBoardOrDeadly(t1.getX(), t1.getY())) {
+            findNeighbours(t1.getX(), t1.getY(), historyMap.getMap());
+        }
+        Common.Tuple t2 = generateXY(turnLeft(direction), x, y, 6);
+        if(!offBoardOrDeadly(t2.getX(), t2.getY())) {
+            findNeighbours(t2.getX(), t2.getY(), historyMap.getMap());
+        }
+        Common.Tuple t3 = generateXY(turnLeft(turnLeft(direction)), x, y, 6);
+        if(!offBoardOrDeadly(t3.getX(), t3.getY())) {
+            findNeighbours(t3.getX(), t3.getY(), historyMap.getMap());
+        }
+        Common.Tuple t4 = generateXY(turnRight(direction), x, y, 6);
+        if(!offBoardOrDeadly(t4.getX(), t4.getY())) {
+            findNeighbours(t4.getX(), t4.getY(), historyMap.getMap());
+        }
     }
 
     private void testPossibleMoves(Direction direction, int x, int y, int speed) {
-        System.out.println("Test change nothing");
         testMove(direction, x, y, speed);
-        System.out.println("Test left");
         testMove(turnLeft(direction), x, y, speed);
-        System.out.println("Test right");
         testMove(turnRight(direction), x, y, speed);
         if(speed > 1) {
-            System.out.println("Test -speed");
             testMove(direction, x, y, speed - 1);
         }
         if(speed < 9) {
-            System.out.println("Test +speed");
             testMove(direction, x, y, speed + 1);
         }
     }
@@ -67,7 +84,6 @@ public class DeadEndRecognition {
         for(Common.Tuple t: tuple) {
             if(isNotOffBoard(t.getX(), t.getY())) {
                 historyMap.setDeadly(t.getX(), t.getY());
-                System.out.println("Cell ( " + t.getX() + ", " + t.getY() + " ) is now tmp deadly!");
             }
         }
         testRoundOfLine(tuple, direction);
@@ -77,17 +93,19 @@ public class DeadEndRecognition {
     private void testRoundOfLine(Common.Tuple[] tuplesInLine, Direction direction) {
         ArrayList<Common.Tuple> toList = new ArrayList<>(Arrays.asList(tuplesInLine));
         ArrayList<Common.Tuple> tuples = getLineOffPosition(toList, direction);
-        boolean alreadyChecked = false;
-        for (Common.Tuple neighbour : tuples) {
-            if (isNotOffBoard(neighbour.getX(), neighbour.getY()) && !alreadyChecked) {
+        AtomicBoolean alreadyChecked = new AtomicBoolean(false);
+        tuples.forEach((neighbour) -> {
+            if (isNotOffBoard(neighbour.getX(), neighbour.getY())) {
                 if(isNotDeadly(neighbour.getX(), neighbour.getY())) {
-                    findNeighbours(neighbour.getX(), neighbour.getY(), historyMap.getMap());
-                    alreadyChecked = true;
+                    if(!alreadyChecked.get()) {
+                        testRoundOfCell(neighbour.getX(), neighbour.getY());
+                        alreadyChecked.set(true);
+                    }
                 } else {
-                    alreadyChecked = false;
+                    alreadyChecked.set(false);
                 }
             }
-        }
+        });
     }
 
     private ArrayList<Common.Tuple> getLineOffPosition(ArrayList<Common.Tuple> tuples, Direction direction) {
@@ -143,12 +161,6 @@ public class DeadEndRecognition {
             default:
                 throw new IllegalStateException();
         }
-        //debug
-        StringBuffer s = new StringBuffer();
-        tuplesToReturn.forEach((t) -> {
-            s.append("( " + t.getX() + ", " + t.getY() + " )");
-        });
-        System.out.println(s.toString());
         return tuplesToReturn;
     }
 
@@ -157,12 +169,12 @@ public class DeadEndRecognition {
             boolean areaAlreadyTested = false;
             for(int i = 0; i <= 7; i++) {
                 Common.Tuple tuple = getRoundOfPosition(x, y, i);
-                if(isNotOffBoard(tuple.getX(), tuple.getY()) && !areaAlreadyTested) {
+                if(isNotOffBoard(tuple.getX(), tuple.getY())) {
                     if(isNotDeadly(tuple.getX(), tuple.getY())) {
-                        findNeighbours(tuple.getX(), tuple.getY(), historyMap.getMap());
-                        //debug
-                        cells[tuple.getX()][tuple.getY()].setMarkedForDeadEndFlooding(2.0);
-                        areaAlreadyTested = true;
+                        if(!areaAlreadyTested) {
+                            findNeighbours(tuple.getX(), tuple.getY(), historyMap.getMap());
+                            areaAlreadyTested = true;
+                        }
                     } else {
                         areaAlreadyTested = false;
                     }
@@ -286,7 +298,7 @@ public class DeadEndRecognition {
         int deadEndCellCount = 1;
         cellsToTest.add(map[x][y]);
         int toTestCount = 1;
-        while(toTestCount > 0 && deadEndCellCount < 300) {
+        while(toTestCount > 0 && deadEndCellCount < 775) {
             Cell cell = cellsToTest.pop();
             toTestCount--;
             int xCell = cell.getX();
@@ -321,8 +333,8 @@ public class DeadEndRecognition {
             }
         }
         double deadEndRisk;
-        if((deadEndCellCount < 300)) {
-            deadEndRisk = -0.00001 * Math.pow(deadEndCellCount, 2) + 2;
+        if((deadEndCellCount < 775)) {
+            deadEndRisk = 0.15 * -Math.log(deadEndCellCount) + 2;
             cellsTested.forEach((testedCell) -> {
                 cells[testedCell.getX()][testedCell.getY()].setDeadEndRisk(deadEndRisk);
             });

@@ -84,9 +84,6 @@ public class GUIBoard extends GridPane {
                 } else if (riskType == RiskType.DEADEND) {
                     risks = cell.getDeadEndRisk();
                     single = true;
-                } else if (riskType == RiskType.MARKEDFORFLOODING) {
-                    risks = cell.getMarkedForDeadEndFlooding();
-                    single = true;
                 } else if (riskType == RiskType.KILLALGORITHM) {
                     risks = cell.getKillIncentive();
                     single = true;
