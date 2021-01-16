@@ -5,6 +5,7 @@ import static de.uol.snakeinc.Common.generateAllXYUpToFromOne;
 import static de.uol.snakeinc.Common.generateXY;
 import static de.uol.snakeinc.Common.turnLeft;
 import static de.uol.snakeinc.Common.turnRight;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
@@ -17,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 
 @Log4j2
 public class DeadEndRecognition {
@@ -39,15 +41,26 @@ public class DeadEndRecognition {
         this.historyMap = new HistoryMap(getDeepCopyOfMap());
     }
 
+    /**
+     * method to start.
+     */
     public void findDeadEnds() {
         Direction usDir = us.getDirection();
         int usX = us.getX();
         int usY = us.getY();
         int usSpeed = us.getSpeed();
         testPossibleMoves(usDir, usX, usY, usSpeed);
-        testRandom(usDir, usX, usY);
+        if(Config.RANDOM_TESTING) {
+            testRandom(usDir, usX, usY);
+        }
     }
 
+    /**
+     * tests for a dead end in every direction.
+     * @param direction Direction
+     * @param x x coordinate
+     * @param y y coordinate
+     */
     private void testRandom(Direction direction, int x, int y) {
         Common.Tuple t1 = generateXY(direction, x, y, 6);
         if (!offBoardOrDeadly(t1.getX(), t1.getY())) {
@@ -67,6 +80,13 @@ public class DeadEndRecognition {
         }
     }
 
+    /**
+     * method to test all possible moves.
+     * @param direction Direction
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param speed our speed
+     */
     private void testPossibleMoves(Direction direction, int x, int y, int speed) {
         testMove(direction, x, y, speed);
         testMove(turnLeft(direction), x, y, speed);
@@ -79,6 +99,14 @@ public class DeadEndRecognition {
         }
     }
 
+    /**
+     * tests a single move.
+     * calls testRoundOfLine().
+     * @param direction Direction
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param speed our speed
+     */
     private void testMove(Direction direction, int x, int y, int speed) {
         Common.Tuple[] tuple = generateAllXYUpToFromOne(direction, x, y, speed + 1);
         for (Common.Tuple t: tuple) {
@@ -90,6 +118,12 @@ public class DeadEndRecognition {
         historyMap.resetMap();
     }
 
+    /**
+     * always starting with the highest cell and going clockwise.
+     * calls testRoundOfCell() only once per area.
+     * @param tuplesInLine tuples that would be blocked by that action
+     * @param direction Direction
+     */
     private void testRoundOfLine(Common.Tuple[] tuplesInLine, Direction direction) {
         ArrayList<Common.Tuple> toList = new ArrayList<>(Arrays.asList(tuplesInLine));
         ArrayList<Common.Tuple> tuples = getLineOffPosition(toList, direction);
@@ -108,6 +142,13 @@ public class DeadEndRecognition {
         });
     }
 
+    /**
+     * calculates all tuples around tuplesInLine.
+     * starting with y as lowest possible and x same as first tuple of line.
+     * @param tuples tuples
+     * @param direction Direction
+     * @return returns a clockwise ArrayList around the input tuple
+     */
     private ArrayList<Common.Tuple> getLineOffPosition(ArrayList<Common.Tuple> tuples, Direction direction) {
         ArrayList<Common.Tuple> tuplesToReturn = new ArrayList<>();
         int speed = tuples.size();
@@ -164,6 +205,13 @@ public class DeadEndRecognition {
         return tuplesToReturn;
     }
 
+    /**
+     * calculates all tuples around a tuple.
+     * always starting with the highest cell and going clockwise.
+     * calls findNeighbours() only once per area.
+     * @param x x
+     * @param y y
+     */
     private void testRoundOfCell(int x, int y) {
         if (isNotOffBoard(x, y)) {
             boolean areaAlreadyTested = false;
@@ -183,6 +231,14 @@ public class DeadEndRecognition {
         }
     }
 
+    /**
+     * helper method for testRoundOfCell().
+     * return a tuple clockwise around a tuple based on depth.
+     * @param x x of the tuple
+     * @param y y of the tuple
+     * @param depth 0-7 position of the cycle around a tuple
+     * @return a tuple
+     */
     private Common.Tuple getRoundOfPosition(int x, int y, int depth) {
         int newX = x;
         int newY = y;
@@ -221,6 +277,10 @@ public class DeadEndRecognition {
         return new Common.Tuple(newX, newY);
     }
 
+    /**
+     * deepcopy method for cells.
+     * @return a copy of cells
+     */
     private Cell[][] getDeepCopyOfMap() {
         Cell[][] newCells = new Cell[cells.length][cells[0].length];
         for (int i = 0; i < cells.length; i++) {
@@ -231,6 +291,10 @@ public class DeadEndRecognition {
         return newCells;
     }
 
+    /**
+     * helper class.
+     * double cell array with revertible changes
+     */
     @Getter
     class HistoryMap {
 
@@ -290,6 +354,9 @@ public class DeadEndRecognition {
     /**
      * calculates the risk for each gate.
      * goes from 2 to 1 based on the size of the dead end.
+     * @param x x
+     * @param y y
+     * @param map cells array
      */
     private void findNeighbours(int x, int y, Cell[][] map) {
         Set<Cell> cellsTested = new HashSet<>();
@@ -298,7 +365,7 @@ public class DeadEndRecognition {
         int deadEndCellCount = 1;
         cellsToTest.add(map[x][y]);
         int toTestCount = 1;
-        while(toTestCount > 0 && deadEndCellCount < 775) {
+        while (toTestCount > 0 && deadEndCellCount < Config.MAX_RECOGNITION_CELL_COUNT) {
             Cell cell = cellsToTest.pop();
             toTestCount--;
             int xCell = cell.getX();
@@ -333,8 +400,8 @@ public class DeadEndRecognition {
             }
         }
         double deadEndRisk;
-        if ((deadEndCellCount < 775)) {
-            deadEndRisk = 0.15 * -Math.log(deadEndCellCount) + 2;
+        if ((deadEndCellCount < Config.MAX_RECOGNITION_CELL_COUNT)) {
+            deadEndRisk = Config.LN_MULTIPLIER * -Math.log(deadEndCellCount) + Config.FUNCTION_Y_OFFSET;
             cellsTested.forEach((testedCell) -> {
                 cells[testedCell.getX()][testedCell.getY()].setDeadEndRisk(deadEndRisk);
             });
