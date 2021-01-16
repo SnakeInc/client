@@ -29,7 +29,7 @@ public class GUIBoard extends GridPane {
         actualRoundProperty.setValue(0);
         width = 0;
         height = 0;
-        riskType = RiskType.KILLALGORITHM;
+        riskType = RiskType.GLOBAL;
         this.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
@@ -76,33 +76,50 @@ public class GUIBoard extends GridPane {
                 Color color = Color.YELLOW;
                 double globalRisk = cell.getRisks();
                 double risks;
+                double range = 0.2;
+                double defaultValue = 1.0;
                 boolean single = false;
                 boolean positive = false;
                 if (riskType == RiskType.SECTION) {
                     risks = cell.getAreaRisk();
                     single = true;
-                } else if (riskType == RiskType.DEADEND) {
+                } else if (riskType == RiskType.DEAD_END) {
                     risks = cell.getDeadEndRisk();
                     single = true;
-                } else if (riskType == RiskType.KILLALGORITHM) {
+                } else if (riskType == RiskType.KILL_ALGORITHM) {
                     risks = cell.getKillIncentive();
                     single = true;
                     positive = true;
-                } else if (riskType == RiskType.OPPONENTMOVERISK) {
+                } else if (riskType == RiskType.OPPONENT_MOVE_RISK) {
                     risks = cell.getOpponentMovementRisk();
                     single = true;
-                } else if (riskType == RiskType.PATHHIGHLIGHT) {
+                } else if (riskType == RiskType.PATH_HIGHLIGHT) {
                     risks = cell.getPathHighlight();
+                    single = true;
+                    positive = true;
+                } else if (riskType == RiskType.DEAD_END_FLOODING) {
+                    risks = cell.getDeadEndFlooding();
+                    single = true;
+                    range = 2.5;
+                } else if (riskType == RiskType.DEAD_END_JUMPING) {
+                    risks = cell.getDeadEndJumping();
                     single = true;
                     positive = true;
                 } else {
                     risks = globalRisk;
                 }
+                ((GUICell) node).setFill(Color.BLACK);
                 if (globalRisk >= 10) {
                     ((GUICell) node).setEnemy(cell.getID() == us.getId());
-                    ((GUICell) node).setOpacity(1.0D);
+                    node.setOpacity(1.0D);
                 } else {
-                    ((GUICell) node).setOption(color, risks, single, positive);
+                    ((GUICell) node).setOption(color, risks, single, positive, range, defaultValue);
+                }
+                if (riskType == RiskType.DEAD_END_FLOODING_FLOODED_CELLS) {
+                    if (cell.flooded()) {
+                        ((GUICell) node).setFill(Color.ORANGE);
+                        node.setOpacity(1.0D);
+                    }
                 }
             }
         });

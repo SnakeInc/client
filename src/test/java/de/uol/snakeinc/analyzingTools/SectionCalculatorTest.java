@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class SectionCalculatorTest {
 
     @Test
-    public void testRankAreaRiskCellls() {
+    public void testRankAreaRiskCells() {
         SectionCalculator calculator = new SectionCalculator(20, 20);
 
         Cell[][] cells = new Cell[20][20];
@@ -72,9 +72,7 @@ public class SectionCalculatorTest {
                     assertEquals(values[sectionX][sectionY], value);
                 }
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }

@@ -20,16 +20,12 @@ public class MoveCalculation {
 
     private Cell[][] cells;
     private Player us;
-    int width;
-    int height;
     BoardAnalyzer boardAnalyzer;
     private final int searchingDepth = Config.SEARCHING_DEPTH;
 
     public MoveCalculation(Cell[][] cells, Player us, BoardAnalyzer boardAnalyzer) {
         this.cells = cells;
         this.us = us;
-        this.height = cells[0].length;
-        this.width = cells.length;
         this.boardAnalyzer = boardAnalyzer;
     }
 
@@ -106,7 +102,6 @@ public class MoveCalculation {
     @AllArgsConstructor
     @Getter
     public static class DirSpeed {
-
         private final Direction direction;
         private final int speed;
     }

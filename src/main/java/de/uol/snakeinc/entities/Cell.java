@@ -1,11 +1,12 @@
 package de.uol.snakeinc.entities;
 
+import de.uol.snakeinc.deadendflooding.DeadCell;
 import de.uol.snakeinc.Config;
 import de.uol.snakeinc.pathfinding.PathCell;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Cell extends PathCell {
+public class Cell extends PathCell implements DeadCell {
 
 
     //Basic Value.
@@ -37,8 +38,16 @@ public class Cell extends PathCell {
 
     private boolean tmpDeadly;
 
+    private double deadEndFlooding;
+
+    private double deadEndJumping;
+
     @Getter
     private int iD;
+
+    private boolean hit;
+
+    private boolean flooded;
 
     public Cell(int x, int y) {
         super(x, y);
@@ -49,8 +58,11 @@ public class Cell extends PathCell {
         pathHighlight = 1;
         killIncentive = 1;
         deadEndRisk = 1;
+        deadEndFlooding = 1;
+        deadEndJumping = 1;
         hardDeadly = false;
         tmpDeadly = false;
+        flooded = false;
     }
 
     @Override
@@ -92,6 +104,28 @@ public class Cell extends PathCell {
         this.pathHighlight = risk;
     }
 
+    public void setDeadEndFlooding(double deadEndFlooding) {
+        if (deadEndFlooding > this.deadEndFlooding) {
+            this.deadEndFlooding = deadEndFlooding;
+        }
+    }
+
+    public void setDeadEndFloodingReset(double deadEndFlooding) {
+        this.deadEndFlooding = deadEndFlooding;
+    }
+
+    public double getDeadEndFlooding() {
+        return this.deadEndFlooding;
+    }
+
+    public void setDeadEndJumping(double deadEndJumping) {
+        this.deadEndJumping = deadEndJumping;
+    }
+
+    public double getDeadEndJumping() {
+        return this.deadEndJumping;
+    }
+
     public void setDeadEndRisk(double riskValue) {
         if ((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;
@@ -101,7 +135,6 @@ public class Cell extends PathCell {
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interaction between players.
-        //Not calculated: Interinteraktion between players.
         if (hardDeadly || tmpDeadly) {
             return Config.DEATH_VALUE;
         }
@@ -111,7 +144,9 @@ public class Cell extends PathCell {
             areaRisk *
             deadEndRisk *
             killIncentive *
-            pathHighlight;
+            pathHighlight *
+            deadEndFlooding;
+            //* deadEndJumping;
     }
 
     /**
@@ -137,5 +172,25 @@ public class Cell extends PathCell {
 
     public void setKillIncentive() {
         this.killIncentive = Config.KILL_INCENTIVE;
+    }
+
+    @Override
+    public boolean hasHit() {
+        return this.hit;
+    }
+
+    @Override
+    public void setHit(boolean hit) {
+        this.hit = hit;
+    }
+
+    @Override
+    public boolean flooded() {
+        return this.flooded;
+    }
+
+    @Override
+    public void setFlooded(boolean flooded) {
+        this.flooded = flooded;
     }
 }

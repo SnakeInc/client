@@ -14,8 +14,6 @@ import java.util.Set;
 public class OpponentMovesCalculation {
 
     private BoardAnalyzer boardAnalyzer;
-    private int width;
-    private int height;
     private Cell [][] cells;
     Set<Cell> evaluatedCells = new HashSet<>();
 
@@ -31,8 +29,6 @@ public class OpponentMovesCalculation {
      * @param us us
      */
     public Set<Cell> evaluate(Cell[][] cells, Player[] players, Player us) {
-        this.width = cells.length;
-        this.height = cells[1].length;
         this.cells = cells;
         int x;
         int y;
@@ -82,7 +78,7 @@ public class OpponentMovesCalculation {
         //Todo remove
         Common.assertCellXY(x,y, cells);
         for (var xy : Common.generateAllXYUpToFromOne(dir, x, y, speed + 1)) {
-            if (offBoardOrDeadly(xy.getX(), xy.getY())) {
+            if (Common.offBoardOrDeadly(xy.getX(), xy.getY(), cells)) {
                 abort = true;
                 break;
             } else {
@@ -100,28 +96,28 @@ public class OpponentMovesCalculation {
         Common.assertCellXY(x,y, cells);
         switch (dir) {
             case UP:
-                if (!offBoardOrDeadly(x, y - 1) && !offBoardOrDeadly(x, y - speed)) {
+                if (!Common.offBoardOrDeadly(x, y - 1, cells) && !Common.offBoardOrDeadly(x, y - speed, cells)) {
                     evaluateCells(x, y - 1, depth);
                     evaluateCells(x, y - speed, depth);
                     calculateRisk(x, y - speed, depth + 1, speed);
                 }
                 break;
             case DOWN:
-                if (!offBoardOrDeadly(x, y + 1) && !offBoardOrDeadly(x, y + speed)) {
+                if (!Common.offBoardOrDeadly(x, y + 1, cells) && !Common.offBoardOrDeadly(x, y + speed, cells)) {
                     evaluateCells(x, y + 1, depth);
                     evaluateCells(x, y + speed, depth);
                     calculateRisk(x, y + speed, depth + 1, speed);
                 }
                 break;
             case RIGHT:
-                if (!offBoardOrDeadly(x + 1, y) && !offBoardOrDeadly(x + speed, y)) {
+                if (!Common.offBoardOrDeadly(x + 1, y, cells) && !Common.offBoardOrDeadly(x + speed, y, cells)) {
                     evaluateCells(x + 1, y, depth);
                     evaluateCells(x + speed, y, depth);
                     calculateRisk(x + speed, y, depth + 1, speed);
                 }
                 break;
             case LEFT:
-                if (!offBoardOrDeadly(x - 1, y) && !offBoardOrDeadly(x - speed, y)) {
+                if (!Common.offBoardOrDeadly(x - 1, y, cells) && !Common.offBoardOrDeadly(x - speed, y, cells)) {
                     evaluateCells(x - 1, y, depth);
                     evaluateCells(x - speed, y, depth);
                     calculateRisk(x - speed, y, depth + 1, speed);
@@ -143,21 +139,5 @@ public class OpponentMovesCalculation {
         Common.assertCellXY(x,y, cells);
         evaluatedCells.add(cells[x][y]);
         cells[x][y].raiseOpponentMovementRisk(depth);
-    }
-
-    /**
-     * tests if coordinates are on the board or the cell is deadly.
-     * @param x x coordinate
-     * @param y y coordinate
-     * @return returns the test value
-     */
-    public boolean offBoardOrDeadly(int x, int y) {
-        //Todo remove
-        Common.assertCellXY(x,y, cells);
-        if (x < 0 || x >= width || y < 0 || y >= height) {
-            return true;
-        } else {
-            return cells[x][y].isDeadly();
-        }
     }
 }

@@ -91,7 +91,7 @@ public class AStarSearch extends Pathfinder {
     }
 
     /*
-     ** Calculate distance between this.now and xend/yend
+     ** Calculate distance between this.now and dx and dy
      **
      ** @return (int) distance
      */

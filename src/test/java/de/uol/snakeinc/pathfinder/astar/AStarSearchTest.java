@@ -3,11 +3,15 @@ package de.uol.snakeinc.pathfinder.astar;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.pathfinding.PathCell;
 import de.uol.snakeinc.pathfinding.astar.AStarSearch;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AStarSearchTest {
 
@@ -38,7 +42,7 @@ public class AStarSearchTest {
         }
         AStarSearch search = new AStarSearch(cells);
         List<PathCell> pathCells = search.findPath(cells[0][0], cells[4][2], true);
-        assertTrue(pathCells != null);
+        assertNotNull(pathCells);
         List<Cell> correctPath = new ArrayList<Cell>();
         correctPath.add(cells[0][0]);
         correctPath.add(cells[1][0]);
@@ -84,7 +88,7 @@ public class AStarSearchTest {
         }
         AStarSearch search = new AStarSearch(cells);
         List<PathCell> pathCells = search.findPath(cells[0][0], cells[4][2], true);
-        assertTrue(pathCells != null);
+        assertNotNull(pathCells);
         List<Cell> correctPath = new ArrayList<Cell>();
         correctPath.add(cells[0][0]);
         correctPath.add(cells[1][0]);
@@ -123,7 +127,7 @@ public class AStarSearchTest {
         }
         AStarSearch search = new AStarSearch(cells);
         List<PathCell> pathCells = search.findPath(cells[0][0], cells[4][2], true);
-        assertTrue(pathCells == null);
+        assertNotNull(pathCells);
     }
 
     private boolean testCellsInUse(List<PathCell> pathCells, List<Cell> rightPathCells) {

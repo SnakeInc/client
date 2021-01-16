@@ -22,9 +22,11 @@ public class BoardAnalyzer {
     private int round = 0;
 
     private SectionCalculator sectionCalculator;
+    private DeadEndFlooding deadEndFlooding;
 
     public BoardAnalyzer(int width, int height) {
         this.sectionCalculator = new SectionCalculator(width, height);
+        this.deadEndFlooding = new DeadEndFlooding(width, height);
     }
 
     /**
@@ -42,7 +44,9 @@ public class BoardAnalyzer {
         OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
         evaluatedCells = calc.evaluate(cells, players, us);
         timeTracker.logTime("OpponentMovement-Calculation");
-        DeadEndRecognition deadEndRecognition = new DeadEndRecognition(cells, us,this);
+        deadEndFlooding.calculate(cells, us);
+        timeTracker.logTime("DeadEndFlooding-Calculation");
+        DeadEndRecognition deadEndRecognition = new DeadEndRecognition(cells, us);
         deadEndRecognition.findDeadEnds();
         timeTracker.logTime("DeadEnd-Calculation");
         evaluatedCells.addAll(KillAlgorithm.killAlgorithm(cells, players, us));
