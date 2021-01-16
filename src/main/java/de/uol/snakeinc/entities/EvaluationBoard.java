@@ -87,7 +87,7 @@ public class EvaluationBoard {
     /**
      * logs the compute values for each cell.
      * @param cells cells
-     * @param active todo
+     * @param active only logs when the player is active
      */
     private void logCurrentEvaluation (Cell[][] cells, boolean active) {
         if (SnakeInc.hasGui()) {
@@ -203,7 +203,7 @@ public class EvaluationBoard {
      * Parse board based on json-format.
      * @param json    json from websocket
      * @param players parsed players
-     * @param us      // todo this
+     * @param us      our player
      * @return parsed board
      */
     public static EvaluationBoard initParseFromJson(JsonObject json, HashMap<Integer, Player> players, Player us) {

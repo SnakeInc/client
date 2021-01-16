@@ -12,10 +12,13 @@ public class Game {
     @Getter
     private HashMap<Integer, int[][]> boards;
     private EvaluationBoard EvaluationBoard;
+    @Getter
     private Player us;
 
+    @Getter
     private int round = 0;
 
+    @Getter
     private String gameId;
 
     public Game(String serverId) {
@@ -39,7 +42,7 @@ public class Game {
     /**
      * todo javadoc.
      * @param evaluationBoard todo this
-     * @param rawBoard        todo this
+     * @param rawBoard        the raw board for logging
      */
     public void informIntelligentBoard(EvaluationBoard evaluationBoard, int[][] rawBoard) {
         EvaluationBoard = evaluationBoard;
@@ -50,15 +53,11 @@ public class Game {
 
     /**
      * todo javadoc.
-     * @param rawBoard todo
+     * @param rawBoard the raw board for logging
      */
     public void informIntelligentBoard(int[][] rawBoard) {
         EvaluationBoard.update(players, us, round);
         boards.put(round, rawBoard);
-    }
-
-    public EvaluationBoard getEvaluationBoard() {
-        return this.EvaluationBoard;
     }
 
     /**
@@ -71,18 +70,6 @@ public class Game {
             EvaluationBoard.prepareNextPhase();
         }
         round++;
-    }
-
-    public Player getUs() {
-        return this.us;
-    }
-
-    public int getRounds() {
-        return this.round;
-    }
-
-    public String getGameId() {
-        return this.gameId;
     }
 
     private String generateGameId(long time) {

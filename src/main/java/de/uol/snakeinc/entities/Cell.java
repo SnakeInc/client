@@ -15,14 +15,17 @@ public class Cell extends PathCell implements Cloneable {
     private double tmpMoveCalcValue;
 
     //The risk that another agent will move to this cell
+    @Getter
     private double opponentMovementRisk;
 
+    @Getter
     private double killIncentive;
 
     //Area-risk
+    @Getter @Setter
     private double areaRisk;
 
-    //
+    @Getter
     private double deadEndRisk;
 
     @Getter
@@ -65,10 +68,10 @@ public class Cell extends PathCell implements Cloneable {
     }
 
     /**
-     * Todo this.
-     * @param depth Todo this
+     * Raises the opponent movement risk according to the depth.
+     * @param depth the depth
      */
-    public void raiseActionRisk(int depth) {
+    public void raiseOpponentMovementRisk(int depth) {
         switch (depth) {
             case 1:
                 opponentMovementRisk = opponentMovementRisk * Config.MOVE_RISK_1;
@@ -84,34 +87,10 @@ public class Cell extends PathCell implements Cloneable {
         }
     }
 
-    public void setAreaRisk(double risk) {
-        this.areaRisk = risk;
-    }
-
-    public double getAreaRisk() {
-        return this.areaRisk;
-    }
-
-    public double getDeadEndRisk() {
-        return this.deadEndRisk;
-    }
-
-    public double getKillAlgorithmRisk() {
-        return this.killIncentive;
-    }
-
-    public double getOpponentMovementRisk() {
-        return this.opponentMovementRisk;
-    }
-
     public void setDeadEndRisk(double riskValue) {
         if ((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;
         }
-    }
-
-    public double getValue() {
-        return value;
     }
 
     public double getRisks() {
@@ -125,9 +104,9 @@ public class Cell extends PathCell implements Cloneable {
     }
 
     /**
-     * TODO this and rename.
+     * Clears the temporary move calculation value.
      */
-    public void clearPseudoValue() {
+    public void clearTmpMoveCalcValue() {
         tmpMoveCalcValue = 1;
         tmpDeadly = false;
     }
