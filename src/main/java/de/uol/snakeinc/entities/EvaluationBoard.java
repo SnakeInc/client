@@ -140,7 +140,7 @@ public class EvaluationBoard {
         int x = player.getX();
         int y = player.getY();
         //Todo remove
-        Common.assertCelXY(x,y, cells);
+        Common.assertCellXY(x,y, cells);
         int speed = player.getSpeed();
         int iD = player.getId();
         setCells(x, y, iD);
@@ -151,7 +151,7 @@ public class EvaluationBoard {
 
     private void setCells(int x, int y, int iD) {
         //Todo remove
-        Common.assertCelXY(x,y, cells);
+        Common.assertCellXY(x,y, cells);
         if (x >= 0 && x < width && y >= 0 && y < height) {
             cells[x][y].setId(iD);
         }
@@ -174,7 +174,7 @@ public class EvaluationBoard {
             speed = playerHashMap.get(i).getSpeed();
             tmpPlayer = playerHashMap.get(i);
             //Todo remove
-            Common.assertCelXY(x,y, cells);
+            Common.assertCellXY(x,y, cells);
 
             //Checking for jumping
             if (round % Config.ROUNDS_PER_JUMP == 0 && speed >= 3) {

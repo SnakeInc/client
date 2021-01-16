@@ -67,7 +67,7 @@ public class MoveCalculation {
 
     private double calculateAction(Direction dir, int x, int y, int speed, int depth) {
         //Todo remove
-        Common.assertCelXY(x,y, cells);
+        Common.assertCellXY(x,y, cells);
         if (this.searchingDepth == depth) {
             return 1;
         }
@@ -90,7 +90,7 @@ public class MoveCalculation {
     private double calculate(Action act, Direction dir, int x, int y, int speed,
                              int depth, HashSet<Cell> pseudoEvaluatedCells) {
         //Todo remove
-        Common.assertCelXY(x,y, cells);
+        Common.assertCellXY(x,y, cells);
         var dirSpeedDepth = preCalculate(act, dir, speed);
         dir = dirSpeedDepth.direction;
         speed = dirSpeedDepth.speed;
@@ -170,7 +170,7 @@ public class MoveCalculation {
     private double calculateDirection(Direction dir, int x, int y, int speed, int depth,
                                       HashSet<Cell> pseudEvaluatedCells, boolean jumping, double deathValue) {
         //Todo remove
-        Common.assertCelXY(x,y, cells);
+        Common.assertCellXY(x,y, cells);
         double result = 1;
 
         if (jumping && speed >= Config.MINIMUM_JUMP_SPEED) {
