@@ -46,9 +46,9 @@ public class BoardAnalyzer {
         timeTracker.logTime("OpponentMovement-Calculation");
         deadEndFlooding.calculate(cells, us);
         timeTracker.logTime("DeadEndFlooding-Calculation");
-        DeadEndRecognition deadEndRecognition = new DeadEndRecognition(cells, us);
-        deadEndRecognition.findDeadEnds();
-        timeTracker.logTime("DeadEnd-Calculation");
+        //DeadEndRecognition deadEndRecognition = new DeadEndRecognition(cells, us);
+        //deadEndRecognition.findDeadEnds();
+        //timeTracker.logTime("DeadEnd-Calculation");
         evaluatedCells.addAll(KillAlgorithm.killAlgorithm(cells, players, us));
         timeTracker.logTime("KillAlgorithm-Calculation");
         timeTracker.logFinal();
