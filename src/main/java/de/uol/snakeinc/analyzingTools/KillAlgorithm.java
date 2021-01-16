@@ -102,7 +102,6 @@ public abstract class KillAlgorithm {
 
     @AllArgsConstructor
     @Getter
-    @Setter
     public static class FloodVar {
 
         int floodTerminationCount;
