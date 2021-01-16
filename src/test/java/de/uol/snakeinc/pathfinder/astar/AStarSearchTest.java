@@ -37,7 +37,7 @@ public class AStarSearchTest {
             }
         }
         AStarSearch search = new AStarSearch(cells);
-        List<PathCell> pathCells = search.findPath(cells[0][0], cells[4][2]);
+        List<PathCell> pathCells = search.findPath(cells[0][0], cells[4][2], true);
         assertTrue(pathCells != null);
         List<Cell> correctPath = new ArrayList<Cell>();
         correctPath.add(cells[0][0]);
@@ -83,7 +83,7 @@ public class AStarSearchTest {
             }
         }
         AStarSearch search = new AStarSearch(cells);
-        List<PathCell> pathCells = search.findPath(cells[0][0], cells[4][2]);
+        List<PathCell> pathCells = search.findPath(cells[0][0], cells[4][2], true);
         assertTrue(pathCells != null);
         List<Cell> correctPath = new ArrayList<Cell>();
         correctPath.add(cells[0][0]);
@@ -122,7 +122,7 @@ public class AStarSearchTest {
             }
         }
         AStarSearch search = new AStarSearch(cells);
-        List<PathCell> pathCells = search.findPath(cells[0][0], cells[4][2]);
+        List<PathCell> pathCells = search.findPath(cells[0][0], cells[4][2], true);
         assertTrue(pathCells == null);
     }
 
