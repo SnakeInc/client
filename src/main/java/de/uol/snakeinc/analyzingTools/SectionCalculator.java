@@ -51,7 +51,7 @@ public class SectionCalculator {
                 int sectionX = (int) Math.floor(x / devideWidth);
                 int sectionY = (int) Math.floor(y / devideHeight);
                 if (cells[x][y].getValue() < 10) {
-                    sections[sectionY][sectionX]++;
+                    sections[sectionX][sectionY]++;
                 }
                 options[sectionX][sectionY]++;
             }
@@ -84,10 +84,10 @@ public class SectionCalculator {
         this.rankAreaRiskCells(percentages, cells, min, max);
 
         // Path-Calculation
-        int minX = (int) Math.floor(bestX * devideWidth);
-        int maxX = (int) Math.floor((bestX + 1) * devideWidth);
-        int minY = (int) Math.floor(bestY * devideHeight);
-        int maxY = (int) Math.floor((bestY + 1) * devideHeight);
+        int minX = (int) Math.floor(((double) bestX) * devideWidth);
+        int maxX = (int) Math.floor(((double) (bestX + 1)) * devideWidth);
+        int minY = (int) Math.floor(((double) bestY) * devideHeight);
+        int maxY = (int) Math.floor(((double) (bestY + 1)) * devideHeight);
 
         int optionX = -1;
         int optionY = -1;
@@ -117,7 +117,6 @@ public class SectionCalculator {
             double scale = range / difference;
 
             double value = new LinearInterpolator(1.0, 1.2).getInterpolation(scale);
-
             Pathfinder finder = new AStarSearch(cells);
             List<PathCell> pathCells = finder.findPath(cells[us.getX()][us.getY()], cells[optionX][optionY]);
 
@@ -133,9 +132,6 @@ public class SectionCalculator {
                 }
             }
         }
-
-        double totalTime = (System.nanoTime() - time) / 1000000.0D;
-        log.info("Zeit: " + totalTime + "ms");
     }
 
     private void rankAreaRiskCells(double[][] percentages, Cell[][] cells, double min, double max) {
