@@ -59,7 +59,7 @@ public abstract class Config {
     public static final MoveOrder.SpiralForm IDEAL_SPIRAL_FORM = MoveOrder.SpiralForm.NoSpiral;
 
     /********
-     * MoveOrder.
+     * DeadEndRecognition.
      *******/
     public static final int MAX_RECOGNITION_CELL_COUNT = 775;
     public static final double LN_MULTIPLIER = 0.15;
