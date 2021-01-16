@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Sebastian Diers
  * A*-Algorithm based on A*-Algorithm by rosettacode.org - https://rosettacode.org/wiki/A*_search_algorithm#Java.
  * Optimized to beeing used on cell-grid and for usage with objects.
  */

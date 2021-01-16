@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author Sebastian Diers
  * A*-Node based on A*-Node by rosettacode.org - https://rosettacode.org/wiki/A*_search_algorithm#Java.
  * Optimized to beeing used on cell-grid and for usage with objects.
  */
