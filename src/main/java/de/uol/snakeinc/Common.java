@@ -110,6 +110,11 @@ public abstract class Common {
         private final int y;
     }
 
+    /**
+     * Turns Left.
+     * @param dir origin direction
+     * @return direction left of that
+     */
     public static Direction turnLeft(Direction dir) {
         switch (dir) {
             case UP:
@@ -125,6 +130,11 @@ public abstract class Common {
         }
     }
 
+    /**
+     * Turns Right.
+     * @param dir origin direction
+     * @return direction right of that
+     */
     public static Direction turnRight(Direction dir) {
         switch (dir) {
             case UP:

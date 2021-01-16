@@ -20,6 +20,11 @@ public class DeadEndFlooding {
         this.height = height;
     }
 
+    /**
+     * Todo.
+     * @param cells TODO
+     * @param us todo
+     */
     public void calculate(Cell[][] cells, Player us) {
         int countFreeCells = 0;
         int countCells = 0;
@@ -30,7 +35,7 @@ public class DeadEndFlooding {
                 cells[x][y].setFlooded(false);
                 countCells++;
                 if (cells[x][y].isInUse()) {
-                   countFreeCells++;
+                    countFreeCells++;
                 }
             }
         }
@@ -67,7 +72,7 @@ public class DeadEndFlooding {
         int y = us.getY();
         Direction dir = us.getDirection();
         Common.Tuple xy;
-        switch(action) {
+        switch (action) {
             case SPEED_UP:
                 xy = Common.generateXY(dir, x, y, us.getSpeed() + 1);
                 break;

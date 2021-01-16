@@ -1,5 +1,6 @@
 package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.Common;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
@@ -59,8 +60,8 @@ public class DeadEndRecognition {
         if (depth <= 3) {
             //Recursive call
             recursiveRiskByDirection(x, y, depth, speed, dir);
-            recursiveRiskByDirection(x, y, depth, speed, turnLeft(dir));
-            recursiveRiskByDirection(x, y, depth, speed, turnRight(dir));
+            recursiveRiskByDirection(x, y, depth, speed, Common.turnLeft(dir));
+            recursiveRiskByDirection(x, y, depth, speed, Common.turnRight(dir));
             if (speed + 1 < 10) {
                 recursiveRiskByDirection(x, y, depth, speed + 1, dir);
             }
@@ -99,7 +100,7 @@ public class DeadEndRecognition {
             case DOWN:
                 if (offBoardOrDeadly(x - 1, y, cells) && offBoardOrDeadly(x + 1, y, cells)) {
                     gates.add(new Gate(dir, x, y));
-                    gates.add(new Gate(turnLeft(turnLeft(dir)), x, y));
+                    gates.add(new Gate(Common.turnLeft(Common.turnLeft(dir)), x, y));
                     return true;
                 } else {
                     return false;
@@ -108,7 +109,7 @@ public class DeadEndRecognition {
             case RIGHT:
                 if (offBoardOrDeadly(x, y - 1, cells) && offBoardOrDeadly(x, y + 1, cells)) {
                     gates.add(new Gate(dir, x, y));
-                    gates.add(new Gate(turnLeft(turnLeft(dir)), x, y));
+                    gates.add(new Gate(Common.turnLeft(Common.turnLeft(dir)), x, y));
                     return true;
                 } else {
                     return false;

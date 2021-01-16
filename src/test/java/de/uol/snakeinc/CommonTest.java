@@ -58,9 +58,9 @@ class CommonTest {
     @Property
     boolean turnTests(@ForAll Direction dir) {
         return Common.turnRight(Common.turnLeft(dir)) == dir
-        && Common.turnLeft(Common.turnRight(dir)) == dir
-        && Common.turnLeft(Common.turnLeft(Common.turnLeft(Common.turnLeft(dir)))) == dir
-        && Common.turnRight(Common.turnRight(Common.turnRight(Common.turnRight(dir)))) == dir;
+            && Common.turnLeft(Common.turnRight(dir)) == dir
+            && Common.turnLeft(Common.turnLeft(Common.turnLeft(Common.turnLeft(dir)))) == dir
+            && Common.turnRight(Common.turnRight(Common.turnRight(Common.turnRight(dir)))) == dir;
     }
 
 }
