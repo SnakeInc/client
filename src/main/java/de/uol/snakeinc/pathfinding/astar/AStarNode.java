@@ -23,7 +23,7 @@ public class AStarNode implements Comparable<AStarNode> {
 
     // Compare by f value (g + h)
     @Override
-    public int compareTo(AStarNode that) {
-        return (int)((this.cost + this.distance) - (that.cost + that.distance));
+    public int compareTo(AStarNode node) {
+        return (int)((this.cost + this.distance) - (node.cost + node.distance));
     }
 }
