@@ -97,7 +97,6 @@ public class SectionCalculator {
                 }
             }
         }
-        System.out.println("DeepMin: " + deepMin + " DeepMax: " + deepMax);
 
         this.rankAreaRiskCells(deepPercentages, cells, deepMin, deepMax);
         this.rankPathHighlightCells(deepPercentages, cells, us, bestX, bestY, min, max);
@@ -180,8 +179,10 @@ public class SectionCalculator {
 
                 double range = percentage - min;
                 double scale = range / difference;
-                double value = new LinearInterpolator(Config.AREA_RISK_INTERPOLATION_MAX, Config.AREA_RISK_INTERPOLATION_MIN)
-                    .getInterpolation(scale);
+                double value = new LinearInterpolator(
+                    Config.AREA_RISK_INTERPOLATION_MAX,
+                    Config.AREA_RISK_INTERPOLATION_MIN
+                ).getInterpolation(scale);
                 // set value here
                 //#end -> In own for-loop for performance
                 cells[x][y].setAreaRisk(value);
@@ -223,7 +224,8 @@ public class SectionCalculator {
                     int dividedX = (int) Math.floor(((double) x) / ((double) divisionAmount));
                     int dividedY = (int) Math.floor(((double) y) / ((double) divisionAmount));
 
-                    percentage += percentageIterations.get(iteration)[dividedX][dividedY] * ((double) Config.MULTIPLICATIONS[iteration]);
+                    percentage += percentageIterations.get(iteration)[dividedX][dividedY] *
+                        ((double) Config.MULTIPLICATIONS[iteration]);
                     division += Config.MULTIPLICATIONS[iteration];
 
                     divisionAmount *= 2;
