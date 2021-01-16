@@ -27,14 +27,13 @@ public class SectionCalculator {
     // Case Path ist aktiv -> Bewerte Züge in die Path-Richtung höher(Gewichtung muss evaluiert werden)
     // bei unbekanntem Hinderniss auf dem Weg -> neue Berechnung
 
-    private double devideWidth;
-    private double devideHeight;
-
+    private double divideWidth;
+    private double divideHeight;
     public static int resolution = Config.RESOLUTION;
 
     public SectionCalculator(int width, int height) {
-        this.devideHeight = height / Config.DIVISOR;
-        this.devideWidth = width  / Config.DIVISOR;
+        this.divideHeight = height / Config.DIVISOR;
+        this.divideWidth = width  / Config.DIVISOR;
     }
 
     /**
@@ -48,8 +47,8 @@ public class SectionCalculator {
         // fill options and section. Options are the total optional blocks, sections are the free blocks
         for (int x = 0; x < cells.length; x++) {
             for (int y = 0; y < cells[0].length; y++) {
-                int sectionX = (int) Math.floor(x / devideWidth);
-                int sectionY = (int) Math.floor(y / devideHeight);
+                int sectionX = (int) Math.floor(x / divideWidth);
+                int sectionY = (int) Math.floor(y / divideHeight);
                 cells[x][y].setPathHighlight(1.0);
                 if (!cells[x][y].isInUse()) {
                     sections[sectionX][sectionY]++;
@@ -85,10 +84,10 @@ public class SectionCalculator {
         this.rankAreaRiskCells(percentages, cells, min, max);
 
         // Path-Calculation
-        int minX = (int) Math.floor(((double) bestX) * devideWidth);
-        int maxX = (int) Math.floor(((double) (bestX + 1)) * devideWidth);
-        int minY = (int) Math.floor(((double) bestY) * devideHeight);
-        int maxY = (int) Math.floor(((double) (bestY + 1)) * devideHeight);
+        int minX = (int) Math.floor(((double) bestX) * divideWidth);
+        int maxX = (int) Math.floor(((double) (bestX + 1)) * divideWidth);
+        int minY = (int) Math.floor(((double) bestY) * divideHeight);
+        int maxY = (int) Math.floor(((double) (bestY + 1)) * divideHeight);
 
         int optionX = -1;
         int optionY = -1;
@@ -112,8 +111,8 @@ public class SectionCalculator {
         double difference = max - min;
 
         if (optionX != -1 && optionY != -1 && us.getX() != -1 && us.getY() != -1) {
-            int sectionX = (int) Math.floor(us.getX() / devideWidth);
-            int sectionY = (int) Math.floor(us.getY() / devideHeight);
+            int sectionX = (int) Math.floor(us.getX() / divideWidth);
+            int sectionY = (int) Math.floor(us.getY() / divideHeight);
             double range = percentages[sectionX][sectionY] - min;
             double scale = range / difference;
 
@@ -144,8 +143,8 @@ public class SectionCalculator {
         for (int x = 0; x < cells.length; x++) {
             for (int y = 0; y < cells[0].length; y++) {
                 //#start
-                int sectionX = (int) Math.floor(x / devideWidth);
-                int sectionY = (int) Math.floor(y / devideHeight);
+                int sectionX = (int) Math.floor(x / divideWidth);
+                int sectionY = (int) Math.floor(y / divideHeight);
 
                 double range = percentages[sectionX][sectionY] - min;
                 double scale = range / difference; // scale from min/max-percentage

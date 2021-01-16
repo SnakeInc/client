@@ -90,7 +90,7 @@ class MoveOrderTest {
     }
 
     /**
-     * tests that in a nospiral the nospiral direction comes before the other.
+     * tests that in a noSpiral the noSpiral direction comes before the other.
      * @param speed params
      * @param leftRightBalance params
      * @param idealSpeedMin params

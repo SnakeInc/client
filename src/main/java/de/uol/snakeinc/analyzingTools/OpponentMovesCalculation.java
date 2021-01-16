@@ -14,8 +14,6 @@ import java.util.Set;
 public class OpponentMovesCalculation {
 
     private BoardAnalyzer boardAnalyzer;
-    private int width;
-    private int height;
     private Cell [][] cells;
     Set<Cell> evaluatedCells = new HashSet<>();
 
@@ -31,8 +29,6 @@ public class OpponentMovesCalculation {
      * @param us us
      */
     public Set<Cell> evaluate(Cell[][] cells, Player[] players, Player us) {
-        this.width = cells.length;
-        this.height = cells[1].length;
         this.cells = cells;
         int x;
         int y;

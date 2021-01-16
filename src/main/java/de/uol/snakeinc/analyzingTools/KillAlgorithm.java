@@ -248,7 +248,7 @@ public abstract class KillAlgorithm {
     }
 
     /**
-     * Decides the better AttackDirection if both options are deadends.
+     * Decides the better AttackDirection if both options are dead ends.
      * @param op opponent
      * @param cells cells
      * @param evaluatedCells evaluatedCells

@@ -22,7 +22,6 @@ public class DeadEndRecognition {
 
     Cell[][] cells;
     Player us;
-    BoardAnalyzer boardAnalyzer;
     ArrayList<Gate> gates;
     int width;
     int height;
@@ -32,12 +31,10 @@ public class DeadEndRecognition {
      * Todo this.
      * @param cells todo
      * @param us todo
-     * @param boardAnalyzer todo
      */
-    public DeadEndRecognition(Cell[][] cells, Player us, BoardAnalyzer boardAnalyzer) {
+    public DeadEndRecognition(Cell[][] cells, Player us) {
         this.cells = cells;
         this.us = us;
-        this.boardAnalyzer = boardAnalyzer;
         this.width = cells.length;
         this.height = cells[1].length;
         this.mapCellCount = width * height;
