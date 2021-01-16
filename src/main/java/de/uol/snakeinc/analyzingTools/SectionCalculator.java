@@ -51,7 +51,7 @@ public class SectionCalculator {
                 int sectionX = (int) Math.floor(x / devideWidth);
                 int sectionY = (int) Math.floor(y / devideHeight);
                 cells[x][y].setPathHighlight(1.0);
-                if (cells[x][y].getValue() < 10) {
+                if (!cells[x][y].isInUse()) {
                     sections[sectionX][sectionY]++;
                 }
                 options[sectionX][sectionY]++;

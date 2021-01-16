@@ -55,7 +55,7 @@ public class Cell extends PathCell {
 
     @Override
     public boolean isInUse() {
-        return value != 1;
+        return iD != 0;
     }
 
     public void setId(int id) {
