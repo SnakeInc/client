@@ -32,10 +32,10 @@ public abstract class Config {
     /********
      * Section Calculator.
      *******/
-    public static final int RESOLUTION = 10;
-    public static final double DIVISOR = 10D;
-    public static final double CALCULATE_MIN = 100D;
-    public static final double CALCULATE_MAX = 0D;
+    public static final int RESOLUTION = 32; // / 2 = 16 / 2 = 8 / 2 = 4 / 2 = 2
+    public static final int ITERATIONS = 4;
+    public static final int[] MULTIPLICATIONS = new int[] { 1, 3, 9, 27, 81 };
+    public static final double DIVISOR = 32D;
     public static final double AREA_RISK_INTERPOLATION_MAX = 1.2D;
     public static final double AREA_RISK_INTERPOLATION_MIN = 1.0D;
     public static final double PATH_HIGHLIGHT_INTERPOLATION_MAX = 1.0D;

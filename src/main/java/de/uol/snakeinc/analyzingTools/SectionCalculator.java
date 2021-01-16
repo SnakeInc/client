@@ -9,6 +9,7 @@ import de.uol.snakeinc.pathfinding.Pathfinder;
 import de.uol.snakeinc.pathfinding.astar.AStarSearch;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,8 +58,8 @@ public class SectionCalculator {
             }
         }
 
-        double min = Config.CALCULATE_MIN;
-        double max = Config.CALCULATE_MAX;
+        double min = 1.0D; // @Joost no magic Value
+        double max = 0.0D; // @Joost no magic Value
         double[][] percentages = new double[resolution][resolution];
 
         // Section-Location of best section;
@@ -69,6 +70,7 @@ public class SectionCalculator {
         for (int x = 0; x < resolution; x++) {
             for (int y = 0; y < resolution; y++) {
                 double percentage = ((double) sections[x][y]) / ((double) options[x][y]);
+
                 if (percentage > max) {
                     max = percentage;
                     bestX = x;
@@ -80,8 +82,24 @@ public class SectionCalculator {
                 percentages[x][y] = percentage;
             }
         }
+        double deepMin = 1.0;
+        double deepMax = 0.0D;
+        double[][] deepPercentages = this.createDeepIterations(percentages);
+        for (int x = 0; x < resolution; x++) {
+            for (int y = 0; y < resolution; y++) {
+                double percentage = deepPercentages[x][y];
 
-        this.rankAreaRiskCells(percentages, cells, min, max);
+                if (percentage > deepMax) {
+                    deepMax = percentage;
+                }
+                if (percentage < deepMin) {
+                    deepMin = percentage;
+                }
+            }
+        }
+        System.out.println("DeepMin: " + deepMin + " DeepMax: " + deepMax);
+
+        this.rankAreaRiskCells(deepPercentages, cells, deepMin, deepMax);
 
         // Path-Calculation
         int minX = (int) Math.floor(((double) bestX) * divideWidth);
@@ -146,19 +164,64 @@ public class SectionCalculator {
                 int sectionX = (int) Math.floor(x / divideWidth);
                 int sectionY = (int) Math.floor(y / divideHeight);
 
-                double range = percentages[sectionX][sectionY] - min;
-                double scale = range / difference; // scale from min/max-percentage
+                double percentage = percentages[sectionX][sectionY];
 
-                // interpolate based on scale. Lower 50 % will get additional risk, upper 50% will lower their risk
-                double value = new
-                        LinearInterpolator(Config.AREA_RISK_INTERPOLATION_MAX, Config.AREA_RISK_INTERPOLATION_MIN)
-                        .getInterpolation(scale);
-                //System.out.println("Value: " +  value + " Scale: " + scale + " Range: " + range);
+                double range = percentage - min;
+                double scale = range / difference;
+                double value = new LinearInterpolator(Config.AREA_RISK_INTERPOLATION_MAX, Config.AREA_RISK_INTERPOLATION_MIN)
+                    .getInterpolation(scale);
                 // set value here
                 //#end -> In own for-loop for performance
                 cells[x][y].setAreaRisk(value);
             }
         }
+    }
+
+    private double[][] createDeepIterations(double[][] percentages) {
+        HashMap<Integer, double[][]> percentageIterations = new HashMap<Integer, double[][]>();
+        int divisionAmountSquare = 1;
+        int divisionAmount = 1;
+        int localResolution = Config.RESOLUTION;
+
+        double[][] deepPercentages = new double[Config.RESOLUTION][Config.RESOLUTION];
+
+        for (int iteration = 0; iteration < Config.ITERATIONS; iteration++) {
+            double[][] percentagesGrid = new double[localResolution][localResolution];
+            for (int x = 0; x < percentages.length; x++) {
+                for (int y = 0; y < percentages[0].length; y++) {
+                    int dividedX = (int) Math.floor(((double) x) / ((double) divisionAmount));
+                    int dividedY = (int) Math.floor(((double) y) / ((double) divisionAmount));
+
+                    double percentage = percentages[x][y] / ((double) divisionAmountSquare);
+                    percentagesGrid[dividedX][dividedY] = percentage;
+                }
+            }
+            percentageIterations.put(iteration, percentagesGrid);
+            divisionAmountSquare *= 4;
+            divisionAmount *= 2;
+            localResolution /= 2;
+        }
+        for (int x = 0; x < percentages.length; x++) {
+            for (int y = 0; y < percentages[0].length; y++) {
+                divisionAmount = 1;
+                double percentage = 0.0D;
+                double division = 0.0D;
+
+                for (int iteration = 0; iteration < Config.ITERATIONS; iteration++) {
+                    int dividedX = (int) Math.floor(((double) x) / ((double) divisionAmount));
+                    int dividedY = (int) Math.floor(((double) y) / ((double) divisionAmount));
+
+                    percentage += percentageIterations.get(iteration)[dividedX][dividedY] * ((double) Config.MULTIPLICATIONS[iteration]);
+                    division += Config.MULTIPLICATIONS[iteration];
+
+                    divisionAmount *= 2;
+                }
+
+                percentage = percentage / division;
+                deepPercentages[x][y] = percentage;
+            }
+        }
+        return deepPercentages;
     }
 
 }
