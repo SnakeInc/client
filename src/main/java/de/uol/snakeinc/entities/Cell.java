@@ -162,8 +162,8 @@ public class Cell extends PathCell implements DeadCell {
             deadEndRisk *
             killIncentive *
             pathHighlight *
-            deadEndFlooding *
-            deadEndJumping;
+            deadEndFlooding;
+            //* deadEndJumping;
     }
 
     /**
