@@ -106,7 +106,6 @@ public class MoveCalculation {
     @AllArgsConstructor
     @Getter
     public static class DirSpeed {
-
         private final Direction direction;
         private final int speed;
     }

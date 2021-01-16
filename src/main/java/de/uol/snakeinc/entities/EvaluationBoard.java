@@ -2,8 +2,8 @@ package de.uol.snakeinc.entities;
 
 import com.google.gson.JsonObject;
 import de.uol.snakeinc.Common;
-import de.uol.snakeinc.Config;
 import de.uol.snakeinc.SnakeInc;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
 import de.uol.snakeinc.analyzingTools.MoveCalculation;
 import de.uol.snakeinc.gui.Gui;
@@ -106,7 +106,6 @@ public class EvaluationBoard {
                 }
                 str.append("\n");
             }
-
             log.debug(str.toString());
         }
     }
@@ -147,7 +146,6 @@ public class EvaluationBoard {
         var xy = Common.generateXY(player.getDirection(), x, y, -(speed - 1));
         setCells(xy.getX(), xy.getY(), iD);
     }
-
 
     private void setCells(int x, int y, int iD) {
         //Todo remove
