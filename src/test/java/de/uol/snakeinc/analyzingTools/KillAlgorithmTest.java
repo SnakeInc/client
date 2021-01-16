@@ -344,6 +344,38 @@ class KillAlgorithmTest {
         assertEquals(Config.KILL_INCENTIVE, swapCells4[7][4].getRisks());
         assertEquals(Config.KILL_INCENTIVE, swapCells4[6][4].getRisks());
         assertEquals(Config.KILL_INCENTIVE, swapCells4[5][4].getRisks());
-    }
 
+        Cell[][] cells5 = new Cell[20][50];
+        for (int x = 0; x < 20; x++) {
+            for (int y = 0; y < 50; y++) {
+                cells5[x][y] = new Cell(x, y);
+            }
+        }
+        cells5[5][17].setId(2);
+        cells5[4][17].setId(2);
+        cells5[3][17].setId(2);
+        cells5[2][17].setId(2);
+        cells5[1][17].setId(2);
+        cells5[0][17].setId(2);
+
+        cells5[9][14].setId(1);
+        cells5[10][14].setId(1);
+        cells5[11][14].setId(1);
+        cells5[12][14].setId(1);
+        cells5[13][14].setId(1);
+        cells5[14][14].setId(1);
+        cells5[15][14].setId(1);
+        cells5[16][14].setId(1);
+        cells5[17][14].setId(1);
+        cells5[18][14].setId(1);
+        cells5[19][14].setId(1);
+
+        Player us6 = new Player(1, 9, 14, Direction.LEFT, 2, true, "1");
+        Player op6 = new Player(2, 5, 17, Direction.RIGHT, 1, true, "2");
+
+        Player[] players6 = new Player[] {op6, us6};
+        Set<Cell> evaluatedCells6 = KillAlgorithm.killAlgorithm(cells5, players6, us6);
+
+        assertEquals(0, evaluatedCells6.size());
+    }
 }
