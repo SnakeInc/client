@@ -4,7 +4,7 @@ import de.uol.snakeinc.pathfinding.PathCell;
 import lombok.Getter;
 import lombok.Setter;
 
-public class AStarNode implements Comparable {
+public class AStarNode implements Comparable<AStarNode> {
 
     @Getter
     private AStarNode parent;
@@ -23,8 +23,7 @@ public class AStarNode implements Comparable {
 
     // Compare by f value (g + h)
     @Override
-    public int compareTo(Object o) {
-        AStarNode that = (AStarNode) o;
+    public int compareTo(AStarNode that) {
         return (int)((this.cost + this.distance) - (that.cost + that.distance));
     }
 }

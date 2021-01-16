@@ -49,9 +49,8 @@ public class Gui extends Application {
         initialize();
 
         riskType.setPadding(new Insets(10,10,10,10));
-        riskType.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
-                board.setRiskType((RiskType) newValue);
-            }
+        riskType.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) ->
+                board.setRiskType((RiskType) newValue)
         );
         root.getChildren().add(riskType);
 

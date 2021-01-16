@@ -104,22 +104,6 @@ public class Cell extends PathCell implements DeadCell {
         this.pathHighlight = risk;
     }
 
-    public double getAreaRisk() {
-        return this.areaRisk;
-    }
-
-    public double getDeadEndRisk() {
-        return this.deadEndRisk;
-    }
-
-    public double getKillAlgorithmRisk() {
-        return this.killIncentive;
-    }
-
-    public double getOpponentMovementRisk() {
-        return this.opponentMovementRisk;
-    }
-
     public void setDeadEndFlooding(double deadEndFlooding) {
         if (deadEndFlooding > this.deadEndFlooding) {
             this.deadEndFlooding = deadEndFlooding;
@@ -151,7 +135,6 @@ public class Cell extends PathCell implements DeadCell {
     public double getRisks() {
         //Not calculated: Speed-Up.
         //Not calculated: Interaction between players.
-        //Not calculated: Interinteraktion between players.
         if (hardDeadly || tmpDeadly) {
             return Config.DEATH_VALUE;
         }
