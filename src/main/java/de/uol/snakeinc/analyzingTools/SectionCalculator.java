@@ -117,7 +117,10 @@ public class SectionCalculator {
             double range = percentages[sectionX][sectionY] - min;
             double scale = range / difference;
 
-            double value = new LinearInterpolator(0.8, 1.0).getInterpolation(scale);
+            double value = new LinearInterpolator(
+                Config.PATH_HIGHLIGHT_INTERPOLATION_MIN,
+                Config.PATH_HIGHLIGHT_INTERPOLATION_MAX
+            ).getInterpolation(scale);
             Pathfinder finder = new AStarSearch(cells);
             List<PathCell> pathCells = finder.findPath(cells[us.getX()][us.getY()], cells[optionX][optionY]);
 
