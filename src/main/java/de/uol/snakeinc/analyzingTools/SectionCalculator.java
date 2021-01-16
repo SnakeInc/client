@@ -42,7 +42,7 @@ public class SectionCalculator {
      * @param cells cells
      * @param us player us
      */
-    public void calculate(Cell[][] cells) {
+    public void calculate(Cell[][] cells, Player us) {
         int[][] sections = new int[resolution][resolution];
         int[][] options = new int[resolution][resolution];
         // fill options and section. Options are the total optional blocks, sections are the free blocks
