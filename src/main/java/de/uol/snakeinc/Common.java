@@ -111,7 +111,7 @@ public abstract class Common {
     }
 
     /**
-     * Assert Cell
+     * Assert Cell.
      * @param x position X
      * @param y position Y
      * @param cells cells
