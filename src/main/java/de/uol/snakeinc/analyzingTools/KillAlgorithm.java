@@ -140,13 +140,11 @@ public abstract class KillAlgorithm {
      * @return          true if theres a dead end
      */
     private static boolean checkForDeadEnd(int x, int y, Cell[][] cells, FloodVar floodVar) {
-        if (Common.offBoardOrDeadly(x, y, cells)) {
-            return true;
-        } else if (floodVar.floodCache[x][y] != 1) {
+        if (!Common.offBoardOrDeadly(x, y, cells) && floodVar.floodCache[x][y] != 1) {
             int terminationCount = flood(floodVar, x, y, cells).getFloodTerminationCount();
             return terminationCount > 0;
         }
-        return false;
+        return true;
     }
 
     /**
