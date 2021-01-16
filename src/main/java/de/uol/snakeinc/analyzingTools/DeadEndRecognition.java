@@ -65,7 +65,7 @@ public class DeadEndRecognition {
     private void testMove(Direction direction, int x, int y, int speed) {
         Common.Tuple[] tuple = generateAllXYUpToFromOne(direction, x, y, speed + 1);
         for(Common.Tuple t: tuple) {
-            if(!isOffBoard(t.getX(), t.getY())) {
+            if(isNotOffBoard(t.getX(), t.getY())) {
                 historyMap.setDeadly(t.getX(), t.getY());
                 System.out.println("Cell ( " + t.getX() + ", " + t.getY() + " ) is now tmp deadly!");
             }
@@ -79,9 +79,9 @@ public class DeadEndRecognition {
         ArrayList<Common.Tuple> tuples = getLineOffPosition(toList, direction);
         boolean alreadyChecked = false;
         for (Common.Tuple neighbour : tuples) {
-            if (!isOffBoard(neighbour.getX(), neighbour.getY()) && !alreadyChecked) {
-                if(!isDeadly(neighbour.getX(), neighbour.getY())) {
-                    testRoundOfCell(neighbour.getX(), neighbour.getY());
+            if (isNotOffBoard(neighbour.getX(), neighbour.getY()) && !alreadyChecked) {
+                if(isNotDeadly(neighbour.getX(), neighbour.getY())) {
+                    findNeighbours(neighbour.getX(), neighbour.getY(), historyMap.getMap());
                     alreadyChecked = true;
                 } else {
                     alreadyChecked = false;
@@ -153,12 +153,12 @@ public class DeadEndRecognition {
     }
 
     private void testRoundOfCell(int x, int y) {
-        if(!isOffBoard(x, y)) {
+        if(isNotOffBoard(x, y)) {
             boolean areaAlreadyTested = false;
             for(int i = 0; i <= 7; i++) {
                 Common.Tuple tuple = getRoundOfPosition(x, y, i);
-                if(!isOffBoard(tuple.getX(), tuple.getY()) && !areaAlreadyTested) {
-                    if(!isDeadly(tuple.getX(), tuple.getY())) {
+                if(isNotOffBoard(tuple.getX(), tuple.getY()) && !areaAlreadyTested) {
+                    if(isNotDeadly(tuple.getX(), tuple.getY())) {
                         findNeighbours(tuple.getX(), tuple.getY(), historyMap.getMap());
                         //debug
                         cells[tuple.getX()][tuple.getY()].setMarkedForDeadEndFlooding(2.0);
@@ -261,8 +261,8 @@ public class DeadEndRecognition {
      * @param y y coordinate
      * @return returns true if deadly
      */
-    private boolean isDeadly(int x, int y) {
-        return historyMap.getMap()[x][y].isDeadly();
+    private boolean isNotDeadly(int x, int y) {
+        return !historyMap.getMap()[x][y].isDeadly();
     }
 
     /**
@@ -271,8 +271,8 @@ public class DeadEndRecognition {
      * @param y y coordinate
      * @return returns true if not on the board
      */
-    private boolean isOffBoard(int x, int y) {
-        return x < 0 || x >= width || y < 0 || y >= height;
+    private boolean isNotOffBoard(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height;
     }
 
     /**
@@ -286,11 +286,11 @@ public class DeadEndRecognition {
         int deadEndCellCount = 1;
         cellsToTest.add(map[x][y]);
         int toTestCount = 1;
-        while(toTestCount > 0 && deadEndCellCount < (mapCellCount / 4)) {
+        while(toTestCount > 0 && deadEndCellCount < 300) {
             Cell cell = cellsToTest.pop();
             toTestCount--;
-            int xCell = cell.getY();
-            int yCell = cell.getX();
+            int xCell = cell.getX();
+            int yCell = cell.getY();
             if(!(cellsTested.contains(cell) || cellsToTest.contains(cell) || offBoardOrDeadly(xCell, yCell))) {
                 cellsTested.add(cell);
                 deadEndCellCount++;
@@ -321,10 +321,10 @@ public class DeadEndRecognition {
             }
         }
         double deadEndRisk;
-        if((deadEndCellCount < (mapCellCount / 4))) {
-            deadEndRisk = -deadEndCellCount * (1 / (mapCellCount / 4)) + 2;
+        if((deadEndCellCount < 300)) {
+            deadEndRisk = -0.00001 * Math.pow(deadEndCellCount, 2) + 2;
             cellsTested.forEach((testedCell) -> {
-                cells[testedCell.getY()][testedCell.getX()].setDeadEndRisk(deadEndRisk);
+                cells[testedCell.getX()][testedCell.getY()].setDeadEndRisk(deadEndRisk);
             });
             log.debug("Size: " + deadEndCellCount + " - Risk: " + deadEndRisk);
         }

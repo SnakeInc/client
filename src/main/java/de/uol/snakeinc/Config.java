@@ -22,7 +22,7 @@ public abstract class Config {
     public static final int SEARCHING_DEPTH = 10;
     public static final double BEST_ACTION_MULTIPLIER = 100D;
     public static final Action DEFAULT_BEST_ACTION = Action.CHANGE_NOTHING;
-    public static final double DEATH_VALUE_BASE = 3D;
+    public static final double DEATH_VALUE_BASE = 6D;
 
     /********
      * Opponent Moves Calculation.
