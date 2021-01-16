@@ -37,7 +37,7 @@ public abstract class KillAlgorithm {
         for (int i = 0; i < players.length; i++) {
             if (BoardAnalyzer.inDistance(us, players[i], 3)) {
                 int[][] floodCache = new int [width][height];
-                floodCache = closeCircle(cells, floodCache, players[i], us);
+                floodCache = connectPlayersFillFloodCache(cells, floodCache, players[i], us);
                 FloodVar floodVarIf = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache.clone());
                 FloodVar floodVarElse = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache.clone());
                 Player op = players[i];
@@ -170,7 +170,7 @@ public abstract class KillAlgorithm {
      * @param us          us
      * @return           floodCache
      */
-    private static int[][] closeCircle(Cell[][] cells, int[][] floodCache, Player op, Player us) {
+    private static int[][] connectPlayersFillFloodCache(Cell[][] cells, int[][] floodCache, Player op, Player us) {
         int usX = us.getX();
         int usY = us.getY();
         int opX = op.getX();
@@ -185,11 +185,12 @@ public abstract class KillAlgorithm {
             }
             str.append("\n");
         }
-
         System.out.println(str.toString());
-        System.out.println(opX + "  " + opY + " and " + usX + usY);
+        System.out.println(opX + "  " + opY + " and " + usX + "  " + usY);
+
         AStarSearch search = new AStarSearch(cells);
         List<PathCell> pathCells = search.findPath(cells[opX][opY], cells[usX][usY]);
+
         if (pathCells != null) {
             for (PathCell pathCell : pathCells) {
                 System.out.println(pathCell.getX() + " and " + pathCell.getY());
