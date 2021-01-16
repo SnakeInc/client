@@ -14,8 +14,6 @@ import java.util.Set;
 
 public abstract class KillAlgorithm {
 
-
-
     /**
      * Sets incentives if another Player can be attacked.
      * @param cells     cells
@@ -28,7 +26,7 @@ public abstract class KillAlgorithm {
         int width = cells.length;
         int height = cells[1].length;
         for (int i = 0; i < players.length; i++) {
-            if (BoardAnalyzer.inDistance(us, players[i], 4)) {
+            if (BoardAnalyzer.inDistance(us, players[i], 3)) {
                 int[][] floodCache = new int [width][height];
                 closeCircle(floodCache, players[i], us);
                 FloodVar floodVarIf = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache);

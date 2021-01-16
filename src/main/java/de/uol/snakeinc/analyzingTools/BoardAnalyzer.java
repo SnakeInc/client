@@ -3,6 +3,7 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Player;
+import de.uol.snakeinc.timetracking.TimeTracker;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -21,9 +22,11 @@ public class BoardAnalyzer {
     private int round = 0;
 
     private SectionCalculator sectionCalculator;
+    private DeadEndFlooding deadEndFlooding;
 
     public BoardAnalyzer(int width, int height) {
         this.sectionCalculator = new SectionCalculator(width, height);
+        this.deadEndFlooding = new DeadEndFlooding(width, height);
     }
 
     /**
@@ -34,13 +37,21 @@ public class BoardAnalyzer {
      * @param cells cells
      */
     public void analyze(Cell[][] cells, Player[] players, Player us) {
+        TimeTracker timeTracker = new TimeTracker();
         round++;
+        sectionCalculator.calculate(cells, us);
+        timeTracker.logTime("Section-Calculation");
         OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
-        sectionCalculator.calculate(cells);
         evaluatedCells = calc.evaluate(cells, players, us);
+        timeTracker.logTime("OpponentMovement-Calculation");
+        deadEndFlooding.calculate(cells, us);
+        timeTracker.logTime("DeadEndFlooding-Calculation");
         DeadEndRecognition deadEndRecognition = new DeadEndRecognition(cells, us,this);
         deadEndRecognition.findDeadEnds();
+        timeTracker.logTime("DeadEnd-Calculation");
         evaluatedCells.addAll(KillAlgorithm.killAlgorithm(cells, players, us));
+        timeTracker.logTime("KillAlgorithm-Calculation");
+        timeTracker.logFinal();
     }
 
     /**

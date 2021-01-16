@@ -1,11 +1,12 @@
 package de.uol.snakeinc.entities;
 
+import de.uol.snakeinc.deadendflooding.DeadCell;
 import de.uol.snakeinc.Config;
 import de.uol.snakeinc.pathfinding.PathCell;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Cell extends PathCell implements Cloneable {
+public class Cell extends PathCell implements DeadCell {
 
 
     //Basic Value.
@@ -26,6 +27,10 @@ public class Cell extends PathCell implements Cloneable {
     @Getter @Setter
     private double areaRisk;
 
+    //Highlighted path
+    @Getter
+    private double pathHighlight;
+
     @Getter
     private double deadEndRisk;
 
@@ -33,8 +38,16 @@ public class Cell extends PathCell implements Cloneable {
 
     private boolean tmpDeadly;
 
+    private double deadEndFlooding;
+
+    private double deadEndJumping;
+
     @Getter
     private int iD;
+
+    private boolean hit;
+
+    private boolean flooded;
 
     public Cell(int x, int y) {
         super(x, y);
@@ -42,15 +55,19 @@ public class Cell extends PathCell implements Cloneable {
         opponentMovementRisk = 1;
         tmpMoveCalcValue = 1;
         areaRisk = 1;
+        pathHighlight = 1;
         killIncentive = 1;
         deadEndRisk = 1;
+        deadEndFlooding = 1;
+        deadEndJumping = 1;
         hardDeadly = false;
         tmpDeadly = false;
+        flooded = false;
     }
 
     @Override
     public boolean isInUse() {
-        return value != 1;
+        return iD != 0;
     }
 
     public void setId(int id) {
@@ -83,6 +100,48 @@ public class Cell extends PathCell implements Cloneable {
         }
     }
 
+    public void setPathHighlight(double risk) {
+        this.pathHighlight = risk;
+    }
+
+    public double getAreaRisk() {
+        return this.areaRisk;
+    }
+
+    public double getDeadEndRisk() {
+        return this.deadEndRisk;
+    }
+
+    public double getKillAlgorithmRisk() {
+        return this.killIncentive;
+    }
+
+    public double getOpponentMovementRisk() {
+        return this.opponentMovementRisk;
+    }
+
+    public void setDeadEndFlooding(double deadEndFlooding) {
+        if (deadEndFlooding > this.deadEndFlooding) {
+            this.deadEndFlooding = deadEndFlooding;
+        }
+    }
+
+    public void setDeadEndFloodingReset(double deadEndFlooding) {
+        this.deadEndFlooding = deadEndFlooding;
+    }
+
+    public double getDeadEndFlooding() {
+        return this.deadEndFlooding;
+    }
+
+    public void setDeadEndJumping(double deadEndJumping) {
+        this.deadEndJumping = deadEndJumping;
+    }
+
+    public double getDeadEndJumping() {
+        return this.deadEndJumping;
+    }
+
     public void setDeadEndRisk(double riskValue) {
         if ((! hardDeadly) && this.deadEndRisk < riskValue) {
             this.deadEndRisk = riskValue;
@@ -96,7 +155,15 @@ public class Cell extends PathCell implements Cloneable {
         if (hardDeadly || tmpDeadly) {
             return Config.DEATH_VALUE;
         }
-        return getValue()  * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk * killIncentive;
+        return getValue() *
+            opponentMovementRisk *
+            tmpMoveCalcValue *
+            areaRisk *
+            deadEndRisk *
+            killIncentive *
+            pathHighlight *
+            deadEndFlooding;
+        //* deadEndJumping;
     }
 
     /**
@@ -122,6 +189,26 @@ public class Cell extends PathCell implements Cloneable {
 
     public void setKillIncentive() {
         this.killIncentive = Config.KILL_INCENTIVE;
+    }
+
+    @Override
+    public boolean hasHit() {
+        return this.hit;
+    }
+
+    @Override
+    public void setHit(boolean hit) {
+        this.hit = hit;
+    }
+
+    @Override
+    public boolean flooded() {
+        return this.flooded;
+    }
+
+    @Override
+    public void setFlooded(boolean flooded) {
+        this.flooded = flooded;
     }
 
     @Override

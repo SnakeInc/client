@@ -2,8 +2,8 @@ package de.uol.snakeinc.entities;
 
 import com.google.gson.JsonObject;
 import de.uol.snakeinc.Common;
-import de.uol.snakeinc.Config;
 import de.uol.snakeinc.SnakeInc;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.analyzingTools.BoardAnalyzer;
 import de.uol.snakeinc.analyzingTools.MoveCalculation;
 import de.uol.snakeinc.gui.Gui;
@@ -106,7 +106,6 @@ public class EvaluationBoard {
                 }
                 str.append("\n");
             }
-
             log.debug(str.toString());
         }
     }
@@ -139,6 +138,8 @@ public class EvaluationBoard {
     private void updateJumpingPlayerCells(Player player) {
         int x = player.getX();
         int y = player.getY();
+        //Todo remove
+        Common.assertCellXY(x,y, cells);
         int speed = player.getSpeed();
         int iD = player.getId();
         setCells(x, y, iD);
@@ -146,8 +147,9 @@ public class EvaluationBoard {
         setCells(xy.getX(), xy.getY(), iD);
     }
 
-
     private void setCells(int x, int y, int iD) {
+        //Todo remove
+        Common.assertCellXY(x,y, cells);
         if (x >= 0 && x < width && y >= 0 && y < height) {
             cells[x][y].setId(iD);
         }
@@ -169,6 +171,8 @@ public class EvaluationBoard {
             y = playerHashMap.get(i).getY();
             speed = playerHashMap.get(i).getSpeed();
             tmpPlayer = playerHashMap.get(i);
+            //Todo remove
+            Common.assertCellXY(x,y, cells);
 
             //Checking for jumping
             if (round % Config.ROUNDS_PER_JUMP == 0 && speed >= 3) {

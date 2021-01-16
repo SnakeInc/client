@@ -111,9 +111,9 @@ public abstract class Common {
     }
 
     /**
-     * turns the direction to the left.
-     * @param dir Direction
-     * @return Direction
+     * Turns Left.
+     * @param dir origin direction
+     * @return direction left of that
      */
     public static Direction turnLeft(Direction dir) {
         switch (dir) {
@@ -131,9 +131,9 @@ public abstract class Common {
     }
 
     /**
-     * turns the direction to the right.
-     * @param dir Direction
-     * @return Direction
+     * Turns Right.
+     * @param dir origin direction
+     * @return direction right of that
      */
     public static Direction turnRight(Direction dir) {
         switch (dir) {
@@ -148,5 +148,18 @@ public abstract class Common {
             default:
                 throw new IllegalStateException();
         }
+    }
+
+    /**
+     * Assert Cell.
+     * @param x position X
+     * @param y position Y
+     * @param cells cells
+     */
+    public static void assertCellXY(int x, int y, Cell[][] cells) {
+        if (x < 0 || x >= cells.length || y < 0 || y >= cells[0].length) {
+            return;
+        }
+        assert cells[x][y].getX() == x && cells[x][y].getY() == y;
     }
 }
