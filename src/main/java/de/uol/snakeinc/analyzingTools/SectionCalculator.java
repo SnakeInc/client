@@ -50,6 +50,7 @@ public class SectionCalculator {
             for (int y = 0; y < cells[0].length; y++) {
                 int sectionX = (int) Math.floor(x / devideWidth);
                 int sectionY = (int) Math.floor(y / devideHeight);
+                cells[x][y].setPathHighlight(1.0);
                 if (cells[x][y].getValue() < 10) {
                     sections[sectionX][sectionY]++;
                 }
@@ -116,7 +117,7 @@ public class SectionCalculator {
             double range = percentages[sectionX][sectionY] - min;
             double scale = range / difference;
 
-            double value = new LinearInterpolator(1.0, 1.2).getInterpolation(scale);
+            double value = new LinearInterpolator(0.8, 1.0).getInterpolation(scale);
             Pathfinder finder = new AStarSearch(cells);
             List<PathCell> pathCells = finder.findPath(cells[us.getX()][us.getY()], cells[optionX][optionY]);
 
