@@ -15,10 +15,12 @@ public class DeadEndFlooding {
 
     private int width;
     private int height;
+    private List<Cell> deadEndCells;
 
     public DeadEndFlooding(int width, int height) {
         this.width = width;
         this.height = height;
+        this.deadEndCells = new ArrayList<Cell>();
     }
 
     /**
@@ -32,7 +34,9 @@ public class DeadEndFlooding {
         for (int x = 0; x < this.width; x++) {
             for (int y = 0; y < this.height; y++) {
                 cells[x][y].setDeadEndFloodingReset(1.0);
-                cells[x][y].setDeadEndJumping(1.0);
+                if (deadEndCells == null || !deadEndCells.contains(cells[us.getX()][us.getY()])) {
+                    cells[x][y].setDeadEndJumping(1.0);
+                }
                 cells[x][y].setFlooded(false);
                 countCells++;
                 if (cells[x][y].isInUse()) {
@@ -41,27 +45,32 @@ public class DeadEndFlooding {
             }
         }
 
-        if (!checkInDeadEnd(cells, cells[us.getX()][us.getY()], us.getDirection())) {
+
+        if (deadEndCells == null || !deadEndCells.contains(cells[us.getX()][us.getY()])) {
+            deadEndCells = checkInDeadEnd(cells, cells[us.getX()][us.getY()], us.getDirection());
+            int blocks = 500;
+            if (deadEndCells != null) {
+                blocks = deadEndCells.size() - 1;
+            }
             Cell speedUp = this.getCell(cells, us, Action.SPEED_UP);
             Cell slowDown = this.getCell(cells, us, Action.SLOW_DOWN);
             Cell changeNothing = this.getCell(cells, us, Action.CHANGE_NOTHING);
             Cell turnLeft = this.getCell(cells, us, Action.TURN_LEFT);
             Cell turnRight = this.getCell(cells, us, Action.TURN_RIGHT);
-
             if (speedUp != null) {
-                this.floodRound(cells, speedUp, us.getDirection(), us, 500);
+                this.floodRound(cells, speedUp, us.getDirection(), us, blocks);
             }
             if (slowDown != null) {
-                this.floodRound(cells, slowDown, us.getDirection(), us, 500);
+                this.floodRound(cells, slowDown, us.getDirection(), us, blocks);
             }
             if (changeNothing != null) {
-                this.floodRound(cells, changeNothing, us.getDirection(), us, 500);
+                this.floodRound(cells, changeNothing, us.getDirection(), us, blocks);
             }
             if (turnLeft != null) {
-                this.floodRound(cells, turnLeft, Common.turnLeft(us.getDirection()), us, 500);
+                this.floodRound(cells, turnLeft, Common.turnLeft(us.getDirection()), us, blocks);
             }
             if (turnRight != null) {
-                this.floodRound(cells, turnRight, Common.turnRight(us.getDirection()), us, 500);
+                this.floodRound(cells, turnRight, Common.turnRight(us.getDirection()), us, blocks);
             }
         }
     }
@@ -104,7 +113,7 @@ public class DeadEndFlooding {
         return null;
     }
 
-    private boolean checkInDeadEnd(Cell[][] cells, Cell position, Direction direction) {
+    private List<Cell> checkInDeadEnd(Cell[][] cells, Cell position, Direction direction) {
         position.setHit(true);
         List<Cell> checkCells = new ArrayList<Cell>();
         List<Cell> neighbours = this.getPossibleNeighbours(cells, position, direction, true);
@@ -145,9 +154,9 @@ public class DeadEndFlooding {
                     }
                 }
             }
-            return true;
+            return checkCells;
         }
-        return false;
+        return null;
     }
 
     private void floodRound(Cell[][] cells, Cell position, Direction direction, Player us, int blocks) {

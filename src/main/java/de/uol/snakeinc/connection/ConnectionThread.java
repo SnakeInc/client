@@ -34,7 +34,7 @@ public class ConnectionThread extends Thread {
         try {
             //wss://msoll.de/spe_ed?key=
             //url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
-            url = new URI("wss://yellowphoenix18.de:555/Jordi");
+            url = new URI("wss://yellowphoenix18.de:555/SnakeInc");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
