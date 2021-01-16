@@ -3,13 +3,16 @@ package de.uol.snakeinc;
 import de.uol.snakeinc.connection.ConnectionThread;
 import de.uol.snakeinc.gui.Gui;
 import de.uol.snakeinc.gui.GuiThread;
-import de.uol.snakeinc.pathfinding.PathfindTester;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class SnakeInc {
 
+    @Getter @Setter
     private static Gui gui;
+    @Getter @Setter
     private static boolean guiReady = false;
 
     /**
@@ -31,23 +34,7 @@ public class SnakeInc {
         tester.testPathfinding();*/
     }
 
-    public static void setGui(Gui gui) {
-        SnakeInc.gui = gui;
-    }
-
     public static boolean hasGui() {
         return SnakeInc.gui != null;
-    }
-
-    public static Gui getGui() {
-        return SnakeInc.gui;
-    }
-
-    public static void setGuiReady(boolean guiReady) {
-        SnakeInc.guiReady = guiReady;
-    }
-
-    public static boolean isGuiReady() {
-        return SnakeInc.guiReady;
     }
 }
