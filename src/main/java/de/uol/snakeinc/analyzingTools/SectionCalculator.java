@@ -73,8 +73,6 @@ public class SectionCalculator {
 
                 if (percentage > max) {
                     max = percentage;
-                    bestX = x;
-                    bestY = y;
                 }
                 if (percentage < min) {
                     min = percentage;
@@ -91,6 +89,8 @@ public class SectionCalculator {
 
                 if (percentage > deepMax) {
                     deepMax = percentage;
+                    bestX = x;
+                    bestY = y;
                 }
                 if (percentage < deepMin) {
                     deepMin = percentage;
@@ -100,6 +100,18 @@ public class SectionCalculator {
         System.out.println("DeepMin: " + deepMin + " DeepMax: " + deepMax);
 
         this.rankAreaRiskCells(deepPercentages, cells, deepMin, deepMax);
+        this.rankPathHighlightCells(deepPercentages, cells, us, bestX, bestY, min, max);
+    }
+
+    private void rankPathHighlightCells(
+        double[][] percentages,
+        Cell[][] cells,
+        Player us,
+        double bestX,
+        double bestY,
+        double min,
+        double max
+    ) {
 
         // Path-Calculation
         int minX = (int) Math.floor(((double) bestX) * divideWidth);
@@ -142,7 +154,7 @@ public class SectionCalculator {
             List<PathCell> pathCells = finder.findPath(cells[us.getX()][us.getY()], cells[optionX][optionY]);
 
             if (pathCells != null) {
-                int count = 8;
+                int count = Config.PATH_HIGHLIGHT_PATH_RANGE;
                 for (PathCell pathCell : pathCells) {
                     if (count <= 0) {
                         break;

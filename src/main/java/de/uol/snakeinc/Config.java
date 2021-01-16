@@ -40,6 +40,7 @@ public abstract class Config {
     public static final double AREA_RISK_INTERPOLATION_MIN = 1.0D;
     public static final double PATH_HIGHLIGHT_INTERPOLATION_MAX = 1.0D;
     public static final double PATH_HIGHLIGHT_INTERPOLATION_MIN = 0.8D;
+    public static final int PATH_HIGHLIGHT_PATH_RANGE = 12;
 
     /********
      * Cell.
