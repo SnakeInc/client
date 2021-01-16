@@ -50,7 +50,7 @@ public class DeadEndRecognition {
         int usY = us.getY();
         int usSpeed = us.getSpeed();
         testPossibleMoves(usDir, usX, usY, usSpeed);
-        if(Config.RANDOM_TESTING) {
+        if (Config.RANDOM_TESTING) {
             testRandom(usDir, usX, usY);
         }
     }
