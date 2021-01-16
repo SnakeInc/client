@@ -127,7 +127,7 @@ public class AStarSearchTest {
         }
         AStarSearch search = new AStarSearch(cells);
         List<PathCell> pathCells = search.findPath(cells[0][0], cells[4][2], true);
-        assertNotNull(pathCells);
+        assertNull(pathCells);
     }
 
     private boolean testCellsInUse(List<PathCell> pathCells, List<Cell> rightPathCells) {

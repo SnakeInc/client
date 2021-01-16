@@ -45,24 +45,36 @@ public abstract class KillAlgorithm {
                 Boolean boolElse = false;
                 switch (dir) {
                     case DOWN:
-                        boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf) || checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
-                        boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse) || checkForDeadEnd(x + 1, y - 1, cells, floodVarElse);
-                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height, floodVarIf, floodVarElse, evaluatedCells);
+                        boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf)
+                            || checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
+                        boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse)
+                            || checkForDeadEnd(x + 1, y - 1, cells, floodVarElse);
+                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
+                            floodVarIf, floodVarElse, evaluatedCells);
                         break;
                     case UP:
-                        boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf) || checkForDeadEnd(x - 1, y + 1, cells, floodVarIf);
-                        boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse) || checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
-                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height, floodVarIf, floodVarElse, evaluatedCells);
+                        boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf)
+                            || checkForDeadEnd(x - 1, y + 1, cells, floodVarIf);
+                        boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse)
+                            || checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
+                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
+                            floodVarIf, floodVarElse, evaluatedCells);
                         break;
                     case RIGHT:
-                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf) || checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
-                        boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse) || checkForDeadEnd(x - 1, y + 1, cells, floodVarElse);
-                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height, floodVarIf, floodVarElse, evaluatedCells);
+                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf)
+                            || checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
+                        boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse)
+                            || checkForDeadEnd(x - 1, y + 1, cells, floodVarElse);
+                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
+                            floodVarIf, floodVarElse, evaluatedCells);
                         break;
                     case LEFT:
-                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf) || checkForDeadEnd(x + 1, y - 1, cells, floodVarIf);
-                        boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse) || checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
-                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height, floodVarIf, floodVarElse, evaluatedCells);
+                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf)
+                            || checkForDeadEnd(x + 1, y - 1, cells, floodVarIf);
+                        boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse)
+                            || checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
+                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height,
+                            floodVarIf, floodVarElse, evaluatedCells);
                         break;
                     default:
                         throw new IllegalStateException();
@@ -72,7 +84,22 @@ public abstract class KillAlgorithm {
         return evaluatedCells;
     }
 
-    private static void checkBooleanAndDecide (Cell[][] cells, Player op, boolean boolIf, boolean boolElse, Direction dir, int width, int height, FloodVar floodVarIf, FloodVar floodVarElse, Set<Cell> evaluatedCells) {
+    /**
+     * Checks the deadends and choses the best attack-option.
+     * @param cells cells
+     * @param op opponent
+     * @param boolIf boolean
+     * @param boolElse boolean
+     * @param dir direction
+     * @param width width
+     * @param height height
+     * @param floodVarIf floodVarIf
+     * @param floodVarElse floodVarElse
+     * @param evaluatedCells evaluated cells
+     */
+    private static void checkBooleanAndDecide (Cell[][] cells, Player op, boolean boolIf, boolean boolElse,
+                                               Direction dir, int width, int height, FloodVar floodVarIf,
+                                               FloodVar floodVarElse, Set<Cell> evaluatedCells) {
         if (dir == Direction.RIGHT || dir == Direction.LEFT) {
             if (boolIf) {
                 if (boolElse) {
@@ -81,7 +108,7 @@ public abstract class KillAlgorithm {
                 } else {
                     raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
                 }
-            } else if (boolElse){
+            } else if (boolElse) {
                 raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
             }
         } else {
@@ -92,7 +119,7 @@ public abstract class KillAlgorithm {
                 } else {
                     raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
                 }
-            } else if (boolElse){
+            } else if (boolElse) {
                 raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
             }
         }
@@ -138,7 +165,7 @@ public abstract class KillAlgorithm {
             floodVar.floodTerminationCount--;
             floodVar.floodCache[x][y] = 1;
 
-            for(var xy : Common.generateXYAllDirections(x, y,1)) {
+            for (var xy : Common.generateXYAllDirections(x, y,1)) {
                 floodVar = flood(floodVar, xy, cells);
             }
         }
@@ -148,7 +175,6 @@ public abstract class KillAlgorithm {
     private static FloodVar flood(FloodVar floodVar, Common.Tuple tuple, Cell[][] cells) {
         if (!Common.offBoardOrDeadly(tuple.getX(), tuple.getY(), cells) && floodVar.getFloodTerminationCount() > 0
             && floodVar.getFloodCache()[tuple.getX()][tuple.getY()] != 1) {
-           // System.out.println(tuple.getX() + "  " + tuple.getY() + " " + !Common.offBoardOrDeadly(tuple.getX(), tuple.getY(), cells) + " RISK " + cells[tuple.getX()][tuple.getY()].getRisks());
 
             floodVar.floodTerminationCount--;
             floodVar.floodCache[tuple.getX()][tuple.getY()] = 1;
@@ -162,6 +188,7 @@ public abstract class KillAlgorithm {
 
     /**
      * Marks cells between the heads of us and op.
+     * @param cells  cells
      * @param floodCache floodCache
      * @param op         opponent
      * @param us          us
@@ -197,7 +224,8 @@ public abstract class KillAlgorithm {
      * @return                   Set of cells
      */
     private static Set<Cell> raiseKillIncentive(Player player, Cell[][] cells, Set<Cell> killingCells,
-                                                Direction opDirection, Direction attackDirection, int width, int height) {
+                                                Direction opDirection, Direction attackDirection, int width,
+                                                int height) {
         int x = player.getX();
         int y = player.getY();
         int attackDistance = player.getSpeed() * Config.INITIAL_ATTACK_DISTANCE;
