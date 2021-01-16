@@ -8,9 +8,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- The AStarSearch class, along with the AStarNode class,
- implements a generic A* search algorithm. The AStarNode
- class should be subclassed to provide searching capability.
+ * @author Sebastian Diers
+ * A*-Algorithm based on A*-Algorithm by rosettacode.org - https://rosettacode.org/wiki/A*_search_algorithm#Java
+ * Optimized to beeing used on cell-grid and for usage with objects.
  */
 public class AStarSearch extends Pathfinder {
 
@@ -110,8 +110,8 @@ public class AStarSearch extends Pathfinder {
                 }
                 int mazePositionY = this.now.getCell().getY() + y;
                 int mazePositionX = this.now.getCell().getX() + x;
-                if (mazePositionY >= this.maze[0].length || mazePositionY < 0 || //changed
-                    mazePositionX >= this.maze.length || mazePositionX < 0) { //changed
+                if (mazePositionY >= this.maze[0].length || mazePositionY < 0 ||
+                    mazePositionX >= this.maze.length || mazePositionX < 0) {
                     continue; // skip if diagonal movement is not allowed
                 }
                 AStarNode node = new AStarNode(
@@ -121,12 +121,12 @@ public class AStarSearch extends Pathfinder {
                 );
                 if ((x != 0 || y != 0) // not this.now
                     && this.now.getCell().getX() + x >= 0
-                    && this.now.getCell().getX() + x < this.maze.length // check maze boundaries //changed
+                    && this.now.getCell().getX() + x < this.maze.length // check maze boundaries
                     && this.now.getCell().getY() + y >= 0
-                    && this.now.getCell().getY() + y < this.maze[0].length //changed
+                    && this.now.getCell().getY() + y < this.maze[0].length
                     // check if square is walkable
                     && !this.checkInUse(this.maze[this.now.getCell().getX() + x][this.now.getCell().getY() + y]
-                    , checkEnd) //changed
+                    , checkEnd)
                     // if not already done
                     && !findNeighborInList(this.open, node) && !findNeighborInList(this.closed, node)) {
                     node.setCost(node.getParent().getCost() + 1.); // Horizontal/vertical cost = 1.0
