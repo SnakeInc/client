@@ -57,8 +57,9 @@ class KillAlgorithmTest {
         Player us = new Player(1, 9, 14, Direction.LEFT, 2, true, "1");
         Player op = new Player(2, 5, 17, Direction.RIGHT, 1, true, "2");
 
-        Player[] players = new Player[] {op};
+        Player[] players = new Player[] {op,us};
         Set<Cell> evaluatedCells = KillAlgorithm.killAlgorithm(cells, players, us);
+        assertFalse(evaluatedCells.isEmpty());
         for (Cell cell : evaluatedCells) {
             System.out.println(cell.getX() + "  " + cell.getY());
 
