@@ -29,7 +29,7 @@ public class GUIBoard extends GridPane {
         actualRoundProperty.setValue(0);
         width = 0;
         height = 0;
-        riskType = RiskType.KILLALGORITHM;
+        riskType = RiskType.GLOBAL;
         this.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
