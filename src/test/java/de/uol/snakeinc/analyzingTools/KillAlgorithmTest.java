@@ -16,8 +16,6 @@ class KillAlgorithmTest {
     @Test
     void killAlgorithm() {
 
-
-
         Cell[][] cells = new Cell[20][20];
         for (int x = 0; x < 20; x++) {
             for (int y = 0; y < 20; y++) {

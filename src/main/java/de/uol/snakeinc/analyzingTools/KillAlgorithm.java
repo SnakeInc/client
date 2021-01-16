@@ -188,7 +188,8 @@ public abstract class KillAlgorithm {
 
         System.out.println(str.toString());
         System.out.println(opX + "  " + opY + " and " + usX + usY);
-        List<PathCell> pathCells = new AStarSearch(cells).findPath(cells[opX][opY], cells[usX][usY]);
+        AStarSearch search = new AStarSearch(cells);
+        List<PathCell> pathCells = search.findPath(cells[opX][opY], cells[usX][usY]);
         if (pathCells != null) {
             for (PathCell pathCell : pathCells) {
                 System.out.println(pathCell.getX() + " and " + pathCell.getY());
