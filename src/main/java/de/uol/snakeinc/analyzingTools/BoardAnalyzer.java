@@ -3,6 +3,7 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Player;
+import de.uol.snakeinc.timetracking.TimeTracker;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -34,13 +35,19 @@ public class BoardAnalyzer {
      * @param cells cells
      */
     public void analyze(Cell[][] cells, Player[] players, Player us) {
+        TimeTracker timeTracker = new TimeTracker();
         round++;
-        OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
         sectionCalculator.calculate(cells);
+        timeTracker.logTime("Section-Calculation");
+        OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
         evaluatedCells = calc.evaluate(cells, players, us);
+        timeTracker.logTime("OpponentMovement-Calculation");
         DeadEndRecognition deadEndRecognition = new DeadEndRecognition(cells, us,this);
         deadEndRecognition.findDeadEnds();
+        timeTracker.logTime("DeadEnd-Calculation");
         evaluatedCells.addAll(KillAlgorithm.killAlgorithm(cells, players, us));
+        timeTracker.logTime("KillAlgorithm-Calculation");
+        timeTracker.logFinal();
     }
 
     /**
