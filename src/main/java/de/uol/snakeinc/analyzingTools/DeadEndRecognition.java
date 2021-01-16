@@ -1,6 +1,7 @@
 package de.uol.snakeinc.analyzingTools;
 
 import de.uol.snakeinc.Common;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
 import de.uol.snakeinc.entities.Player;
@@ -54,15 +55,15 @@ public class DeadEndRecognition {
     }
 
     private void calculateRisk(int x, int y, int depth, int speed, Direction dir) {
-        if (depth <= 3) {
+        if (depth <= Config.DER_SEARCHING_DEPTH) {
             //Recursive call
             recursiveRiskByDirection(x, y, depth, speed, dir);
             recursiveRiskByDirection(x, y, depth, speed, Common.turnLeft(dir));
             recursiveRiskByDirection(x, y, depth, speed, Common.turnRight(dir));
-            if (speed + 1 < 10) {
+            if (speed + 1 < Config.SPEED_MAX) {
                 recursiveRiskByDirection(x, y, depth, speed + 1, dir);
             }
-            if (speed - 1 > 0) {
+            if (speed - 1 > Config.SPEED_MIN) {
                 recursiveRiskByDirection(x, y, depth, speed - 1, dir);
             }
         }

@@ -1,5 +1,6 @@
 package de.uol.snakeinc.gui.items;
 
+import de.uol.snakeinc.Config;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -7,16 +8,16 @@ import javafx.scene.shape.Rectangle;
 public class GUICell extends Rectangle {
 
     public GUICell () {
-        super.setHeight(10);
-        super.setWidth(10);
-        this.setFill(Paint.valueOf("BLACK"));
+        super.setHeight(Config.GUI_CELL_SIZE);
+        super.setWidth(Config.GUI_CELL_SIZE);
+        this.setFill(Paint.valueOf(Config.BASE_COLOR));
     }
 
     public void setEnemy(boolean us) {
         if (us) {
-            this.setFill(Paint.valueOf("GREEN"));
+            this.setFill(Paint.valueOf(Config.OUR_COLOR));
         } else {
-            this.setFill(Paint.valueOf("RED"));
+            this.setFill(Paint.valueOf(Config.ENEMY_COLOR));
         }
         this.setOpacity(1.0);
     }
@@ -36,7 +37,7 @@ public class GUICell extends Rectangle {
                 }
                 this.setOpacity(opacity);
             } else {
-                double opacity = (risk - 1.0D) / 9.0D;
+                double opacity = (risk - 1.0D) / Config.OPACITY_DIVISOR;
                 this.setOpacity(opacity);
             }
         }

@@ -15,6 +15,7 @@ public abstract class Config {
      *******/
     public static final int INITIAL_ATTACK_DISTANCE = 2;
     public static final int INITIAL_FLOOD_TERMINATION_COUNT = 300;
+    public static final int ROUNDS_AHEAD_FOR_KILL = 3;
 
     /********
      * Move Calculation.
@@ -44,11 +45,12 @@ public abstract class Config {
     /********
      * Cell.
      *******/
-    public static final int DEATH_VALUE = 10;
+    public static final double DEATH_VALUE = 10;
     public static final double MOVE_RISK_1 = 1.25D;
     public static final double MOVE_RISK_2 = 1.0625D;
     public static final double MOVE_RISK_3 = 1.015625D;
     public static final double KILL_INCENTIVE = 0.8D;
+
 
     /********
      * MoveOrder.
@@ -57,6 +59,42 @@ public abstract class Config {
     public static final int IDEAL_MIN_SPEED = 1;
     public static final int IDEAL_MAX_SPEED = 2;
     public static final MoveOrder.SpiralForm IDEAL_SPIRAL_FORM = MoveOrder.SpiralForm.NoSpiral;
+
+    /********
+     * Dead End Flooding.
+     *******/
+    public static final int BLOCKS = 500;
+    public static final double DEAD_END_INCENTIVE = 0.1D;
+    public static final double INTERPOLATION_MIN = 1.0D;
+    public static final double INTERPOLATION_MAX = 2.0D;
+    public static final double FLOOD_ADD = 1.5D;
+
+    /********
+     * Dead End Recognition.
+     *******/
+    public static final int DER_SEARCHING_DEPTH = 3;
+
+    /********
+     * Connection Thread.
+     *******/
+    public static final int SLEEP_MILLIS = 100;
+
+    /********
+     * GUI.
+     *******/
+    public static final double BASE_RANGE = 0.2;
+    public static final double DEAD_END_FLOODING_RANGE = 2.5;
+
+    /********
+     * GUI Cell.
+     *******/
+    public static final int GUI_CELL_SIZE = 10;
+    public static final String BASE_COLOR = "BLACK";
+    public static final String OUR_COLOR = "GREEN";
+    public static final String ENEMY_COLOR = "RED";
+    public static final double OPACITY_DIVISOR = 9D;
+
+
 
 
 

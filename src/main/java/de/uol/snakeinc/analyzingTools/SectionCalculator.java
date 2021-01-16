@@ -124,7 +124,7 @@ public class SectionCalculator {
             List<PathCell> pathCells = finder.findPath(cells[us.getX()][us.getY()], cells[optionX][optionY]);
 
             if (pathCells != null) {
-                int count = 8;
+                int count = 8; // TODO what is this?
                 for (PathCell pathCell : pathCells) {
                     if (count <= 0) {
                         break;

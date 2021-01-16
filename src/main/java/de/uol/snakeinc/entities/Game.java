@@ -72,7 +72,8 @@ public class Game {
         round++;
     }
 
+    static final private int SUBSTRING_MAX = 8;
     private String generateGameId(long time) {
-        return DigestUtils.md5Hex("" + time).substring(0, 8);
+        return DigestUtils.md5Hex("" + time).substring(0, SUBSTRING_MAX);
     }
 }

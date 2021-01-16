@@ -92,7 +92,9 @@ public class Cell extends PathCell implements DeadCell {
             case 2:
                 opponentMovementRisk = opponentMovementRisk * Config.MOVE_RISK_2;
                 break;
+                //CHECKSTYLE:OFF
             case 3:
+                //CHECKSTYLE:ON
                 opponentMovementRisk = opponentMovementRisk * Config.MOVE_RISK_3;
                 break;
             default:

@@ -43,6 +43,8 @@
                       value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
         </module>
 
+        <module name="MagicNumber"></module>
+
         <!--detects unnecessary ; -->
         <module name="EmptyStatement"/>
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>

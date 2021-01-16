@@ -175,7 +175,7 @@ public class EvaluationBoard {
             Common.assertCellXY(x,y, cells);
 
             //Checking for jumping
-            if (round % Config.ROUNDS_PER_JUMP == 0 && speed >= 3) {
+            if (round % Config.ROUNDS_PER_JUMP == 0 && speed >= Config.MINIMUM_JUMP_SPEED) {
                 updateJumpingPlayerCells(tmpPlayer);
             } else {
                 for (var xy : Common.generateAllXYUpTo(tmpPlayer.getDirection(), x, y, -speed)) {

@@ -1,5 +1,6 @@
 package de.uol.snakeinc.connection;
 
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.SnakeInc;
 import lombok.extern.log4j.Log4j2;
 
@@ -26,7 +27,7 @@ public class ConnectionThread extends Thread {
         while (!SnakeInc.isGuiReady()) {
             try {
                 log.info("Waiting for GUI");
-                Thread.sleep(100);
+                Thread.sleep(Config.SLEEP_MILLIS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -34,7 +35,7 @@ public class ConnectionThread extends Thread {
         try {
             //wss://msoll.de/spe_ed?key=
             //url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
-            url = new URI("wss://yellowphoenix18.de:554/SnakeInc");
+            url = new URI("wss://yellowphoenix18.de:555/Joost");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

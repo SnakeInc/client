@@ -1,5 +1,6 @@
 package de.uol.snakeinc.gui.items;
 
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Player;
 import javafx.application.Platform;
@@ -76,7 +77,7 @@ public class GUIBoard extends GridPane {
                 Color color = Color.YELLOW;
                 double globalRisk = cell.getRisks();
                 double risks;
-                double range = 0.2;
+                double range = Config.BASE_RANGE;
                 double defaultValue = 1.0;
                 boolean single = false;
                 boolean positive = false;
@@ -100,7 +101,7 @@ public class GUIBoard extends GridPane {
                 } else if (riskType == RiskType.DEAD_END_FLOODING) {
                     risks = cell.getDeadEndFlooding();
                     single = true;
-                    range = 2.5;
+                    range = Config.DEAD_END_FLOODING_RANGE;
                 } else if (riskType == RiskType.DEAD_END_JUMPING) {
                     risks = cell.getDeadEndJumping();
                     single = true;
@@ -109,7 +110,7 @@ public class GUIBoard extends GridPane {
                     risks = globalRisk;
                 }
                 ((GUICell) node).setFill(Color.BLACK);
-                if (globalRisk >= 10) {
+                if (globalRisk >= Config.DEATH_VALUE) {
                     ((GUICell) node).setEnemy(cell.getID() == us.getId());
                     node.setOpacity(1.0D);
                 } else {

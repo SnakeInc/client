@@ -1,6 +1,7 @@
 package de.uol.snakeinc.analyzingTools;
 
 
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Action;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.GenerationMode;
@@ -21,10 +22,11 @@ class MoveOrderTest {
      * @return test value
      */
     @Property(generation = GenerationMode.EXHAUSTIVE)
-    boolean isAlwaysFull(@ForAll @IntRange(min = 1, max = 10) int speed,
+    boolean isAlwaysFull(@ForAll @IntRange(min = Config.SPEED_MIN, max = Config.SPEED_MAX) int speed,
                          @ForAll @IntRange(min = -4, max = 4) int leftRightBalance,
-                         @ForAll @IntRange(min = 1, max = 10) int idealSpeedMin,
-                         @ForAll @IntRange(min = 1, max = 10) int idealSpeedMax, @ForAll MoveOrder.SpiralForm spiral) {
+                         @ForAll @IntRange(min = Config.SPEED_MIN, max = Config.SPEED_MAX) int idealSpeedMin,
+                         @ForAll @IntRange(min = Config.SPEED_MIN, max = Config.SPEED_MAX) int idealSpeedMax,
+                         @ForAll MoveOrder.SpiralForm spiral) {
 
         if (idealSpeedMin > idealSpeedMax) {
             var swap = idealSpeedMax;
