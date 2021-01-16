@@ -136,7 +136,7 @@ public class DeadEndFlooding {
 
         if (count < 500) {
             for (Cell cell : checkCells) {
-                cell.setDeadEndJumping(0.8D);
+                cell.setDeadEndJumping(2.0D);
             }
             for (int x = 0; x < this.width; x++) {
                 for (int y = 0; y < this.height; y++) {
