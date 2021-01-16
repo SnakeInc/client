@@ -121,7 +121,7 @@ public class SectionCalculator {
                 Config.PATH_HIGHLIGHT_INTERPOLATION_MAX
             ).getInterpolation(scale);
             Pathfinder finder = new AStarSearch(cells);
-            List<PathCell> pathCells = finder.findPath(cells[us.getX()][us.getY()], cells[optionX][optionY]);
+            List<PathCell> pathCells = finder.findPath(cells[us.getX()][us.getY()], cells[optionX][optionY], true);
 
             if (pathCells != null) {
                 int count = 8;

@@ -14,7 +14,7 @@ public abstract class Config {
      * Kill Algorithm.
      *******/
     public static final int INITIAL_ATTACK_DISTANCE = 2;
-    public static final int INITIAL_FLOOD_TERMINATION_COUNT = 300;
+    public static final int INITIAL_FLOOD_TERMINATION_COUNT = 200;
 
     /********
      * Move Calculation.
@@ -48,7 +48,7 @@ public abstract class Config {
     public static final double MOVE_RISK_1 = 1.25D;
     public static final double MOVE_RISK_2 = 1.0625D;
     public static final double MOVE_RISK_3 = 1.015625D;
-    public static final double KILL_INCENTIVE = 0.8D;
+    public static final double KILL_INCENTIVE = 0.1D;
 
     /********
      * MoveOrder.

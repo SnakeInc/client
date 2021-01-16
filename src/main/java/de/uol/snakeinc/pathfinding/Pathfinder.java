@@ -7,6 +7,6 @@ public abstract class Pathfinder {
 
     public Pathfinder(PathCell[][] cells) { }
 
-    public abstract List<PathCell> findPath(PathCell start, PathCell end);
+    public abstract List<PathCell> findPath(PathCell start, PathCell end, boolean checkEnd);
 
 }
