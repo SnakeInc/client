@@ -27,7 +27,18 @@
     <module name="SuppressionSingleFilter">
         <property name="checks" value="MagicNumber"/>
         <property name="files" value="test/*"/>
-        <!--property name="lines" value="82,108-122"/-->
+    </module>
+
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="MagicNumber"/>
+        <property name="files" value="Gui.java"/>
+    </module>
+
+
+    <module name="SuppressionSingleFilter">
+        <!--Todo remove this -->
+        <property name="checks" value="MagicNumber"/>
+        <property name="files" value="DeadEndRecognition.java"/>
     </module>
 
     <module name="TreeWalker">
