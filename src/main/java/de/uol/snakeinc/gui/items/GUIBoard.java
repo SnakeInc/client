@@ -83,28 +83,25 @@ public class GUIBoard extends GridPane {
                 if (riskType == RiskType.SECTION) {
                     risks = cell.getAreaRisk();
                     single = true;
-                } else if (riskType == RiskType.DEADEND) {
+                } else if (riskType == RiskType.DEAD_END) {
                     risks = cell.getDeadEndRisk();
                     single = true;
-                } else if (riskType == RiskType.KILLALGORITHM) {
+                } else if (riskType == RiskType.KILL_ALGORITHM) {
                     risks = cell.getKillIncentive();
                     single = true;
                     positive = true;
-                } else if (riskType == RiskType.OPPONENTMOVERISK) {
+                } else if (riskType == RiskType.OPPONENT_MOVE_RISK) {
                     risks = cell.getOpponentMovementRisk();
                     single = true;
-                } else if (riskType == RiskType.PATHHIGHLIGHT) {
+                } else if (riskType == RiskType.PATH_HIGHLIGHT) {
                     risks = cell.getPathHighlight();
                     single = true;
                     positive = true;
-                } else if (riskType == RiskType.OPPONENTMOVERISK) {
-                    risks = cell.getOpponentMovementRisk();
-                    single = true;
-                } else if (riskType == RiskType.DEADENDFLOODING) {
+                } else if (riskType == RiskType.DEAD_END_FLOODING) {
                     risks = cell.getDeadEndFlooding();
                     single = true;
                     range = 2.5;
-                } else if (riskType == RiskType.DEADENDJUMPING) {
+                } else if (riskType == RiskType.DEAD_END_JUMPING) {
                     risks = cell.getDeadEndJumping();
                     single = true;
                     positive = true;
@@ -114,14 +111,14 @@ public class GUIBoard extends GridPane {
                 ((GUICell) node).setFill(Color.BLACK);
                 if (globalRisk >= 10) {
                     ((GUICell) node).setEnemy(cell.getID() == us.getId());
-                    ((GUICell) node).setOpacity(1.0D);
+                    node.setOpacity(1.0D);
                 } else {
                     ((GUICell) node).setOption(color, risks, single, positive, range, defaultValue);
                 }
-                if (riskType == RiskType.DEADENDFLOODING_FLOODED_CELLS) {
+                if (riskType == RiskType.DEAD_END_FLOODING_FLOODED_CELLS) {
                     if (cell.flooded()) {
                         ((GUICell) node).setFill(Color.ORANGE);
-                        ((GUICell) node).setOpacity(1.0D);
+                        node.setOpacity(1.0D);
                     }
                 }
             }

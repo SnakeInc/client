@@ -8,6 +8,7 @@ import de.uol.snakeinc.entities.Player;
 import de.uol.snakeinc.math.interpolation.LinearInterpolator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DeadEndFlooding {
@@ -39,8 +40,6 @@ public class DeadEndFlooding {
                 }
             }
         }
-        double percentage = ((double) countFreeCells) / ((double) countCells);
-        //int blocks = (int) (500 + Math.floor(200.0D * percentage));
 
         if (!checkInDeadEnd(cells, cells[us.getX()][us.getY()], us.getDirection())) {
             Cell speedUp = this.getCell(cells, us, Action.SPEED_UP);
@@ -59,10 +58,10 @@ public class DeadEndFlooding {
                 this.floodRound(cells, changeNothing, us.getDirection(), us, 500);
             }
             if (turnLeft != null) {
-                this.floodRound(cells, turnLeft, us.getDirection().getLeft(), us, 500);
+                this.floodRound(cells, turnLeft, Common.turnLeft(us.getDirection()), us, 500);
             }
             if (turnRight != null) {
-                this.floodRound(cells, turnRight, us.getDirection().getRight(), us, 500);
+                this.floodRound(cells, turnRight, Common.turnRight(us.getDirection()), us, 500);
             }
         }
     }
@@ -136,7 +135,7 @@ public class DeadEndFlooding {
 
         if (count < 500) {
             for (Cell cell : checkCells) {
-                cell.setDeadEndJumping(0.8D);
+                cell.setDeadEndJumping(2.0D);
             }
             for (int x = 0; x < this.width; x++) {
                 for (int y = 0; y < this.height; y++) {
@@ -259,9 +258,7 @@ public class DeadEndFlooding {
 
         List<Cell> finalCells = new ArrayList<Cell>();
         for (int x = xStart; x < xEnd; x++) {
-            for (int y = yStart; y < yEnd; y++) {
-                finalCells.add(cells[x][y]);
-            }
+            finalCells.addAll(Arrays.asList(cells[x]).subList(yStart, yEnd));
         }
         return finalCells;
     }

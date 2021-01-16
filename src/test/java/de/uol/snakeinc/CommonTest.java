@@ -15,7 +15,7 @@ class CommonTest {
                          @ForAll @IntRange(min = 11, max = 200) int x,
                          @ForAll @IntRange(min = 11, max = 200) int y) {
         /*
-         * Swap values, so that CellsX/Y is alwas smaller than x, y;
+         * Swap values, so that CellsX/Y is always smaller than x, y;
          */
         if (cellsX > x) {
             var swap = cellsX;

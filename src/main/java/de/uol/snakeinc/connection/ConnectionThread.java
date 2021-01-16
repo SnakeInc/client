@@ -53,7 +53,7 @@ public class ConnectionThread extends Thread {
             }
             try {
                 sslContext.init( null, null, null );
-            } catch (KeyManagementException | NullPointerException e) {
+            } catch (NullPointerException | KeyManagementException e) {
                 e.printStackTrace();
             }
             SSLSocketFactory factory = sslContext.getSocketFactory();
