@@ -27,11 +27,8 @@ public abstract class KillAlgorithm {
         Set<Cell> evaluatedCells = new HashSet<>();
         int width = cells.length;
         int height = cells[1].length;
-        Direction usDirection = us.getDirection();
-        int usX = us.getX();
-        int usY = us.getY();
         for (int i = 0; i < players.length; i++) {
-            if (BoardAnalyzer.inDistance(us, players[i], 3)) {
+            if (BoardAnalyzer.inDistance(us, players[i], 4)) {
                 int[][] floodCache = new int [width][height];
                 floodCache = connectPlayersFillFloodCache(cells, floodCache, players[i], us);
                 FloodVar floodVarIf = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache.clone());
@@ -40,8 +37,8 @@ public abstract class KillAlgorithm {
                 int x = players[i].getX();
                 int y = players[i].getY();
                 Direction dir = players[i].getDirection();
-                Boolean boolIf = false;
-                Boolean boolElse = false;
+                boolean boolIf = false;
+                boolean boolElse = false;
                 switch (dir) {
                     case DOWN:
                         boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf)
