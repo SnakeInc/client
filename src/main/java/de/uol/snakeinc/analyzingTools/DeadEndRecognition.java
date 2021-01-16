@@ -285,7 +285,7 @@ public class DeadEndRecognition {
         Cell[][] newCells = new Cell[cells.length][cells[0].length];
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[0].length; j++) {
-                newCells[i][j] = cells[i][j].clone();
+                newCells[i][j] = new Cell(cells[i][j]);
             }
         }
         return newCells;
@@ -312,7 +312,7 @@ public class DeadEndRecognition {
         }
 
         public void resetMap() {
-            changedCells.forEach(Cell::setNoneDeadly);
+            changedCells.forEach(Cell::setNotDeadly);
         }
 
     }
