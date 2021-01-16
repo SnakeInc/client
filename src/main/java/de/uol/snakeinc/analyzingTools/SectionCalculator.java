@@ -36,8 +36,6 @@ public class SectionCalculator {
      * @param cells cells
      */
     public void calculate(Cell[][] cells) {
-        long time = System.nanoTime();
-
         int[][] sections = new int[resolution][resolution];
         int[][] options = new int[resolution][resolution];
         // fill options and section. Options are the total optional blocks, sections are the free blocks
@@ -70,9 +68,6 @@ public class SectionCalculator {
         }
 
         this.rankAreaRiskCells(percentages, cells, min, max);
-
-        double totalTime = (System.nanoTime() - time) / 1000000.0D;
-        log.info("Zeit: " + totalTime + "ms");
     }
 
     private void rankAreaRiskCells(double[][] percentages, Cell[][] cells, double min, double max) {
