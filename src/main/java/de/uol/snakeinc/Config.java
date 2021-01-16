@@ -14,7 +14,7 @@ public abstract class Config {
      * Kill Algorithm.
      *******/
     public static final int INITIAL_ATTACK_DISTANCE = 2;
-    public static final int INITIAL_FLOOD_TERMINATION_COUNT = 300;
+    public static final int INITIAL_FLOOD_TERMINATION_COUNT = 100;
 
     /********
      * Move Calculation.

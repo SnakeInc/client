@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,64 +32,40 @@ public abstract class KillAlgorithm {
         int width = cells.length;
         int height = cells[1].length;
         Direction usDirection = us.getDirection();
+        int usX = us.getX();
+        int usY = us.getY();
         for (int i = 0; i < players.length; i++) {
-            if (BoardAnalyzer.inDistance(us, players[i], 4)) {
+            if (BoardAnalyzer.inDistance(us, players[i], 3)) {
                 int[][] floodCache = new int [width][height];
                 floodCache = closeCircle(cells, floodCache, players[i], us);
-                FloodVar floodVarIf = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache);
-                FloodVar floodVarElse = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache);
+                FloodVar floodVarIf = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache.clone());
+                FloodVar floodVarElse = new FloodVar(Config.INITIAL_FLOOD_TERMINATION_COUNT, floodCache.clone());
                 Player op = players[i];
                 int x = players[i].getX();
                 int y = players[i].getY();
                 Direction dir = players[i].getDirection();
                 Boolean boolIf = false;
                 Boolean boolElse = false;
-                switch (usDirection) {
-                    case DOWN:
-                    case UP:
-                        boolIf = checkForDeadEnd(x + 1, y, cells, floodVarIf);
-                        boolElse = checkForDeadEnd(x - 1, y, cells, floodVarElse);
-                        break;
-                    case RIGHT:
-                    case LEFT:
-                        boolIf = checkForDeadEnd(x, y + 1, cells, floodVarIf);
-                        boolElse = checkForDeadEnd(x, y - 1, cells, floodVarElse);
-                        break;
-                }
                 switch (dir) {
                     case DOWN:
+                        boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf) || checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
+                        boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse) || checkForDeadEnd(x + 1, y - 1, cells, floodVarElse);
+                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height, floodVarIf, floodVarElse, evaluatedCells);
+                        break;
                     case UP:
-                        boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf) || boolIf;
-                        boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse) || boolElse;
-                        if (boolIf) {
-                            if (boolElse) {
-                                decideAttackDirection(op, cells, evaluatedCells, dir,
-                                    width, height, floodVarIf, floodVarElse);
-                                break;
-                            }
-                            raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
-                            break;
-                        }
-                        if (boolElse) {
-                            raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
-                        }
+                        boolIf = checkForDeadEnd(x - 1, y, cells, floodVarIf) || checkForDeadEnd(x - 1, y + 1, cells, floodVarIf);
+                        boolElse = checkForDeadEnd(x + 1, y, cells, floodVarElse) || checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
+                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height, floodVarIf, floodVarElse, evaluatedCells);
                         break;
                     case RIGHT:
+                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf) || checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
+                        boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse) || checkForDeadEnd(x - 1, y + 1, cells, floodVarElse);
+                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height, floodVarIf, floodVarElse, evaluatedCells);
+                        break;
                     case LEFT:
-                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf) || boolIf;
-                        boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse) || boolElse;
-                        if (boolIf) {
-                            if (boolElse) {
-                                decideAttackDirection(op, cells, evaluatedCells, dir,
-                                    width, height, floodVarIf, floodVarElse);
-                                break;
-                            }
-                            raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
-                            break;
-                        }
-                        if (boolElse) {
-                            raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
-                        }
+                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf) || checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
+                        boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse) || checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
+                        checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height, floodVarIf, floodVarElse, evaluatedCells);
                         break;
                     default:
                         throw new IllegalStateException();
@@ -96,6 +73,30 @@ public abstract class KillAlgorithm {
             }
         }
         return evaluatedCells;
+    }
+
+    private static void checkBooleanAndDecide (Cell[][] cells, Player op, boolean boolIf, boolean boolElse, Direction dir, int width, int height, FloodVar floodVarIf, FloodVar floodVarElse, Set<Cell> evaluatedCells) {
+        if (dir == Direction.RIGHT || dir == Direction.LEFT) {
+            if (boolIf) {
+                if (boolElse) {
+                    decideAttackDirection(op, cells, evaluatedCells, dir,
+                        width, height, floodVarIf, floodVarElse);
+                }
+                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
+            } else if (boolElse){
+                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
+            }
+        } else {
+            if (boolIf) {
+                if (boolElse) {
+                    decideAttackDirection(op, cells, evaluatedCells, dir,
+                        width, height, floodVarIf, floodVarElse);
+                }
+                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
+            } else if (boolElse){
+                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
+            }
+        }
     }
 
     @AllArgsConstructor
@@ -116,9 +117,11 @@ public abstract class KillAlgorithm {
      * @return          true if theres a dead end
      */
     private static boolean checkForDeadEnd(int x, int y, Cell[][] cells, FloodVar floodVar) {
+        System.out.println(floodVar.floodCache[x][y] + " " + !Common.offBoardOrDeadly(x, y, cells));
         if (!Common.offBoardOrDeadly(x, y, cells) && floodVar.floodCache[x][y] != 1) {
             int terminationCount = flood(floodVar, x, y, cells).getFloodTerminationCount();
-            return terminationCount > 0 && terminationCount < 399 ;
+            System.out.println(terminationCount > 0 && terminationCount < 399);
+            return terminationCount > 0 && terminationCount < Config.INITIAL_FLOOD_TERMINATION_COUNT ;
         }
         return false;
     }
@@ -138,7 +141,7 @@ public abstract class KillAlgorithm {
             floodVar.floodTerminationCount--;
             floodVar.floodCache[x][y] = 1;
 
-            for(var xy : Common.generateXYAllDirections(x,y,1)) {
+            for(var xy : Common.generateXYAllDirections(x, y,1)) {
                 floodVar = flood(floodVar, xy, cells);
             }
         }
@@ -146,7 +149,18 @@ public abstract class KillAlgorithm {
     }
 
     private static FloodVar flood(FloodVar floodVar, Common.Tuple tuple, Cell[][] cells) {
-        return flood(floodVar, tuple.getX(), tuple.getY(), cells);
+        if (!Common.offBoardOrDeadly(tuple.getX(), tuple.getY(), cells) && floodVar.getFloodTerminationCount() > 0
+            && floodVar.getFloodCache()[tuple.getX()][tuple.getY()] != 1) {
+           // System.out.println(tuple.getX() + "  " + tuple.getY() + " " + !Common.offBoardOrDeadly(tuple.getX(), tuple.getY(), cells) + " RISK " + cells[tuple.getX()][tuple.getY()].getRisks());
+
+            floodVar.floodTerminationCount--;
+            floodVar.floodCache[tuple.getX()][tuple.getY()] = 1;
+
+            for(var xy : Common.generateXYAllDirections(tuple.getX(),tuple.getY(),1)) {
+                floodVar = flood(floodVar, xy, cells);
+            }
+        }
+        return floodVar;
     }
 
     /**
@@ -161,8 +175,24 @@ public abstract class KillAlgorithm {
         int usY = us.getY();
         int opX = op.getX();
         int opY = op.getY();
+
+        StringBuilder str = new StringBuilder();
+        DecimalFormat f = new DecimalFormat("##.00");
+        str.append("\n");
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[0].length; j++) {
+                str.append(f.format(cells[i][j].getRisks())).append("\t");
+            }
+            str.append("\n");
+        }
+
+        System.out.println(str.toString());
+        System.out.println(opX + "  " + opY + " and " + usX + usY);
         List<PathCell> pathCells = new AStarSearch(cells).findPath(cells[opX][opY], cells[usX][usY]);
         if (pathCells != null) {
+            for (PathCell pathCell : pathCells) {
+                System.out.println(pathCell.getX() + " and " + pathCell.getY());
+            }
             for (PathCell pathCell : pathCells) {
                 floodCache[pathCell.getX()][pathCell.getY()] = 1;
             }
