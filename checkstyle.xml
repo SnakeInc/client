@@ -24,6 +24,12 @@
         <property name="max" value="120"/>
     </module>
 
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="MagicNumber"/>
+        <property name="files" value="test/*"/>
+        <!--property name="lines" value="82,108-122"/-->
+    </module>
+
     <module name="TreeWalker">
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
@@ -35,7 +41,7 @@
 
         <!-- Avoid Star-Imports https://checkstyle.sourceforge.io/config_imports.html#AvoidStarImport -->
         <module name="AvoidStarImport">
-            <property name="excludes" value="java.io,java.net,java.lang.Math,org.junit.jupiter.api.Assertions"/>
+            <property name="excludes" value="java.io,java.net,java.lang.Math"/>
         </module>
 
         <module name="ConstantName">
@@ -43,7 +49,7 @@
                       value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
         </module>
 
-        <module name="MagicNumber"></module>
+        <module name="MagicNumber"/>
 
         <!--detects unnecessary ; -->
         <module name="EmptyStatement"/>
