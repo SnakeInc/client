@@ -125,7 +125,8 @@ public class AStarSearch extends Pathfinder {
                     && this.now.getCell().getY() + y >= 0
                     && this.now.getCell().getY() + y < this.maze[0].length //changed
                     // check if square is walkable
-                    && !this.checkInUse(this.maze[this.now.getCell().getX() + x][this.now.getCell().getY() + y], checkEnd) //changed
+                    && !this.checkInUse(this.maze[this.now.getCell().getX() + x][this.now.getCell().getY() + y]
+                    , checkEnd) //changed
                     // if not already done
                     && !findNeighborInList(this.open, node) && !findNeighborInList(this.closed, node)) {
                     node.setCost(node.getParent().getCost() + 1.); // Horizontal/vertical cost = 1.0

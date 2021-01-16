@@ -9,7 +9,6 @@ import de.uol.snakeinc.pathfinding.PathCell;
 import de.uol.snakeinc.pathfinding.astar.AStarSearch;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.List;
@@ -144,7 +143,6 @@ public abstract class KillAlgorithm {
     private static boolean checkForDeadEnd(int x, int y, Cell[][] cells, FloodVar floodVar) {
         if (!Common.offBoardOrDeadly(x, y, cells) && floodVar.floodCache[x][y] != 1) {
             int terminationCount = flood(floodVar, x, y, cells).getFloodTerminationCount();
-            System.out.println(terminationCount > 0 && terminationCount < 399);
             return terminationCount > 0 && terminationCount < Config.INITIAL_FLOOD_TERMINATION_COUNT ;
         }
         return false;
@@ -179,7 +177,7 @@ public abstract class KillAlgorithm {
             floodVar.floodTerminationCount--;
             floodVar.floodCache[tuple.getX()][tuple.getY()] = 1;
 
-            for(var xy : Common.generateXYAllDirections(tuple.getX(),tuple.getY(),1)) {
+            for (var xy : Common.generateXYAllDirections(tuple.getX(),tuple.getY(),1)) {
                 floodVar = flood(floodVar, xy, cells);
             }
         }
