@@ -185,9 +185,10 @@ public abstract class KillAlgorithm {
             }
             str.append("\n");
         }
-        System.out.println(str.toString());
-        System.out.println(opX + "  " + opY + " and " + usX + "  " + usY);
 
+        System.out.println(str.toString());
+
+        System.out.println(opX + "  " + opY + " and " + usX + " " +usY);
         AStarSearch search = new AStarSearch(cells);
         List<PathCell> pathCells = search.findPath(cells[opX][opY], cells[usX][usY]);
 
@@ -198,6 +199,8 @@ public abstract class KillAlgorithm {
             for (PathCell pathCell : pathCells) {
                 floodCache[pathCell.getX()][pathCell.getY()] = 1;
             }
+        } else {
+            System.out.println("cells null");
         }
         return floodCache;
     }
