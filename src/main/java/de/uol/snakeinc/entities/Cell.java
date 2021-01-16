@@ -46,7 +46,7 @@ public class Cell extends PathCell {
         opponentMovementRisk = 1;
         tmpMoveCalcValue = 1;
         areaRisk = 1;
-        pathHighlight = 1.2;
+        pathHighlight = 1;
         killIncentive = 1;
         deadEndRisk = 1;
         hardDeadly = false;
@@ -105,7 +105,13 @@ public class Cell extends PathCell {
         if (hardDeadly || tmpDeadly) {
             return Config.DEATH_VALUE;
         }
-        return getValue()  * opponentMovementRisk * tmpMoveCalcValue * areaRisk * deadEndRisk * killIncentive * pathHighlight;
+        return getValue() *
+            opponentMovementRisk *
+            tmpMoveCalcValue *
+            areaRisk *
+            deadEndRisk *
+            killIncentive *
+            pathHighlight;
     }
 
     /**
