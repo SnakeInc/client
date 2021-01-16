@@ -1,16 +1,17 @@
 package de.uol.snakeinc.entities;
 
-import lombok.CustomLog;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import de.uol.snakeinc.Config;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@CustomLog
+@Log4j2
 public class Player {
 
     @Getter
@@ -27,6 +28,8 @@ public class Player {
     private boolean active;
     @Getter
     private String name;
+    @Getter
+    private int leftRightBalance;
 
     public Player(int id, int x, int y, Direction direction, int speed, boolean active, String name) {
         this.id = id;
@@ -36,6 +39,28 @@ public class Player {
         this.speed = speed;
         this.active = active;
         this.name = name;
+        this.leftRightBalance = 0;
+    }
+
+    /**
+     * updates the left right balance of the player.
+     * @param action whether the payer moves left to right
+     */
+    public void updateLeftRightBalance(Action action) {
+        switch (action) {
+            case TURN_LEFT:
+                if (leftRightBalance > -Config.LEFT_RIGHT_BALANCE_MAX) {
+                    leftRightBalance--;
+                }
+                return;
+            case TURN_RIGHT:
+                if (leftRightBalance < Config.LEFT_RIGHT_BALANCE_MAX) {
+                    leftRightBalance++;
+                }
+                return;
+            default:
+                //return;
+        }
     }
 
     /**

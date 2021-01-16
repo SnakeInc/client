@@ -1,6 +1,7 @@
 package de.uol.snakeinc.entities;
 
 import de.uol.snakeinc.connection.SpeedWebSocketClient;
+import lombok.Getter;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.HashMap;
@@ -8,18 +9,22 @@ import java.util.HashMap;
 public class Game {
 
     private HashMap<Integer, Player> players;
-    private HashMap<Integer, Board> boards;
-    private Board currentBoard;
+    @Getter
+    private HashMap<Integer, int[][]> boards;
+    private EvaluationBoard EvaluationBoard;
+    @Getter
     private Player us;
 
+    @Getter
     private int round = 0;
 
+    @Getter
     private String gameId;
 
     public Game(String serverId) {
         this.gameId = serverId + "_" + generateGameId(System.currentTimeMillis());
         this.players = new HashMap<Integer, Player>();
-        this.boards = new HashMap<Integer, Board>();
+        this.boards = new HashMap<Integer, int[][]>();
     }
 
     public HashMap<Integer, Player> getPlayers() {
@@ -34,20 +39,25 @@ public class Game {
         this.us = this.players.get(id);
     }
 
-    public void setCurrentBoard(Board board) {
-        if (this.currentBoard != null) {
-            this.boards.put(round, this.currentBoard);
+    /**
+     * todo javadoc.
+     * @param evaluationBoard todo this
+     * @param rawBoard        the raw board for logging
+     */
+    public void informIntelligentBoard(EvaluationBoard evaluationBoard, int[][] rawBoard) {
+        EvaluationBoard = evaluationBoard;
+        if (evaluationBoard != null) {
+            this.boards.put(round, rawBoard);
         }
-        this.currentBoard = board;
-        this.round++;
     }
 
-    public Board getCurrentBoard() {
-        return this.currentBoard;
-    }
-
-    public HashMap<Integer, Board> getBoards() {
-        return this.boards;
+    /**
+     * todo javadoc.
+     * @param rawBoard the raw board for logging
+     */
+    public void informIntelligentBoard(int[][] rawBoard) {
+        EvaluationBoard.update(players, us, round);
+        boards.put(round, rawBoard);
     }
 
     /**
@@ -55,24 +65,11 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
-        // Implement logical working here
-        socket.sendAction(Action.SPEED_UP);
-    }
-
-    public void makeExportReady() {
-        this.boards.put(round, this.currentBoard);
-    }
-
-    public Player getUs() {
-        return this.us;
-    }
-
-    public int getRounds() {
-        return this.round + 1;
-    }
-
-    public String getGameId() {
-        return this.gameId;
+        if (us.isActive()) {
+            socket.sendAction(EvaluationBoard.getAction());
+            EvaluationBoard.prepareNextPhase();
+        }
+        round++;
     }
 
     private String generateGameId(long time) {

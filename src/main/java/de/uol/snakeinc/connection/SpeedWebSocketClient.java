@@ -5,11 +5,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.uol.snakeinc.entities.Action;
-import de.uol.snakeinc.entities.Board;
+import de.uol.snakeinc.entities.EvaluationBoard;
 import de.uol.snakeinc.entities.Game;
 import de.uol.snakeinc.entities.Player;
-import de.uol.snakeinc.export.ExportManager;
-import lombok.CustomLog;
+import de.uol.snakeinc.export.Export;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -21,41 +22,46 @@ import java.util.HashMap;
  * Websocket for Spe_ed - the game.
  * @author Sebastian Diers
  */
-@CustomLog
+@Log4j2
 public class SpeedWebSocketClient extends WebSocketClient {
 
     private ConnectionThread thread;
     private Game game;
     private String serverId;
+    private boolean initialMessage = true;
+    @Getter
+    private boolean stopped = false;
 
-    private ExportManager exportManager;
-
-    public SpeedWebSocketClient(ConnectionThread thread, URI url, ExportManager exportManager) {
+    public SpeedWebSocketClient(ConnectionThread thread, URI url) {
         super(url);
         this.thread = thread;
-        this.serverId = DigestUtils.md5Hex(url.getHost().toString()).substring(0, 4);
-
-        this.exportManager = exportManager;
+        this.serverId = DigestUtils.md5Hex(url.getHost()).substring(0, 4);
     }
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
         log.info("Connection established");
-        this.thread.callBack();
         this.game = new Game(serverId);
+        this.initialMessage = true;
     }
 
     @Override
     public void onMessage(String message) {
-        log.info("Received message: " + message);
+        //log.info("Received message: " + message);
         try {
             JsonElement jsonTree = JsonParser.parseString(message);
             JsonObject jsonObject = jsonTree.getAsJsonObject();
             for (Player player : Player.parseFromJson(jsonObject)) {
                 game.addPlayer(player);
             }
-            game.setCurrentBoard(Board.parseFromJson(jsonObject, game.getPlayers()));
             game.setUs(jsonObject.get("you").getAsInt());
+            if (initialMessage) {
+                initialMessage = false;
+                game.informIntelligentBoard(EvaluationBoard
+                    .initParseFromJson(jsonObject, game.getPlayers(), game.getUs()), getRawBoard(jsonObject));
+            } else {
+                game.informIntelligentBoard(getRawBoard(jsonObject));
+            }
             game.runAction(this);
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -66,26 +72,25 @@ public class SpeedWebSocketClient extends WebSocketClient {
     @Override
     public void onClose(int code, String message, boolean remote) {
         log.info("Connection closed: " + message);
-
         // Run Game-Logging
         if (this.game != null) {
             try {
                 log.info("Logging game");
-                this.game.makeExportReady();
-                this.exportManager.generateExport(game);
+                var export = new Export(game);
+                export.generateFile();
             } catch (Exception exception) {
                 log.error("Error while logging the game");
                 exception.printStackTrace();
                 this.thread.stopConnection();
             }
         }
-        this.thread.callBack();
+        this.stopped = true;
     }
 
     @Override
     public void onError(Exception exception) {
         log.info("Got an exception: " + exception.getMessage());
-        this.thread.callBack();
+        exception.printStackTrace();
     }
 
     /**
@@ -99,5 +104,13 @@ public class SpeedWebSocketClient extends WebSocketClient {
         Gson gson = new Gson();
 
         this.send(gson.toJson(json));
+        log.info(gson.toJson(json));
+    }
+
+    private int[][] getRawBoard(JsonObject json) {
+        Gson gson = new Gson();
+
+        //log.debug(json.get("cells").toString());
+        return gson.fromJson(json.get("cells").toString(), int[][].class);
     }
 }

@@ -29,6 +29,10 @@
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
         <module name="EmptyForInitializerPad"/>
 
+        <module name="FallThrough"/>
+
+        <module name="MissingSwitchDefault"/>
+
         <!-- Avoid Star-Imports https://checkstyle.sourceforge.io/config_imports.html#AvoidStarImport -->
         <module name="AvoidStarImport">
             <property name="excludes" value="java.io,java.net,java.lang.Math,org.junit.jupiter.api.Assertions"/>

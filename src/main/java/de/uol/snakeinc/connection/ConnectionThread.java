@@ -1,7 +1,7 @@
 package de.uol.snakeinc.connection;
 
-import de.uol.snakeinc.export.ExportManager;
-import lombok.CustomLog;
+import de.uol.snakeinc.SnakeInc;
+import lombok.extern.log4j.Log4j2;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -14,22 +14,27 @@ import java.security.NoSuchAlgorithmException;
  * Thread handling Connection to Websocket.
  * @author Sebastian Diers
  */
-@CustomLog
+@Log4j2
 public class ConnectionThread extends Thread {
 
     private SpeedWebSocketClient webSocket;
     private URI url;
     private boolean running;
-    private boolean callback;
-
-    private ExportManager exportManager;
 
     public ConnectionThread(String apiKey) {
         this.running = true;
-        this.exportManager = new ExportManager();
+        while (!SnakeInc.isGuiReady()) {
+            try {
+                log.info("Waiting for GUI");
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             //wss://msoll.de/spe_ed?key=
-            url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
+            //url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
+            url = new URI("wss://yellowphoenix18.de:554/SnakeInc");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -39,8 +44,7 @@ public class ConnectionThread extends Thread {
     public void run() {
         log.debug("Starting Connection-Thread");
         while (running) {
-            callback = false;
-            webSocket = new SpeedWebSocketClient(this, url, exportManager);
+            webSocket = new SpeedWebSocketClient(this, url);
             SSLContext sslContext = null;
             try {
                 sslContext = SSLContext.getInstance("TLS");
@@ -49,28 +53,16 @@ public class ConnectionThread extends Thread {
             }
             try {
                 sslContext.init( null, null, null );
-            } catch (KeyManagementException e) {
+            } catch (NullPointerException | KeyManagementException e) {
                 e.printStackTrace();
             }
             SSLSocketFactory factory = sslContext.getSocketFactory();
             webSocket.setSocketFactory(factory);
             webSocket.connect();
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            while (webSocket.isOpen() || this.callback == false) {
+            while (webSocket.isOpen() || !this.webSocket.isStopped()) {
+               //Busy Waiting
             }
         }
-    }
-
-    public SpeedWebSocketClient getWebSocket() {
-        return this.webSocket;
-    }
-
-    public void callBack() {
-        this.callback = true;
     }
 
     /**

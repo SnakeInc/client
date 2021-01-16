@@ -1,3 +1,6 @@
 /.idea/
 /InformatiCup.iml
 /target
+/.jqwik-database
+
+/logs/
