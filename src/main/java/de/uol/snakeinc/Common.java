@@ -111,6 +111,9 @@ public abstract class Common {
     }
 
     public static void assertCelXY(int x, int y, Cell[][] cells) {
+        if (x < 0 || x >= cells.length || y < 0 || y >= cells[0].length) {
+            return;
+        }
         assert cells[x][y].getX() == x && cells[x][y].getY() == y;
     }
 }
