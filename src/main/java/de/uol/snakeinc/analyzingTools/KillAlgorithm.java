@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -63,7 +62,7 @@ public abstract class KillAlgorithm {
                         checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height, floodVarIf, floodVarElse, evaluatedCells);
                         break;
                     case LEFT:
-                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf) || checkForDeadEnd(x - 1, y - 1, cells, floodVarIf);
+                        boolIf = checkForDeadEnd(x, y - 1, cells, floodVarIf) || checkForDeadEnd(x + 1, y - 1, cells, floodVarIf);
                         boolElse = checkForDeadEnd(x, y + 1, cells, floodVarElse) || checkForDeadEnd(x + 1, y + 1, cells, floodVarElse);
                         checkBooleanAndDecide(cells, op, boolIf, boolElse, dir, width, height, floodVarIf, floodVarElse, evaluatedCells);
                         break;
@@ -81,20 +80,22 @@ public abstract class KillAlgorithm {
                 if (boolElse) {
                     decideAttackDirection(op, cells, evaluatedCells, dir,
                         width, height, floodVarIf, floodVarElse);
+                } else {
+                    raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
                 }
-                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
             } else if (boolElse){
-                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.DOWN, width, height);
+                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.UP, width, height);
             }
         } else {
             if (boolIf) {
                 if (boolElse) {
                     decideAttackDirection(op, cells, evaluatedCells, dir,
                         width, height, floodVarIf, floodVarElse);
+                } else {
+                    raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
                 }
-                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
             } else if (boolElse){
-                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.RIGHT, width, height);
+                raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
             }
         }
     }
@@ -117,7 +118,6 @@ public abstract class KillAlgorithm {
      * @return          true if theres a dead end
      */
     private static boolean checkForDeadEnd(int x, int y, Cell[][] cells, FloodVar floodVar) {
-        System.out.println(floodVar.floodCache[x][y] + " " + !Common.offBoardOrDeadly(x, y, cells));
         if (!Common.offBoardOrDeadly(x, y, cells) && floodVar.floodCache[x][y] != 1) {
             int terminationCount = flood(floodVar, x, y, cells).getFloodTerminationCount();
             System.out.println(terminationCount > 0 && terminationCount < 399);
@@ -176,31 +176,14 @@ public abstract class KillAlgorithm {
         int opX = op.getX();
         int opY = op.getY();
 
-        StringBuilder str = new StringBuilder();
-        DecimalFormat f = new DecimalFormat("##.00");
-        str.append("\n");
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                str.append(f.format(cells[i][j].getRisks())).append("\t");
-            }
-            str.append("\n");
-        }
 
-        System.out.println(str.toString());
-
-        System.out.println(opX + "  " + opY + " and " + usX + " " +usY);
         AStarSearch search = new AStarSearch(cells);
 
         List<PathCell> pathCells = search.findPath(cells[opX][opY], cells[usX][usY], false);
         if (pathCells != null) {
             for (PathCell pathCell : pathCells) {
-                System.out.println(pathCell.getX() + " and " + pathCell.getY());
-            }
-            for (PathCell pathCell : pathCells) {
                 floodCache[pathCell.getX()][pathCell.getY()] = 1;
             }
-        } else {
-            System.out.println("cells null");
         }
         return floodCache;
     }
@@ -225,7 +208,7 @@ public abstract class KillAlgorithm {
             case UP:
             case DOWN:
                 if (Direction.LEFT == attackDirection) {
-                    for (int i = 0; i < attackDistance; i++) {
+                    for (int i = 0; i < attackDistance + 1; i++) {
                         if (x - i >= 0 && y - attackDistance >= 0 && y + attackDistance < height) {
                             evaluateCell(cells[x - i][y - attackDistance], killingCells);
                             evaluateCell(cells[x - i][y + attackDistance], killingCells);
@@ -236,7 +219,7 @@ public abstract class KillAlgorithm {
                         }
                     }
                 } else if (Direction.RIGHT == attackDirection) {
-                    for (int i = 0; i < attackDistance; i++) {
+                    for (int i = 0; i < attackDistance + 1; i++) {
                         if (x + i < width && y - attackDistance >= 0 && y + attackDistance < height) {
                             evaluateCell(cells[x + i][y - attackDistance], killingCells);
                             evaluateCell(cells[x + i][y + attackDistance], killingCells);
@@ -251,7 +234,7 @@ public abstract class KillAlgorithm {
             case RIGHT:
             case LEFT:
                 if (Direction.UP == attackDirection) {
-                    for (int i = 0; i < attackDistance; i++) {
+                    for (int i = 0; i < attackDistance + 1; i++) {
                         if (x - attackDistance >= 0 && x + attackDistance < width && y - i >= 0) {
                             evaluateCell(cells[x - attackDistance][y - i], killingCells);
                             evaluateCell(cells[x + attackDistance][y - i], killingCells);
@@ -262,7 +245,7 @@ public abstract class KillAlgorithm {
                         }
                     }
                 } else if (Direction.DOWN == attackDirection) {
-                    for (int i = 0; i < attackDistance; i++) {
+                    for (int i = 0; i < attackDistance + 1; i++) {
                         if (x - attackDistance >= 0 && x + attackDistance < width && y + i < height) {
                             evaluateCell(cells[x - attackDistance][y + i], killingCells);
                             evaluateCell(cells[x + attackDistance][y + i], killingCells);
@@ -303,7 +286,7 @@ public abstract class KillAlgorithm {
      */
     private static void decideAttackDirection(Player op, Cell[][] cells, Set<Cell> evaluatedCells, Direction dir,
                                               int width, int height, FloodVar floodVarIf, FloodVar floodVarElse) {
-        if (floodVarIf.floodTerminationCount > floodVarElse.floodTerminationCount) {
+        if (floodVarIf.floodTerminationCount < floodVarElse.floodTerminationCount) {
             if (dir == Direction.UP || dir == Direction.DOWN) {
                 raiseKillIncentive(op, cells, evaluatedCells, dir, Direction.LEFT, width, height);
             } else {
