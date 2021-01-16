@@ -1,5 +1,6 @@
 package de.uol.snakeinc.entities;
 
+import de.uol.snakeinc.tests.WhiteBox;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
@@ -124,6 +125,14 @@ class EvaluationBoardTest {
     }
 
     @Test
-    void startingStrategy() {
+    public void testArrayVariableCellMapping() {
+        EvaluationBoard board = new EvaluationBoard(50, 80, new Player[0], null, 1);
+        Cell[][] cells = (Cell[][]) WhiteBox.getInternalState(board, "cells");
+        for (int x = 0; x < cells.length; x++) {
+            for (int y = 0; y < cells[0].length; y++) {
+                assertEquals(x, cells[x][y].getX());
+                assertEquals(y, cells[x][y].getY());
+            }
+        }
     }
 }

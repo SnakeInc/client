@@ -1,8 +1,6 @@
 package de.uol.snakeinc.connection;
 
 import de.uol.snakeinc.SnakeInc;
-import de.uol.snakeinc.export.ExportManager;
-import lombok.CustomLog;
 import lombok.extern.log4j.Log4j2;
 
 import javax.net.ssl.SSLContext;
@@ -23,11 +21,8 @@ public class ConnectionThread extends Thread {
     private URI url;
     private boolean running;
 
-    private ExportManager exportManager;
-
     public ConnectionThread(String apiKey) {
         this.running = true;
-        this.exportManager = new ExportManager();
         while (!SnakeInc.isGuiReady()) {
             try {
                 log.info("Waiting for GUI");
@@ -49,7 +44,7 @@ public class ConnectionThread extends Thread {
     public void run() {
         log.debug("Starting Connection-Thread");
         while (running) {
-            webSocket = new SpeedWebSocketClient(this, url, exportManager);
+            webSocket = new SpeedWebSocketClient(this, url);
             SSLContext sslContext = null;
             try {
                 sslContext = SSLContext.getInstance("TLS");
@@ -65,13 +60,9 @@ public class ConnectionThread extends Thread {
             webSocket.setSocketFactory(factory);
             webSocket.connect();
             while (webSocket.isOpen() || !this.webSocket.isStopped()) {
-                //todo: should this be empty
+               //Busy Waiting
             }
         }
-    }
-
-    public SpeedWebSocketClient getWebSocket() {
-        return this.webSocket;
     }
 
     /**

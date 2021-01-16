@@ -3,6 +3,7 @@ package de.uol.snakeinc.analyzingTools;
 import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Player;
+import de.uol.snakeinc.timetracking.TimeTracker;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -34,13 +35,19 @@ public class BoardAnalyzer {
      * @param cells cells
      */
     public void analyze(Cell[][] cells, Player[] players, Player us) {
+        TimeTracker timeTracker = new TimeTracker();
         round++;
+        sectionCalculator.calculate(cells, us);
+        timeTracker.logTime("Section-Calculation");
         OpponentMovesCalculation calc = new OpponentMovesCalculation(this);
-        sectionCalculator.calculate(cells);
         evaluatedCells = calc.evaluate(cells, players, us);
+        timeTracker.logTime("OpponentMovement-Calculation");
         DeadEndRecognition deadEndRecognition = new DeadEndRecognition(cells, us,this);
         deadEndRecognition.findDeadEnds();
+        timeTracker.logTime("DeadEnd-Calculation");
         evaluatedCells.addAll(KillAlgorithm.killAlgorithm(cells, players, us));
+        timeTracker.logTime("KillAlgorithm-Calculation");
+        timeTracker.logFinal();
     }
 
     /**
@@ -52,14 +59,13 @@ public class BoardAnalyzer {
      */
     public static Boolean inDistance(Player player1, Player player2, int inRounds) {
         int distance = Math.abs(player1.getX() - player2.getX()) + Math.abs(player1.getY() - player2.getY());
-        //TODO: Implement and use pathfinder-algorithm to check if the players can reach each other in max three rounds.
         return distance <= (player1.getSpeed() * inRounds) + (player2.getSpeed() * inRounds) && distance != 0;
     }
 
     /**
      * simple method to check if this is a jumping round.
-     * @param roundsInFuture Todo this
-     * @return Todo this
+     * @param roundsInFuture how many rounds in future to check
+     * @return if there is a jump in the round
      */
     public boolean checkForJumping(int roundsInFuture) {
         return (round + roundsInFuture) % Config.ROUNDS_PER_JUMP == 0;

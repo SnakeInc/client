@@ -2,9 +2,14 @@ package de.uol.snakeinc.analyzingTools;
 
 import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
+import de.uol.snakeinc.entities.Player;
 import de.uol.snakeinc.math.interpolation.LinearInterpolator;
-import lombok.CustomLog;
+import de.uol.snakeinc.pathfinding.PathCell;
+import de.uol.snakeinc.pathfinding.Pathfinder;
+import de.uol.snakeinc.pathfinding.astar.AStarSearch;
 import lombok.extern.log4j.Log4j2;
+
+import java.util.List;
 
 /**
  * Calculate 10 x 10 grid with sections of free space.
@@ -25,26 +30,19 @@ public class SectionCalculator {
     private double devideWidth;
     private double devideHeight;
 
-    private int height;
-    private int width;
-
     public static int resolution = Config.RESOLUTION;
 
     public SectionCalculator(int width, int height) {
         this.devideHeight = height / Config.DIVISOR;
         this.devideWidth = width  / Config.DIVISOR;
-
-        this.height = height;
-        this.width = width;
     }
 
     /**
      * Calculate values for sections.
      * @param cells cells
+     * @param us player us
      */
-    public void calculate(Cell[][] cells) {
-        long time = System.nanoTime();
-
+    public void calculate(Cell[][] cells, Player us) {
         int[][] sections = new int[resolution][resolution];
         int[][] options = new int[resolution][resolution];
         // fill options and section. Options are the total optional blocks, sections are the free blocks
@@ -52,34 +50,92 @@ public class SectionCalculator {
             for (int y = 0; y < cells[0].length; y++) {
                 int sectionX = (int) Math.floor(x / devideWidth);
                 int sectionY = (int) Math.floor(y / devideHeight);
-                if (cells[x][y].getValue() == 1) {
-                    sections[sectionY][sectionX]++;
+                cells[x][y].setPathHighlight(1.0);
+                if (!cells[x][y].isInUse()) {
+                    sections[sectionX][sectionY]++;
                 }
-                options[sectionY][sectionX]++;
+                options[sectionX][sectionY]++;
             }
         }
 
         double min = Config.CALCULATE_MIN;
         double max = Config.CALCULATE_MAX;
         double[][] percentages = new double[resolution][resolution];
+
+        // Section-Location of best section;
+        int bestX = 0;
+        int bestY = 0;
+
         // Calculate percentages of free space in the sections
         for (int x = 0; x < resolution; x++) {
             for (int y = 0; y < resolution; y++) {
-                double percentage = (sections[y][x] * 1.0D) / (options[y][x] * 1.0D);
+                double percentage = ((double) sections[x][y]) / ((double) options[x][y]);
                 if (percentage > max) {
                     max = percentage;
+                    bestX = x;
+                    bestY = y;
                 }
                 if (percentage < min) {
                     min = percentage;
                 }
-                percentages[y][x] = percentage;
+                percentages[x][y] = percentage;
             }
         }
 
         this.rankAreaRiskCells(percentages, cells, min, max);
 
-        double totalTime = (System.nanoTime() - time) / 1000000.0D;
-        log.info("Zeit: " + totalTime + "ms");
+        // Path-Calculation
+        int minX = (int) Math.floor(((double) bestX) * devideWidth);
+        int maxX = (int) Math.floor(((double) (bestX + 1)) * devideWidth);
+        int minY = (int) Math.floor(((double) bestY) * devideHeight);
+        int maxY = (int) Math.floor(((double) (bestY + 1)) * devideHeight);
+
+        int optionX = -1;
+        int optionY = -1;
+        for (int x = minX; x < maxX; x++) {
+            for (int y = minY; y < maxY; y++) {
+                if (x >= cells.length || y >= cells[0].length) {
+                    continue;
+                }
+
+                if (!cells[x][y].isInUse()) {
+                    optionX = x;
+                    optionY = y;
+                    break;
+                }
+            }
+            if (optionX != -1 && optionY != -1) {
+                break;
+            }
+        }
+
+        double difference = max - min;
+
+        if (optionX != -1 && optionY != -1 && us.getX() != -1 && us.getY() != -1) {
+            int sectionX = (int) Math.floor(us.getX() / devideWidth);
+            int sectionY = (int) Math.floor(us.getY() / devideHeight);
+            double range = percentages[sectionX][sectionY] - min;
+            double scale = range / difference;
+
+            double value = new LinearInterpolator(
+                Config.PATH_HIGHLIGHT_INTERPOLATION_MIN,
+                Config.PATH_HIGHLIGHT_INTERPOLATION_MAX
+            ).getInterpolation(scale);
+            Pathfinder finder = new AStarSearch(cells);
+            List<PathCell> pathCells = finder.findPath(cells[us.getX()][us.getY()], cells[optionX][optionY]);
+
+            if (pathCells != null) {
+                int count = 8;
+                for (PathCell pathCell : pathCells) {
+                    if (count <= 0) {
+                        break;
+                    }
+                    Cell cell = (Cell) pathCell;
+                    cell.setPathHighlight(value);
+                    count--;
+                }
+            }
+        }
     }
 
     private void rankAreaRiskCells(double[][] percentages, Cell[][] cells, double min, double max) {
@@ -91,8 +147,8 @@ public class SectionCalculator {
                 int sectionX = (int) Math.floor(x / devideWidth);
                 int sectionY = (int) Math.floor(y / devideHeight);
 
-                double range = percentages[sectionY][sectionX] - min;
-                double scale = (range) / (difference); // scale from min/max-percentage
+                double range = percentages[sectionX][sectionY] - min;
+                double scale = range / difference; // scale from min/max-percentage
 
                 // interpolate based on scale. Lower 50 % will get additional risk, upper 50% will lower their risk
                 double value = new

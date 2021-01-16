@@ -12,7 +12,8 @@ import lombok.extern.log4j.Log4j2;
 
 import java.util.HashSet;
 
-import static de.uol.snakeinc.Common.*;
+import static de.uol.snakeinc.Common.generateXY;
+import static de.uol.snakeinc.Common.offBoardOrDeadly;
 
 @Log4j2
 public class MoveCalculation {
@@ -33,8 +34,8 @@ public class MoveCalculation {
     }
 
     /**
-     * todo this.
-     * @return todo
+     * Calculates the best Action. That is the least penalized Action by the factors on the Board.
+     * @return the selected Action
      */
     public Action calculateBestAction() {
         log.info("calculating BestAction!");
@@ -43,13 +44,13 @@ public class MoveCalculation {
         double bestActionTmp = Config.BEST_ACTION_MULTIPLIER * deathValue(1);
         Action bestAction = Config.DEFAULT_BEST_ACTION;
         double tmp;
-        Action[] actions =
-                MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(), Config.IDEAL_MIN_SPEED, Config.IDEAL_MAX_SPEED, Config.IDEAL_SPIRAL_FORM);
+        Action[] actions = MoveOrder.weights(us.getSpeed(), us.getLeftRightBalance(),
+                Config.IDEAL_MIN_SPEED, Config.IDEAL_MAX_SPEED, Config.IDEAL_SPIRAL_FORM);
         for (Action act : actions) {
             HashSet<Cell> pseudoEvaluatedCells = new HashSet<>();
             tmp = calculate(act, us.getDirection(), us.getX(), us.getY(), us.getSpeed(), 1, pseudoEvaluatedCells);
             for (Cell cell : pseudoEvaluatedCells) {
-                cell.clearPseudoValue();
+                cell.clearTmpMoveCalcValue();
             }
             log.debug("Action eval.: " + act + "with: " + tmp);
             if (tmp < bestActionTmp) {
@@ -65,6 +66,8 @@ public class MoveCalculation {
     }
 
     private double calculateAction(Direction dir, int x, int y, int speed, int depth) {
+        //Todo remove
+        Common.assertCellXY(x,y, cells);
         if (this.searchingDepth == depth) {
             return 1;
         }
@@ -74,7 +77,7 @@ public class MoveCalculation {
             HashSet<Cell> pseudoEvaluatedCellsNextDepth = new HashSet<>();
             tmp = calculate(act, dir, x, y, speed, depth, pseudoEvaluatedCellsNextDepth);
             for (Cell cell : pseudoEvaluatedCellsNextDepth) {
-                cell.clearPseudoValue();
+                cell.clearTmpMoveCalcValue();
             }
             if (tmp < bestAction) {
                 bestAction = tmp;
@@ -86,6 +89,8 @@ public class MoveCalculation {
 
     private double calculate(Action act, Direction dir, int x, int y, int speed,
                              int depth, HashSet<Cell> pseudoEvaluatedCells) {
+        //Todo remove
+        Common.assertCellXY(x,y, cells);
         var dirSpeedDepth = preCalculate(act, dir, speed);
         dir = dirSpeedDepth.direction;
         speed = dirSpeedDepth.speed;
@@ -93,7 +98,8 @@ public class MoveCalculation {
         if (speed < Config.SPEED_MIN || speed > Config.SPEED_MAX) {
             return deathValue(depth);
         } else {
-            return calculateDirection(dir, x, y, speed, depth, pseudoEvaluatedCells, boardAnalyzer.checkForJumping(depth), deathValue(depth));
+            return calculateDirection(dir, x, y, speed, depth, pseudoEvaluatedCells,
+                    boardAnalyzer.checkForJumping(depth), deathValue(depth));
         }
     }
 
@@ -106,11 +112,11 @@ public class MoveCalculation {
     }
 
     /**
-     * todo this.
-     * @param act   todo
-     * @param dir   todo
-     * @param speed todo
-     * @return todo
+     * Calculates the Direction and Speed from the action.
+     * @param act   the Action
+     * @param dir   the current Direction
+     * @param speed the current Speed
+     * @return the new Direction and Speed
      */
     public DirSpeed preCalculate(Action act, Direction dir, int speed) {
         switch (act) {
@@ -161,8 +167,10 @@ public class MoveCalculation {
         }
     }
 
-    private double calculateDirection(Direction dir, int x, int y, int speed,
-                                      int depth, HashSet<Cell> pseudEvaluatedCells, boolean jumping, double deathValue) {
+    private double calculateDirection(Direction dir, int x, int y, int speed, int depth,
+                                      HashSet<Cell> pseudEvaluatedCells, boolean jumping, double deathValue) {
+        //Todo remove
+        Common.assertCellXY(x,y, cells);
         double result = 1;
 
         if (jumping && speed >= Config.MINIMUM_JUMP_SPEED) {
@@ -196,7 +204,7 @@ public class MoveCalculation {
             }
         }
         var xy = generateXY(dir, x, y, 1);
-        return result * calculateAction(Direction.LEFT, xy.getX(), xy.getY(), speed, depth + 1);
+        return result * calculateAction(dir, xy.getX(), xy.getY(), speed, depth + 1);
     }
 
     private double deathValue(int depth) {

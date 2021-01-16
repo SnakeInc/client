@@ -13,6 +13,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import lombok.Setter;
 
 public class GUIBoard extends GridPane {
 
@@ -20,6 +21,7 @@ public class GUIBoard extends GridPane {
 
     private int width ;
     private int height;
+    @Setter
     private RiskType riskType;
 
     public GUIBoard() {
@@ -31,6 +33,11 @@ public class GUIBoard extends GridPane {
         this.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
+    /**
+     * todo.
+     * @param width todo
+     * @param height todo
+     */
     public void initializeCells(int width, int height) {
         Platform.runLater(() -> {
             this.getChildren().clear();
@@ -50,6 +57,11 @@ public class GUIBoard extends GridPane {
     }
 
 
+    /**
+     * todo.
+     * @param cells todo
+     * @param us todo
+     */
     public void updateBoard(Cell[][] cells, Player us) {
         Platform.runLater(() -> {
             ObservableList<Node> children = this.getChildren();
@@ -73,12 +85,16 @@ public class GUIBoard extends GridPane {
                     risks = cell.getDeadEndRisk();
                     single = true;
                 } else if (riskType == RiskType.KILLALGORITHM) {
-                    risks = cell.getKillAlgorithmRisk();
+                    risks = cell.getKillIncentive();
                     single = true;
                     positive = true;
                 } else if (riskType == RiskType.OPPONENTMOVERISK) {
                     risks = cell.getOpponentMovementRisk();
                     single = true;
+                } else if (riskType == RiskType.PATHHIGHLIGHT) {
+                    risks = cell.getPathHighlight();
+                    single = true;
+                    positive = true;
                 } else {
                     risks = globalRisk;
                 }
@@ -92,16 +108,8 @@ public class GUIBoard extends GridPane {
         });
     }
 
-    public void setRiskType(RiskType type) {
-        this.riskType = type;
-    }
-
     public final int getActualRound() {
         return actualRoundProperty.get();
-    }
-
-    public IntegerProperty actualRoundProperty() {
-        return actualRoundProperty;
     }
 
     public void actualizeActualRoundProperty() {

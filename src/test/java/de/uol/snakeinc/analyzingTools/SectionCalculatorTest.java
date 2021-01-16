@@ -69,7 +69,7 @@ public class SectionCalculatorTest {
                     int sectionY = (int) Math.floor(((double) y) / 2D);
 
                     double value = (double) WhiteBox.getInternalState(cells[x][y], "areaRisk");
-                    assertEquals(value, values[sectionY][sectionX]);
+                    assertEquals(values[sectionX][sectionY], value);
                 }
             }
         } catch (IllegalAccessException e) {

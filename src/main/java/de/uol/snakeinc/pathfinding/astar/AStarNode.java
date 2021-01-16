@@ -1,11 +1,16 @@
 package de.uol.snakeinc.pathfinding.astar;
 
 import de.uol.snakeinc.pathfinding.PathCell;
+import lombok.Getter;
+import lombok.Setter;
 
 public class AStarNode implements Comparable {
 
+    @Getter
     private AStarNode parent;
+    @Getter
     private PathCell cell;
+    @Getter @Setter
     private double cost;
     private double distance;
 
@@ -14,26 +19,6 @@ public class AStarNode implements Comparable {
         this.cell = cell;
         this.cost = cost;
         this.distance = distance;
-    }
-
-    public PathCell getCell() {
-        return this.cell;
-    }
-
-    public AStarNode getParent() {
-        return this.parent;
-    }
-
-    public double getCost() {
-        return this.cost;
-    }
-
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
-
-    public double getDistance() {
-        return this.distance;
     }
 
     // Compare by f value (g + h)

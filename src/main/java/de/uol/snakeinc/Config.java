@@ -2,7 +2,6 @@ package de.uol.snakeinc;
 
 import de.uol.snakeinc.analyzingTools.MoveOrder;
 import de.uol.snakeinc.entities.Action;
-import de.uol.snakeinc.entities.Direction;
 
 public abstract class Config {
 
@@ -12,13 +11,13 @@ public abstract class Config {
     public static final int MINIMUM_JUMP_SPEED = 3;
 
     /********
-     * Kill Algorithm
+     * Kill Algorithm.
      *******/
     public static final int INITIAL_ATTACK_DISTANCE = 2;
     public static final int INITIAL_FLOOD_TERMINATION_COUNT = 300;
 
     /********
-     * Move Calculation
+     * Move Calculation.
      *******/
     public static final int SEARCHING_DEPTH = 10;
     public static final double BEST_ACTION_MULTIPLIER = 100D;
@@ -26,12 +25,12 @@ public abstract class Config {
     public static final double DEATH_VALUE_BASE = 3D;
 
     /********
-     * Opponent Moves Calculation
+     * Opponent Moves Calculation.
      *******/
     public static final int OPPONENT_MOVES_DEPTH = 3;
 
     /********
-     * Section Calculator
+     * Section Calculator.
      *******/
     public static final int RESOLUTION = 10;
     public static final double DIVISOR = 10D;
@@ -39,9 +38,11 @@ public abstract class Config {
     public static final double CALCULATE_MAX = 0D;
     public static final double AREA_RISK_INTERPOLATION_MAX = 1.2D;
     public static final double AREA_RISK_INTERPOLATION_MIN = 1.0D;
+    public static final double PATH_HIGHLIGHT_INTERPOLATION_MAX = 1.0D;
+    public static final double PATH_HIGHLIGHT_INTERPOLATION_MIN = 0.8D;
 
     /********
-     * Cell
+     * Cell.
      *******/
     public static final int DEATH_VALUE = 10;
     public static final double MOVE_RISK_1 = 1.25D;
@@ -50,7 +51,7 @@ public abstract class Config {
     public static final double KILL_INCENTIVE = 0.8D;
 
     /********
-     * MoveOrder
+     * MoveOrder.
      *******/
     public static final int LEFT_RIGHT_BALANCE_MAX = 3;
     public static final int IDEAL_MIN_SPEED = 1;

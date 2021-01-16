@@ -50,7 +50,7 @@ public class EvaluationBoard {
         cells = new Cell[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                cells[i][j] = new Cell(j, i);
+                cells[i][j] = new Cell(i, j);
             }
         }
 
@@ -87,6 +87,7 @@ public class EvaluationBoard {
     /**
      * logs the compute values for each cell.
      * @param cells cells
+     * @param active only logs when the player is active
      */
     private void logCurrentEvaluation (Cell[][] cells, boolean active) {
         if (SnakeInc.hasGui()) {
@@ -138,6 +139,8 @@ public class EvaluationBoard {
     private void updateJumpingPlayerCells(Player player) {
         int x = player.getX();
         int y = player.getY();
+        //Todo remove
+        Common.assertCellXY(x,y, cells);
         int speed = player.getSpeed();
         int iD = player.getId();
         setCells(x, y, iD);
@@ -147,6 +150,8 @@ public class EvaluationBoard {
 
 
     private void setCells(int x, int y, int iD) {
+        //Todo remove
+        Common.assertCellXY(x,y, cells);
         if (x >= 0 && x < width && y >= 0 && y < height) {
             cells[x][y].setId(iD);
         }
@@ -168,6 +173,8 @@ public class EvaluationBoard {
             y = playerHashMap.get(i).getY();
             speed = playerHashMap.get(i).getSpeed();
             tmpPlayer = playerHashMap.get(i);
+            //Todo remove
+            Common.assertCellXY(x,y, cells);
 
             //Checking for jumping
             if (round % Config.ROUNDS_PER_JUMP == 0 && speed >= 3) {
@@ -199,20 +206,10 @@ public class EvaluationBoard {
     }
 
     /**
-     * Todo javadoc.
-     * @return todo this
-     */
-    public Action startingStrategy() {
-        //TODO: Implement this.
-        return Action.CHANGE_NOTHING;
-    }
-
-
-    /**
      * Parse board based on json-format.
      * @param json    json from websocket
      * @param players parsed players
-     * @param us      // todo this
+     * @param us      our player
      * @return parsed board
      */
     public static EvaluationBoard initParseFromJson(JsonObject json, HashMap<Integer, Player> players, Player us) {
