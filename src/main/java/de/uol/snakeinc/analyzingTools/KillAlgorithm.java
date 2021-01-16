@@ -28,7 +28,7 @@ public abstract class KillAlgorithm {
         int width = cells.length;
         int height = cells[1].length;
         for (int i = 0; i < players.length; i++) {
-            if (BoardAnalyzer.inDistance(us, players[i], 4)) {
+            if (BoardAnalyzer.inDistance(us, players[i], Config.ROUNDS_AHEAD_FOR_KILL)) {
                 int[][] floodCache = new int [width][height];
                 floodCache = connectPlayersFillFloodCache(cells, floodCache, players[i], us);
                 if (floodCache != null) {

@@ -7,6 +7,7 @@ public class TimeTracker {
 
     private long startTime;
     private long lastPause;
+    private static final double NANOS_IN_A_MS = 1000000.0D;
 
     public TimeTracker() {
         this.startTime = System.nanoTime();
@@ -19,7 +20,7 @@ public class TimeTracker {
      */
     public void logTime(String information) {
         long time = System.nanoTime();
-        double totalTime = (time - this.lastPause) / 1000000.0D;
+        double totalTime = (time - this.lastPause) / NANOS_IN_A_MS;
         log.info("Tracked " + totalTime + "ms - " + information);
         this.lastPause = time;
     }
@@ -29,7 +30,7 @@ public class TimeTracker {
      */
     public void logFinal() {
         long time = System.nanoTime();
-        double totalTime = (time - this.startTime) / 1000000.0D;
+        double totalTime = (time - this.startTime) / NANOS_IN_A_MS;
         log.info("Finalized Process, time needed " + totalTime + "ms");
     }
 

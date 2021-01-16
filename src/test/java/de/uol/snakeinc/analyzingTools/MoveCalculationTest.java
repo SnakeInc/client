@@ -1,5 +1,6 @@
 package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
@@ -12,7 +13,7 @@ class MoveCalculationTest {
     @Property
     boolean testPreCalculateSpeed(@ForAll Action act,
                                   @ForAll Direction dir,
-                                  @ForAll @IntRange(min = 1, max = 10) int speed) {
+                                  @ForAll @IntRange(min = Config.SPEED_MIN, max = Config.SPEED_MAX) int speed) {
         var moveCalc = new MoveCalculation(new Cell[1][0], null, null);
         var res = moveCalc.preCalculate(act, dir, speed);
         int resSpeed = res.getSpeed();
@@ -43,7 +44,7 @@ class MoveCalculationTest {
     @Property
     boolean testPreCalculateDirection(@ForAll Action act,
                                       @ForAll Direction dir,
-                                      @ForAll @IntRange(min = 1, max = 10) int speed) {
+                                      @ForAll @IntRange(min = Config.SPEED_MIN, max = Config.SPEED_MAX) int speed) {
         var moveCalc = new MoveCalculation(new Cell[1][0], null, null);
         var res = moveCalc.preCalculate(act, dir, speed);
         var resDir = res.getDirection();
@@ -72,7 +73,8 @@ class MoveCalculationTest {
     }
 
     @Property
-    boolean testPreCalculateDirection4x(@ForAll Direction dir, @ForAll @IntRange(min = 1, max = 10) int speed) {
+    boolean testPreCalculateDirection4x(@ForAll Direction dir, @ForAll @IntRange(min = Config.SPEED_MIN,
+            max = Config.SPEED_MAX) int speed) {
         var moveCalc = new MoveCalculation(new Cell[1][0], null, null);
         var leftDir = dir;
         var rightDir = dir;

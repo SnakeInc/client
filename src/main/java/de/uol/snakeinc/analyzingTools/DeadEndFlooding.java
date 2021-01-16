@@ -1,6 +1,7 @@
 package de.uol.snakeinc.analyzingTools;
 
 import de.uol.snakeinc.Common;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.entities.Direction;
@@ -27,17 +28,11 @@ public class DeadEndFlooding {
      * @param us todo
      */
     public void calculate(Cell[][] cells, Player us) {
-        int countFreeCells = 0;
-        int countCells = 0;
         for (int x = 0; x < this.width; x++) {
             for (int y = 0; y < this.height; y++) {
                 cells[x][y].setDeadEndFloodingReset(1.0);
                 cells[x][y].setDeadEndJumping(1.0);
                 cells[x][y].setFlooded(false);
-                countCells++;
-                if (cells[x][y].isInUse()) {
-                    countFreeCells++;
-                }
             }
         }
 
@@ -49,19 +44,19 @@ public class DeadEndFlooding {
             Cell turnRight = this.getCell(cells, us, Action.TURN_RIGHT);
 
             if (speedUp != null) {
-                this.floodRound(cells, speedUp, us.getDirection(), us, 500);
+                this.floodRound(cells, speedUp, us.getDirection(), us, Config.BLOCKS);
             }
             if (slowDown != null) {
-                this.floodRound(cells, slowDown, us.getDirection(), us, 500);
+                this.floodRound(cells, slowDown, us.getDirection(), us, Config.BLOCKS);
             }
             if (changeNothing != null) {
-                this.floodRound(cells, changeNothing, us.getDirection(), us, 500);
+                this.floodRound(cells, changeNothing, us.getDirection(), us, Config.BLOCKS);
             }
             if (turnLeft != null) {
-                this.floodRound(cells, turnLeft, Common.turnLeft(us.getDirection()), us, 500);
+                this.floodRound(cells, turnLeft, Common.turnLeft(us.getDirection()), us, Config.BLOCKS);
             }
             if (turnRight != null) {
-                this.floodRound(cells, turnRight, Common.turnRight(us.getDirection()), us, 500);
+                this.floodRound(cells, turnRight, Common.turnRight(us.getDirection()), us, Config.BLOCKS);
             }
         }
     }
@@ -114,7 +109,7 @@ public class DeadEndFlooding {
         checkCells.add(position);
         checkCells.addAll(neighbours);
 
-        while (count < 500) {
+        while (count < Config.BLOCKS) {
             for (Cell cell : neighbours) {
                 newNeighbours.addAll(this.getPossibleNeighbours(cells, cell, direction, true));
             }
@@ -133,7 +128,7 @@ public class DeadEndFlooding {
             }
         }
 
-        if (count < 500) {
+        if (count < Config.BLOCKS) {
             for (Cell cell : checkCells) {
                 cell.setDeadEndJumping(2.0D);
             }
@@ -141,7 +136,7 @@ public class DeadEndFlooding {
                 for (int y = 0; y < this.height; y++) {
                     Cell option = cells[x][y];
                     if (!checkCells.contains(option)) {
-                        option.setDeadEndJumping(0.1D);
+                        option.setDeadEndJumping(Config.DEAD_END_INCENTIVE);
                     }
                 }
             }
@@ -187,8 +182,8 @@ public class DeadEndFlooding {
         if (count < blocks) {
             double scale = ((double) count) / ((double) blocks);
 
-            value = new LinearInterpolator(2.0, 1.0).getInterpolation(scale);
-            position.setDeadEndFlooding(value + 1.5D);
+            value = new LinearInterpolator(Config.INTERPOLATION_MAX, Config.INTERPOLATION_MIN).getInterpolation(scale);
+            position.setDeadEndFlooding(value + Config.FLOOD_ADD);
         }
         for (Cell cell : checkCells) {
             cell.setDeadEndFlooding(value);

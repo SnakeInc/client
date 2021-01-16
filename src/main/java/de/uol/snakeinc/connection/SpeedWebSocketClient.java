@@ -35,7 +35,9 @@ public class SpeedWebSocketClient extends WebSocketClient {
     public SpeedWebSocketClient(ConnectionThread thread, URI url) {
         super(url);
         this.thread = thread;
+        //CHECKSTYLE:OFF
         this.serverId = DigestUtils.md5Hex(url.getHost()).substring(0, 4);
+        //CHECKSTYLE:ON
     }
 
     @Override
