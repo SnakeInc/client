@@ -30,11 +30,19 @@ public class SectionCalculator {
 
     private double divideWidth;
     private double divideHeight;
-    public static int resolution = Config.RESOLUTION;
+    public int resolution = Config.RESOLUTION;
+    public double divisor = Config.DIVISOR;
+    public int iterations = Config.ITERATIONS;
 
     public SectionCalculator(int width, int height) {
-        this.divideHeight = height / Config.DIVISOR;
-        this.divideWidth = width  / Config.DIVISOR;
+        while (width < resolution || height < resolution) {
+            resolution = resolution / 2;
+            divisor = divisor / 2.0D;
+            iterations--;
+        }
+
+        this.divideHeight = height / divisor;
+        this.divideWidth = width  / divisor;
     }
 
     /**
@@ -43,6 +51,9 @@ public class SectionCalculator {
      * @param us player us
      */
     public void calculate(Cell[][] cells, Player us) {
+        if (iterations < 1) {
+            return;
+        }
         int[][] sections = new int[resolution][resolution];
         int[][] options = new int[resolution][resolution];
         // fill options and section. Options are the total optional blocks, sections are the free blocks
@@ -194,11 +205,11 @@ public class SectionCalculator {
         HashMap<Integer, double[][]> percentageIterations = new HashMap<Integer, double[][]>();
         int divisionAmountSquare = 1;
         int divisionAmount = 1;
-        int localResolution = Config.RESOLUTION;
+        int localResolution = this.resolution;
 
-        double[][] deepPercentages = new double[Config.RESOLUTION][Config.RESOLUTION];
+        double[][] deepPercentages = new double[this.resolution][this.resolution];
 
-        for (int iteration = 0; iteration < Config.ITERATIONS; iteration++) {
+        for (int iteration = 0; iteration < this.iterations; iteration++) {
             double[][] percentagesGrid = new double[localResolution][localResolution];
             for (int x = 0; x < percentages.length; x++) {
                 for (int y = 0; y < percentages[0].length; y++) {
@@ -220,7 +231,7 @@ public class SectionCalculator {
                 double percentage = 0.0D;
                 double division = 0.0D;
 
-                for (int iteration = 0; iteration < Config.ITERATIONS; iteration++) {
+                for (int iteration = 0; iteration < this.iterations; iteration++) {
                     int dividedX = (int) Math.floor(((double) x) / ((double) divisionAmount));
                     int dividedY = (int) Math.floor(((double) y) / ((double) divisionAmount));
 
