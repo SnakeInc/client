@@ -1,5 +1,6 @@
 package de.uol.snakeinc.analyzingTools;
 
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.tests.WhiteBox;
 
@@ -13,29 +14,34 @@ public class SectionCalculatorTest {
 
     @Test
     public void testRankAreaRiskCells() {
-        SectionCalculator calculator = new SectionCalculator(20, 20);
+        double division = 8.0D;
+        SectionCalculator calculator = new SectionCalculator(80, 80);
+        WhiteBox.setInternalState(calculator, "resolution", 10);
+        WhiteBox.setInternalState(calculator, "iterations", 1);
+        WhiteBox.setInternalState(calculator, "divideWidth", 8.0D);
+        WhiteBox.setInternalState(calculator, "divideHeight", 8.0D);
 
-        Cell[][] cells = new Cell[20][20];
-        for (int x = 0; x < 20; x++) {
-            for (int y = 0; y < 20; y++) {
+        Cell[][] cells = new Cell[80][80];
+        for (int x = 0; x < 80; x++) {
+            for (int y = 0; y < 80; y++) {
                 cells[x][y] = new Cell(x, y);
             }
         }
 
-        double min = 10.0;
-        double max = 90.0;
+        double min = 0.1;
+        double max = 0.9;
 
         double[][] percentages = new double[][] {
-            { 10.0, 50.0, 50.0, 70.0, 60.0, 80.0, 30.0, 20.0, 90.0, 10.0 },
-            { 70.0, 90.0, 50.0, 30.0, 70.0, 30.0, 20.0, 10.0, 10.0, 40.0 },
-            { 10.0, 50.0, 50.0, 70.0, 60.0, 80.0, 30.0, 20.0, 90.0, 10.0 },
-            { 10.0, 50.0, 50.0, 70.0, 60.0, 80.0, 30.0, 20.0, 90.0, 10.0 },
-            { 10.0, 50.0, 50.0, 70.0, 60.0, 80.0, 30.0, 20.0, 90.0, 10.0 },
-            { 70.0, 90.0, 50.0, 30.0, 70.0, 30.0, 20.0, 10.0, 10.0, 40.0 },
-            { 10.0, 50.0, 50.0, 70.0, 60.0, 80.0, 30.0, 20.0, 90.0, 10.0 },
-            { 70.0, 90.0, 50.0, 30.0, 70.0, 30.0, 20.0, 10.0, 10.0, 40.0 },
-            { 70.0, 90.0, 50.0, 30.0, 70.0, 30.0, 20.0, 10.0, 10.0, 40.0 },
-            { 10.0, 50.0, 50.0, 70.0, 60.0, 80.0, 30.0, 20.0, 90.0, 10.0 },
+            { 0.1, 0.5, 0.5, 0.7, 0.6, 0.8, 0.3, 0.2, 0.9, 0.1 },
+            { 0.7, 0.9, 0.5, 0.3, 0.7, 0.3, 0.2, 0.1, 0.1, 0.4 },
+            { 0.1, 0.5, 0.5, 0.7, 0.6, 0.8, 0.3, 0.2, 0.9, 0.1 },
+            { 0.1, 0.5, 0.5, 0.7, 0.6, 0.8, 0.3, 0.2, 0.9, 0.1 },
+            { 0.1, 0.5, 0.5, 0.7, 0.6, 0.8, 0.3, 0.2, 0.9, 0.1 },
+            { 0.7, 0.9, 0.5, 0.3, 0.7, 0.3, 0.2, 0.1, 0.1, 0.4 },
+            { 0.1, 0.5, 0.5, 0.7, 0.6, 0.8, 0.3, 0.2, 0.9, 0.1 },
+            { 0.7, 0.9, 0.5, 0.3, 0.7, 0.3, 0.2, 0.1, 0.1, 0.4 },
+            { 0.7, 0.9, 0.5, 0.3, 0.7, 0.3, 0.2, 0.1, 0.1, 0.4 },
+            { 0.1, 0.5, 0.5, 0.7, 0.6, 0.8, 0.3, 0.2, 0.9, 0.1 },
         };
 
         double[][] values = new double[][] {
@@ -63,10 +69,10 @@ public class SectionCalculatorTest {
 
         try {
             method.invoke(calculator, percentages, cells, min, max);
-            for (int x = 0; x < 20; x++) {
-                for (int y = 0; y < 20; y++) {
-                    int sectionX = (int) Math.floor(((double) x) / 2D);
-                    int sectionY = (int) Math.floor(((double) y) / 2D);
+            for (int x = 0; x < 80; x++) {
+                for (int y = 0; y < 80; y++) {
+                    int sectionX = (int) Math.floor(((double) x) / division);
+                    int sectionY = (int) Math.floor(((double) y) / division);
 
                     double value = (double) WhiteBox.getInternalState(cells[x][y], "areaRisk");
                     assertEquals(values[sectionX][sectionY], value);
