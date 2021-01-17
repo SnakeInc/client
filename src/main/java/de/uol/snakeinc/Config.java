@@ -95,8 +95,12 @@ public abstract class Config {
     public static final String ENEMY_COLOR = "RED";
     public static final double OPACITY_DIVISOR = 9D;
 
-
-
-
+    /********
+     * DeadEndRecognition.
+     *******/
+    public static final int MAX_RECOGNITION_CELL_COUNT = 775;
+    public static final double LN_MULTIPLIER = 0.15;
+    public static final double FUNCTION_Y_OFFSET = 2.0;
+    public static final boolean RANDOM_TESTING = true;
 
 }
