@@ -65,16 +65,12 @@ public abstract class Config {
     /********
      * Dead End Flooding.
      *******/
-    public static final int BLOCKS = 500;
-    public static final double DEAD_END_INCENTIVE = 0.1D;
+    public static final int BLOCKS = 700;
+    public static final double DEAD_END_INCENTIVE = 0.00001D;
     public static final double INTERPOLATION_MIN = 1.0D;
     public static final double INTERPOLATION_MAX = 2.0D;
     public static final double FLOOD_ADD = 1.5D;
-
-    /********
-     * Dead End Recognition.
-     *******/
-    public static final int DER_SEARCHING_DEPTH = 3;
+    public static final double DEAD_ABORT_BLOCKS = 10;
 
     /********
      * Connection Thread.
