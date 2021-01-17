@@ -17,6 +17,7 @@
   <img src="https://img.shields.io/github/issues-raw/SnakeInc/client?style=flat-square" />
 </p>
 <hr>
+
 ## Dokumentation
 
 Der SnakeInc-Client, das Herzstück der Aufgabe wurde als Universitäts-Projekt entwickelt. Daher wurde zusätzlich zum Projekt auch eine wissenschaftliche Ausarbeitung in Form eines LaTex-Dokumentes erstellt.
