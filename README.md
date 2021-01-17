@@ -35,6 +35,7 @@ Das Spiel spe_ed ist vom Spielprinzip dem Spiel Curvefever sehr ähnlich. Hierbe
 Der SnakeInc-Client ist in mehrere Module untergliedert, welche eigenständig Werte auf einer Zelle des Boards setzen können. Die Werte einer Zelle können von 0 bis X gehen. Werte über 1 werden als Risiko gesehen, Werte unterhalb von 1 sind Incentives. Der nutzt die Movement-Calculation um anhand dieser Werte die besten Züge auf dem Board zu tätigen. Ein Risiko-Wert eines einzelnen Moduls sollte im Normalfall nicht größer als 1.2 sein.
 
 
+
 ### Installation
 
 
