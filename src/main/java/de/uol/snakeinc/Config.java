@@ -69,11 +69,15 @@ public abstract class Config {
     public static final double INTERPOLATION_MIN = 1.0D;
     public static final double INTERPOLATION_MAX = 2.0D;
     public static final double FLOOD_ADD = 1.5D;
+    public static final double DEAD_ABORT_BLOCKS = 10;
 
     /********
-     * Dead End Recognition.
+     * DeadEndRecognition.
      *******/
-    public static final int DER_SEARCHING_DEPTH = 3;
+    public static final int MAX_RECOGNITION_CELL_COUNT = 775;
+    public static final double LN_MULTIPLIER = 0.15;
+    public static final double FUNCTION_Y_OFFSET = 2.0;
+    public static final boolean RANDOM_TESTING = true;
 
     /********
      * Connection Thread.

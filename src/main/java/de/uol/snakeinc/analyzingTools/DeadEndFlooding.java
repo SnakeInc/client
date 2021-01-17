@@ -162,7 +162,7 @@ public class DeadEndFlooding {
     }
 
     private void floodRound(Cell[][] cells, Cell position, Direction direction, Player us, int blocks) {
-        if (blocks < 10) {
+        if (blocks < Config.DEAD_ABORT_BLOCKS) {
             return;
         }
         List<Cell> way = this.getCellsBetween(cells, us.getX(), position.getX(), us.getY(), position.getY());
