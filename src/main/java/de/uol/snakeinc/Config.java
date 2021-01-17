@@ -10,6 +10,7 @@ public abstract class Config {
     public static final int SPEED_MAX = 10;
     public static final int MINIMUM_JUMP_SPEED = 3;
     public static final boolean AUTO_RECONNECT = false;
+    public static final boolean LOG_WRITING_ENABLED = false;
 
     /********
      * Kill Algorithm.
@@ -69,10 +70,11 @@ public abstract class Config {
      * Dead End Flooding.
      *******/
     public static final int BLOCKS = 700;
-    public static final double DEAD_END_INCENTIVE = 0.00001D;
+    public static final int DEAD_END_BLOCKS = 250;
+    public static final double DEAD_END_INCENTIVE = 0.001D;
     public static final double INTERPOLATION_MIN = 1.0D;
-    public static final double INTERPOLATION_MAX = 2.0D;
-    public static final double FLOOD_ADD = 1.5D;
+    public static final double INTERPOLATION_MAX = 1.4D;
+    public static final double FLOOD_ADD = 0.4D;
     public static final double DEAD_ABORT_BLOCKS = 10;
 
     /********
@@ -93,14 +95,14 @@ public abstract class Config {
     public static final String BASE_COLOR = "BLACK";
     public static final String OUR_COLOR = "GREEN";
     public static final String ENEMY_COLOR = "RED";
-    public static final double OPACITY_DIVISOR = 9D;
+    public static final double OPACITY_DIVISOR = 2.0D;
 
     /********
      * DeadEndRecognition.
      *******/
     public static final int MAX_RECOGNITION_CELL_COUNT = 775;
-    public static final double LN_MULTIPLIER = 0.15;
-    public static final double FUNCTION_Y_OFFSET = 2.0;
+    public static final double LN_MULTIPLIER = 0.06;
+    public static final double FUNCTION_Y_OFFSET = 1.4;
     public static final boolean RANDOM_TESTING = true;
     public static final int RANDOM_TESTING_LENGTH = 6;
 

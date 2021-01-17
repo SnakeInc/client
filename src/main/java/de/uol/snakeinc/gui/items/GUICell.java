@@ -32,12 +32,19 @@ public class GUICell extends Rectangle {
                 double opacity;
                 if (positive) {
                     opacity = (risk * (-1.0D)) + 1.0D;
+                    this.setFill(Color.CYAN);
                 } else {
                     opacity = (risk - defaultValue) * (1.0D / range);
                 }
                 this.setOpacity(opacity);
             } else {
-                double opacity = (risk - 1.0D) / Config.OPACITY_DIVISOR;
+                double opacity = 0.0D;
+                if (risk < 1.0D) {
+                    opacity = (risk * (-1.0D)) + 1.0D;
+                    this.setFill(Color.CYAN);
+                } else {
+                    opacity = (risk - 1.0D) / Config.OPACITY_DIVISOR;
+                }
                 this.setOpacity(opacity);
             }
         }
