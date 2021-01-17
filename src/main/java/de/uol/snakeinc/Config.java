@@ -39,7 +39,7 @@ public abstract class Config {
     public static final int ITERATIONS = 4;
     public static final int[] MULTIPLICATIONS = new int[] { 1, 3, 9, 27, 81 };
     public static final double DIVISOR = 32D;
-    public static final double AREA_RISK_INTERPOLATION_MAX = 1.1D;
+    public static final double AREA_RISK_INTERPOLATION_MAX = 1.2D;
     public static final double AREA_RISK_INTERPOLATION_MIN = 1.0D;
     public static final double PATH_HIGHLIGHT_INTERPOLATION_MAX = 1.0D;
     public static final double PATH_HIGHLIGHT_INTERPOLATION_MIN = 0.9D;
