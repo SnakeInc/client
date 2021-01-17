@@ -26,7 +26,7 @@ public class Gui extends Application {
     ));
 
     /**
-     * todo.
+     * Initialize GUI-Board.
      */
     public void initialize() {
         root.setPadding(new Insets(20, 20, 20, 20));
