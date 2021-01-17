@@ -59,7 +59,7 @@ public class GUIBoard extends GridPane {
 
     /**
      * Update gui-board with game-board.
-     * @param cells evaluated risk game-cells.
+     * @param cells evaluated risk game-cells
      * @param us player-object for our position
      */
     public void updateBoard(Cell[][] cells, Player us) {
