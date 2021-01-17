@@ -96,18 +96,18 @@ public class EvaluationBoard {
                 gui.getGuiBoard().initializeCells(cells.length, cells[0].length);
             }
             gui.getGuiBoard().updateBoard(cells, this.us);
-        } else if (active) {
-            StringBuilder str = new StringBuilder();
-            DecimalFormat f = new DecimalFormat("##.00");
-            str.append("\n");
-            for (int i = 0; i < cells.length; i++) {
-                for (int j = 0; j < cells[0].length; j++) {
-                    str.append(f.format(cells[i][j].getRisks())).append("\t");
-                }
-                str.append("\n");
-            }
-            log.debug(str.toString());
-        }
+        }// else if (active) {
+        //    StringBuilder str = new StringBuilder();
+        //    DecimalFormat f = new DecimalFormat("##.00");
+        //    str.append("\n");
+        //    for (int i = 0; i < cells.length; i++) {
+        //        for (int j = 0; j < cells[0].length; j++) {
+        //            str.append(f.format(cells[i][j].getRisks())).append("\t");
+        //        }
+        //        str.append("\n");
+        //    }
+        //    log.debug(str.toString());
+        //}
     }
 
     /**

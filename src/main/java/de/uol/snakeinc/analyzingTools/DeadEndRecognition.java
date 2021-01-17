@@ -60,19 +60,19 @@ public class DeadEndRecognition {
      * @param y y coordinate
      */
     private void testRandom(Direction direction, int x, int y) {
-        Common.Tuple t1 = generateXY(direction, x, y, 6);
+        Common.Tuple t1 = generateXY(direction, x, y, Config.RANDOM_TESTING_LENGTH);
         if (!offBoardOrDeadly(t1.getX(), t1.getY())) {
             findNeighbours(t1.getX(), t1.getY(), historyMap.getMap());
         }
-        Common.Tuple t2 = generateXY(turnLeft(direction), x, y, 6);
+        Common.Tuple t2 = generateXY(turnLeft(direction), x, y, Config.RANDOM_TESTING_LENGTH);
         if (!offBoardOrDeadly(t2.getX(), t2.getY())) {
             findNeighbours(t2.getX(), t2.getY(), historyMap.getMap());
         }
-        Common.Tuple t3 = generateXY(turnLeft(turnLeft(direction)), x, y, 6);
+        Common.Tuple t3 = generateXY(turnLeft(turnLeft(direction)), x, y, Config.RANDOM_TESTING_LENGTH);
         if (!offBoardOrDeadly(t3.getX(), t3.getY())) {
             findNeighbours(t3.getX(), t3.getY(), historyMap.getMap());
         }
-        Common.Tuple t4 = generateXY(turnRight(direction), x, y, 6);
+        Common.Tuple t4 = generateXY(turnRight(direction), x, y, Config.RANDOM_TESTING_LENGTH);
         if (!offBoardOrDeadly(t4.getX(), t4.getY())) {
             findNeighbours(t4.getX(), t4.getY(), historyMap.getMap());
         }
@@ -92,7 +92,7 @@ public class DeadEndRecognition {
         if (speed > 1) {
             testMove(direction, x, y, speed - 1);
         }
-        if (speed < 9) {
+        if (speed < Config.SPEED_MAX - 1) {
             testMove(direction, x, y, speed + 1);
         }
     }
@@ -213,7 +213,9 @@ public class DeadEndRecognition {
     private void testRoundOfCell(int x, int y) {
         if (isNotOffBoard(x, y)) {
             boolean areaAlreadyTested = false;
+            //CHECKSTYLE:OFF
             for (int i = 0; i <= 7; i++) {
+                //CHECKSTYLE:ON
                 Common.Tuple tuple = getRoundOfPosition(x, y, i);
                 if (isNotOffBoard(tuple.getX(), tuple.getY())) {
                     if (isNotDeadly(tuple.getX(), tuple.getY())) {
@@ -237,6 +239,7 @@ public class DeadEndRecognition {
      * @param depth 0-7 position of the cycle around a tuple
      * @return a tuple
      */
+    //CHECKSTYLE:OFF
     private Common.Tuple getRoundOfPosition(int x, int y, int depth) {
         int newX = x;
         int newY = y;
@@ -274,6 +277,7 @@ public class DeadEndRecognition {
         }
         return new Common.Tuple(newX, newY);
     }
+    //CHECKSTYLE:ON
 
     /**
      * deepcopy method for cells.

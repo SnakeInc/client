@@ -102,5 +102,6 @@ public abstract class Config {
     public static final double LN_MULTIPLIER = 0.15;
     public static final double FUNCTION_Y_OFFSET = 2.0;
     public static final boolean RANDOM_TESTING = true;
+    public static final int RANDOM_TESTING_LENGTH = 6;
 
 }

@@ -14,6 +14,11 @@ public class SnakeInc {
     private static Gui gui;
     @Getter @Setter
     private static boolean guiReady = false;
+    @Getter
+    private static String URL = "wss://msoll.de/spe_ed";
+    private static String APIKEY = "4J6JBGVMWOPZCSDJ273T4PLBFATDNTVSWUJ7BEB6C3EPMDXZVKDYLUUU";
+    @Getter
+    private static String TIME_URL = "https://msoll.de/spe_ed_time";
 
     /**
      *  Main-Thread of Program.
@@ -27,11 +32,18 @@ public class SnakeInc {
             SnakeInc.setGuiReady(true);
         }
 
-        String apiKey = "4J6JBGVMWOPZCSDJ273T4PLBFATDNTVSWUJ7BEB6C3EPMDXZVKDYLUUU";
-        ConnectionThread thread = new ConnectionThread(apiKey);
+        if(System.getenv("URL") != null) {
+            URL = System.getenv("URL");
+        }
+        if(System.getenv("APIKEY") != null) {
+            APIKEY = System.getenv("APIKEY");
+        }
+        if(System.getenv("TIME_URL") != null) {
+            TIME_URL = System.getenv("TIME_URL");
+        }
+
+        ConnectionThread thread = new ConnectionThread(APIKEY);
         thread.start();
-        /*PathfindTester tester = new PathfindTester();
-        tester.testPathfinding();*/
     }
 
     public static boolean hasGui() {
