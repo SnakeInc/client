@@ -17,6 +17,8 @@ public abstract class Config {
     public static final int INITIAL_ATTACK_DISTANCE = 2;
     public static final int INITIAL_FLOOD_TERMINATION_COUNT = 200;
     public static final int ROUNDS_AHEAD_FOR_KILL = 4;
+    public static final double KILL_INCENTIVE_DEAD_END = 0.8D;
+    public static final int MAX_PLAYER_CAP = 3;
 
     /********
      * Move Calculation.

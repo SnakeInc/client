@@ -49,7 +49,7 @@ public class BoardAnalyzer {
         DeadEndRecognition deadEndRecognition = new DeadEndRecognition(cells, us);
         deadEndRecognition.findDeadEnds();
         timeTracker.logTime("DeadEnd-Calculation");
-        if (players.length < 3) {
+        if (players.length < Config.MAX_PLAYER_CAP) {
             evaluatedCells.addAll(KillAlgorithm.killAlgorithm(cells, players, us));
         }
         timeTracker.logTime("KillAlgorithm-Calculation");
