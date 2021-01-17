@@ -65,7 +65,7 @@ public class Game {
      * @param socket currently connected socket
      */
     public void runAction(SpeedWebSocketClient socket) {
-        if (us.isActive()) {
+        if (us.isActive() && socket.isOpen()) {
             socket.sendAction(EvaluationBoard.getAction());
             EvaluationBoard.prepareNextPhase();
         }

@@ -19,6 +19,7 @@ public class SnakeInc {
     private static String KEY = "4J6JBGVMWOPZCSDJ273T4PLBFATDNTVSWUJ7BEB6C3EPMDXZVKDYLUUU";
     @Getter
     private static String TIME_URL = "https://msoll.de/spe_ed_time";
+    private static ConnectionThread connection;
 
     /**
      *  Main-Thread of Program.
@@ -42,11 +43,24 @@ public class SnakeInc {
             TIME_URL = System.getenv("TIME_URL");
         }
 
-        ConnectionThread thread = new ConnectionThread(KEY);
-        thread.start();
+        connection = new ConnectionThread(KEY);
+        connection.start();
     }
 
     public static boolean hasGui() {
         return SnakeInc.gui != null;
+    }
+
+    /**
+     * Closes th Gui and Application.
+     */
+    public static void closeGui() {
+        if (hasGui()) {
+            gui.close();
+        }
+    }
+
+    public static void close() {
+        connection.stopConnection();
     }
 }
