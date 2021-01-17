@@ -40,8 +40,8 @@ public class Game {
     }
 
     /**
-     * todo javadoc.
-     * @param evaluationBoard todo this
+     * Initializes the new Evaluation Board in the game.
+     * @param evaluationBoard the new evaluationBoard
      * @param rawBoard        the raw board for logging
      */
     public void informIntelligentBoard(EvaluationBoard evaluationBoard, int[][] rawBoard) {
@@ -52,7 +52,7 @@ public class Game {
     }
 
     /**
-     * todo javadoc.
+     * Updates the EvaluationBoard with the new Player positions etc.
      * @param rawBoard the raw board for logging
      */
     public void informIntelligentBoard(int[][] rawBoard) {

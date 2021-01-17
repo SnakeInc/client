@@ -32,13 +32,13 @@ public class SnakeInc {
             SnakeInc.setGuiReady(true);
         }
 
-        if(System.getenv("URL") != null) {
+        if (System.getenv("URL") != null) {
             URL = System.getenv("URL");
         }
-        if(System.getenv("KEY") != null) {
+        if (System.getenv("KEY") != null) {
             KEY = System.getenv("KEY");
         }
-        if(System.getenv("TIME_URL") != null) {
+        if (System.getenv("TIME_URL") != null) {
             TIME_URL = System.getenv("TIME_URL");
         }
 

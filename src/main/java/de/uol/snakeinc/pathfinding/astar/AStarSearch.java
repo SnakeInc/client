@@ -42,28 +42,6 @@ public class AStarSearch extends Pathfinder {
             }
             this.now = this.open.get(0); // get first node (lowest f score)
             this.open.remove(0); // remove it
-            //todo remove
-            //--------------------
-            //search visualisation
-            //--------------------
-            //var str = new StringBuilder("");
-            //for (var row : maze) {
-            //    for (var cell : row) {
-            //        if(cell.isInUse()) {
-            //            str.append("X");
-            //        } else if (open.stream().map(AStarNode::getCell).anyMatch(cell::equals)) {
-            //            str.append("o");
-            //        } else if(closed.stream().map(AStarNode::getCell).anyMatch(cell::equals)) {
-            //            str.append("c");
-            //        } else if(now.getCell().equals(cell)) {
-            //            str.append("n");
-            //        } else {
-            //            str.append(".");
-            //        }
-            //    }
-            //    str.append("\n");
-            //}
-            //System.out.println(str.toString());
             this.closed.add(this.now); // and add to the closed
             addNeighborsToOpenList(checkEnd);
         }
@@ -100,8 +78,6 @@ public class AStarSearch extends Pathfinder {
     }
 
     private void addNeighborsToOpenList(boolean checkEnd) {
-        // TODO: For Pathfinding with jumps etc. implement options like jump/left/right instead of directions
-        // Maybe extra algorithm
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 if (x != 0 && y != 0) {
