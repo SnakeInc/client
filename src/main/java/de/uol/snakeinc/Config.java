@@ -9,7 +9,7 @@ public abstract class Config {
     public static final int SPEED_MIN = 1;
     public static final int SPEED_MAX = 10;
     public static final int MINIMUM_JUMP_SPEED = 3;
-    public static final boolean AUTO_RECONNECT = false;
+    public static final boolean AUTO_RECONNECT = true;
 
     /********
      * Kill Algorithm.
@@ -42,7 +42,7 @@ public abstract class Config {
     public static final double AREA_RISK_INTERPOLATION_MAX = 1.2D;
     public static final double AREA_RISK_INTERPOLATION_MIN = 1.0D;
     public static final double PATH_HIGHLIGHT_INTERPOLATION_MAX = 1.0D;
-    public static final double PATH_HIGHLIGHT_INTERPOLATION_MIN = 0.9D;
+    public static final double PATH_HIGHLIGHT_INTERPOLATION_MIN = 0.8D;
     public static final int PATH_HIGHLIGHT_PATH_RANGE = 12;
 
     /********
@@ -69,10 +69,11 @@ public abstract class Config {
      * Dead End Flooding.
      *******/
     public static final int BLOCKS = 700;
-    public static final double DEAD_END_INCENTIVE = 0.000000000000000000001D;
+    public static final int DEAD_END_BLOCKS = 300;
+    public static final double DEAD_END_INCENTIVE = 0.001D;
     public static final double INTERPOLATION_MIN = 1.0D;
-    public static final double INTERPOLATION_MAX = 1.2D;
-    public static final double FLOOD_ADD = 0.3D;
+    public static final double INTERPOLATION_MAX = 1.4D;
+    public static final double FLOOD_ADD = 0.4D;
     public static final double DEAD_ABORT_BLOCKS = 10;
 
     /********

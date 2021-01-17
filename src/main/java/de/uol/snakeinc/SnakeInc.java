@@ -15,7 +15,7 @@ public class SnakeInc {
     @Getter @Setter
     private static boolean guiReady = false;
     @Getter
-    private static String URL = "wss://msoll.de/spe_ed";
+    private static String URL = "wss://yellowphoenix18.de:554/";
     private static String KEY = "4J6JBGVMWOPZCSDJ273T4PLBFATDNTVSWUJ7BEB6C3EPMDXZVKDYLUUU";
     @Getter
     private static String TIME_URL = "https://msoll.de/spe_ed_time";

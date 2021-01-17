@@ -144,7 +144,7 @@ public class DeadEndFlooding {
             }
         }
 
-        if (count < Config.BLOCKS) {
+        if (count < Config.DEAD_END_BLOCKS) {
             if (deadEndCells == null || !deadEndCells.contains(cells[us.getX()][us.getY()])) {
                 for (Cell cell : checkCells) {
                     cell.setDeadEndJumping(1.0D);
