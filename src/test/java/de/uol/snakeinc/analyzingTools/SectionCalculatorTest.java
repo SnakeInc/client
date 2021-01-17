@@ -1,6 +1,5 @@
 package de.uol.snakeinc.analyzingTools;
 
-import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Cell;
 import de.uol.snakeinc.tests.WhiteBox;
 
