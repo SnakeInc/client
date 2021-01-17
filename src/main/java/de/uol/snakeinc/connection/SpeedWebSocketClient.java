@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import de.uol.snakeinc.Config;
 import de.uol.snakeinc.entities.Action;
 import de.uol.snakeinc.entities.EvaluationBoard;
 import de.uol.snakeinc.entities.Game;
@@ -79,9 +80,11 @@ public class SpeedWebSocketClient extends WebSocketClient {
         // Run Game-Logging
         if (this.game != null) {
             try {
-                log.info("Logging game");
-                var export = new Export(game, gson);
-                export.generateFile();
+                if (Config.LOG_WRITING_ENABLED) {
+                    log.info("Logging game");
+                    var export = new Export(game, gson);
+                    export.generateFile();
+                }
             } catch (Exception exception) {
                 log.error("Error while logging the game");
                 exception.printStackTrace();

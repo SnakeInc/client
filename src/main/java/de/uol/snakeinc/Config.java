@@ -10,6 +10,7 @@ public abstract class Config {
     public static final int SPEED_MAX = 10;
     public static final int MINIMUM_JUMP_SPEED = 3;
     public static final boolean AUTO_RECONNECT = false;
+    public static final boolean LOG_WRITING_ENABLED = false;
 
     /********
      * Kill Algorithm.
