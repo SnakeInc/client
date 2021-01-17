@@ -156,7 +156,6 @@ public class DeadEndRecognition {
     }
 
     private void findNeighbours(int x, int y, Set<Cell> cellsTested, Stack<Cell> cellsToTest) {
-        log.debug("Calculating Gate: " + x + " - " + y);
         int deadEndCellCount = 1;
         cellsToTest.add(cells[x][y]);
         int toTestCount = 1;
@@ -188,7 +187,6 @@ public class DeadEndRecognition {
             for (Cell testedCell : cellsTested) {
                 testedCell.setDeadEndRisk(deadEndRisk);
             }
-            log.debug("Gate size: " + deadEndCellCount + " - Risk: " + deadEndRisk);
         }
     }
 }
