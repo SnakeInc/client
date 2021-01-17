@@ -21,9 +21,11 @@ public class ConnectionThread extends Thread {
     private SpeedWebSocketClient webSocket;
     private URI url;
     private boolean running;
+    private boolean stopped;
 
     public ConnectionThread(String apiKey) {
         this.running = true;
+        this.stopped = false;
         while (!SnakeInc.isGuiReady()) {
             try {
                 log.info("Waiting for GUI");
@@ -42,7 +44,7 @@ public class ConnectionThread extends Thread {
     @Override
     public void run() {
         log.debug("Starting Connection-Thread");
-        while (running) {
+        while (running && !stopped) {
             webSocket = new SpeedWebSocketClient(this, url);
             SSLContext sslContext = null;
             try {
@@ -58,8 +60,12 @@ public class ConnectionThread extends Thread {
             SSLSocketFactory factory = sslContext.getSocketFactory();
             webSocket.setSocketFactory(factory);
             webSocket.connect();
-            while (webSocket.isOpen() || !this.webSocket.isStopped()) {
+            while ((webSocket.isOpen() || !this.webSocket.isStopped()) && !stopped) {
                //Busy Waiting
+            }
+            if (!Config.AUTO_RECONNECT) {
+                SnakeInc.closeGui();
+                break;
             }
         }
     }
@@ -69,6 +75,9 @@ public class ConnectionThread extends Thread {
      */
     public void stopConnection() {
         this.running = false;
-        this.webSocket.close();
+        this.stopped = true;
+        if (this.webSocket.isOpen()) {
+            this.webSocket.close();
+        }
     }
 }

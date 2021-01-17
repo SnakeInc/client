@@ -4,6 +4,7 @@ import de.uol.snakeinc.SnakeInc;
 import de.uol.snakeinc.gui.items.GUIBoard;
 import de.uol.snakeinc.gui.items.RiskType;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -24,6 +25,7 @@ public class Gui extends Application {
     ComboBox riskType = new ComboBox(FXCollections.observableArrayList(
         RiskType.values()
     ));
+    Stage stage;
 
     /**
      * Initialize GUI-Board.
@@ -59,8 +61,18 @@ public class Gui extends Application {
         Scene scene = new Scene(root, 1500, 1000, Color.BLACK);
         stage.setScene(scene);
         stage.show();
+        stage.setOnCloseRequest(event -> {
+            SnakeInc.close();
+        });
+        this.stage = stage;
 
         SnakeInc.setGui(this);
+    }
+
+    public void close() {
+        Platform.runLater(() -> {
+            this.stage.close();
+        });
     }
 
     public static void main(String[] args) {
