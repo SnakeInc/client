@@ -46,8 +46,7 @@ public class OpponentMovesCalculation {
     }
 
     private void calculateRisk(int x, int y, int depth, int speed) {
-        //Todo remove
-        Common.assertCellXY(x,y, cells);
+
         if (boardAnalyzer.checkForJumping(depth)) {
             calculateRiskWithJumping(x, y, depth, speed);
         } else {
@@ -62,8 +61,7 @@ public class OpponentMovesCalculation {
     }
 
     private void calculateRiskWithJumping(int x, int y, int depth, int speed) {
-        //Todo remove
-        Common.assertCellXY(x,y, cells);
+
         if (depth <= Config.OPPONENT_MOVES_DEPTH) {
             //Recursive call
             recursiveRiskByDirectionWithJumping(x, y, depth, speed, Direction.UP);
@@ -75,8 +73,6 @@ public class OpponentMovesCalculation {
 
     private void recursiveRiskByDirection(int x, int y, int depth, int speed, Direction dir) {
         boolean abort = false;
-        //Todo remove
-        Common.assertCellXY(x,y, cells);
         for (var xy : Common.generateAllXYUpToFromOne(dir, x, y, speed + 1)) {
             if (Common.offBoardOrDeadly(xy.getX(), xy.getY(), cells)) {
                 abort = true;
@@ -92,8 +88,6 @@ public class OpponentMovesCalculation {
     }
 
     private void recursiveRiskByDirectionWithJumping(int x, int y, int depth, int speed, Direction dir) {
-        //Todo remove
-        Common.assertCellXY(x,y, cells);
         switch (dir) {
             case UP:
                 if (!Common.offBoardOrDeadly(x, y - 1, cells) && !Common.offBoardOrDeadly(x, y - speed, cells)) {
@@ -135,8 +129,6 @@ public class OpponentMovesCalculation {
      * @param depth depth
      */
     public void evaluateCells (int x, int y, int depth) {
-        //Todo remove
-        Common.assertCellXY(x,y, cells);
         evaluatedCells.add(cells[x][y]);
         cells[x][y].raiseOpponentMovementRisk(depth);
     }

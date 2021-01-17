@@ -10,7 +10,7 @@ import de.uol.snakeinc.gui.Gui;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
-import java.text.DecimalFormat;
+
 import java.util.HashMap;
 
 /**
@@ -96,7 +96,8 @@ public class EvaluationBoard {
                 gui.getGuiBoard().initializeCells(cells.length, cells[0].length);
             }
             gui.getGuiBoard().updateBoard(cells, this.us);
-        }// else if (active) {
+        }
+        // else if (active) {
         //    StringBuilder str = new StringBuilder();
         //    DecimalFormat f = new DecimalFormat("##.00");
         //    str.append("\n");
@@ -138,8 +139,6 @@ public class EvaluationBoard {
     private void updateJumpingPlayerCells(Player player) {
         int x = player.getX();
         int y = player.getY();
-        //Todo remove
-        Common.assertCellXY(x,y, cells);
         int speed = player.getSpeed();
         int iD = player.getId();
         setCells(x, y, iD);
@@ -148,8 +147,6 @@ public class EvaluationBoard {
     }
 
     private void setCells(int x, int y, int iD) {
-        //Todo remove
-        Common.assertCellXY(x,y, cells);
         if (x >= 0 && x < width && y >= 0 && y < height) {
             cells[x][y].setId(iD);
         }
@@ -171,8 +168,6 @@ public class EvaluationBoard {
             y = playerHashMap.get(i).getY();
             speed = playerHashMap.get(i).getSpeed();
             tmpPlayer = playerHashMap.get(i);
-            //Todo remove
-            Common.assertCellXY(x,y, cells);
 
             //Checking for jumping
             if (round % Config.ROUNDS_PER_JUMP == 0 && speed >= Config.MINIMUM_JUMP_SPEED) {
