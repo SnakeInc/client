@@ -16,7 +16,7 @@ public class SnakeInc {
     private static boolean guiReady = false;
     @Getter
     private static String URL = "wss://msoll.de/spe_ed";
-    private static String APIKEY = "4J6JBGVMWOPZCSDJ273T4PLBFATDNTVSWUJ7BEB6C3EPMDXZVKDYLUUU";
+    private static String KEY = "4J6JBGVMWOPZCSDJ273T4PLBFATDNTVSWUJ7BEB6C3EPMDXZVKDYLUUU";
     @Getter
     private static String TIME_URL = "https://msoll.de/spe_ed_time";
 
@@ -35,14 +35,14 @@ public class SnakeInc {
         if(System.getenv("URL") != null) {
             URL = System.getenv("URL");
         }
-        if(System.getenv("APIKEY") != null) {
-            APIKEY = System.getenv("APIKEY");
+        if(System.getenv("KEY") != null) {
+            KEY = System.getenv("KEY");
         }
         if(System.getenv("TIME_URL") != null) {
             TIME_URL = System.getenv("TIME_URL");
         }
 
-        ConnectionThread thread = new ConnectionThread(APIKEY);
+        ConnectionThread thread = new ConnectionThread(KEY);
         thread.start();
     }
 
