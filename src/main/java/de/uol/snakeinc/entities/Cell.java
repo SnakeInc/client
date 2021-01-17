@@ -188,7 +188,11 @@ public class Cell extends PathCell implements DeadCell {
     }
 
     public void setKillIncentive() {
-        this.killIncentive = Config.KILL_INCENTIVE;
+        if (deadEndRisk * deadEndFlooding > Config.FLOOD_CAP) {
+            this.killIncentive = Config.KILL_INCENTIVE_DEAD_END;
+        } else {
+            this.killIncentive = Config.KILL_INCENTIVE;
+        }
     }
 
     @Override
