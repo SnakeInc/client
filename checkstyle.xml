@@ -34,13 +34,6 @@
         <property name="files" value="Gui.java"/>
     </module>
 
-
-    <module name="SuppressionSingleFilter">
-        <!--Todo remove this -->
-        <property name="checks" value="MagicNumber"/>
-        <property name="files" value="DeadEndRecognition.java"/>
-    </module>
-
     <module name="TreeWalker">
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
