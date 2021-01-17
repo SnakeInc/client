@@ -54,7 +54,7 @@ public abstract class Config {
     public static final double MOVE_RISK_3 = 1.015625D;
     public static final double KILL_INCENTIVE = 0.3D;
     public static final double KILL_INCENTIVE_DEAD_END = 0.8D;
-
+    public static final double FLOOD_CAP = 1.2D;
 
 
     /********
