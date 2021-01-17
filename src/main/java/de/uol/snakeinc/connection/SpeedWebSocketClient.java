@@ -31,9 +31,11 @@ public class SpeedWebSocketClient extends WebSocketClient {
     private boolean initialMessage = true;
     @Getter
     private boolean stopped = false;
+    private Gson gson;
 
     public SpeedWebSocketClient(ConnectionThread thread, URI url) {
         super(url);
+        this.gson = new Gson();
         this.thread = thread;
         //CHECKSTYLE:OFF
         this.serverId = DigestUtils.md5Hex(url.getHost()).substring(0, 4);
@@ -78,7 +80,7 @@ public class SpeedWebSocketClient extends WebSocketClient {
         if (this.game != null) {
             try {
                 log.info("Logging game");
-                var export = new Export(game);
+                var export = new Export(game, gson);
                 export.generateFile();
             } catch (Exception exception) {
                 log.error("Error while logging the game");
@@ -103,16 +105,11 @@ public class SpeedWebSocketClient extends WebSocketClient {
         HashMap<String, String> json = new HashMap<String, String>();
         json.put("action", action.toString().toLowerCase());
 
-        Gson gson = new Gson();
-
         this.send(gson.toJson(json));
         log.info(gson.toJson(json));
     }
 
     private int[][] getRawBoard(JsonObject json) {
-        Gson gson = new Gson();
-
-        //log.debug(json.get("cells").toString());
         return gson.fromJson(json.get("cells").toString(), int[][].class);
     }
 }
