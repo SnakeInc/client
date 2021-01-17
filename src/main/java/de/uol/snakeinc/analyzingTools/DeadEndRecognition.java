@@ -359,7 +359,6 @@ public class DeadEndRecognition {
     private void findNeighbours(int x, int y, Cell[][] map) {
         Set<Cell> cellsTested = new HashSet<>();
         Stack<Cell> cellsToTest = new Stack<>();
-        log.debug("Calculating: " + x + " : " + y);
         int deadEndCellCount = 1;
         cellsToTest.add(map[x][y]);
         int toTestCount = 1;
@@ -403,7 +402,6 @@ public class DeadEndRecognition {
             cellsTested.forEach((testedCell) -> {
                 cells[testedCell.getX()][testedCell.getY()].setDeadEndRisk(deadEndRisk);
             });
-            log.debug("Size: " + deadEndCellCount + " - Risk: " + deadEndRisk);
         }
     }
 }
