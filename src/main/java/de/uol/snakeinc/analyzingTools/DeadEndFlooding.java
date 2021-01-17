@@ -41,7 +41,7 @@ public class DeadEndFlooding {
         }
 
 
-        deadEndCells = checkInDeadEnd(cells, cells[us.getX()][us.getY()], us.getDirection());
+        deadEndCells = checkInDeadEnd(cells, cells[us.getX()][us.getY()], us.getDirection(), us);
         int blocks = Config.BLOCKS;
         if (deadEndCells != null) {
             blocks = deadEndCells.size() - 1;
@@ -115,7 +115,7 @@ public class DeadEndFlooding {
         return null;
     }
 
-    private List<Cell> checkInDeadEnd(Cell[][] cells, Cell position, Direction direction) {
+    private List<Cell> checkInDeadEnd(Cell[][] cells, Cell position, Direction direction, Player us) {
         position.setHit(true);
         List<Cell> checkCells = new ArrayList<Cell>();
         List<Cell> neighbours = this.getPossibleNeighbours(cells, position, direction, true);
@@ -145,14 +145,16 @@ public class DeadEndFlooding {
         }
 
         if (count < Config.BLOCKS) {
-            for (Cell cell : checkCells) {
-                cell.setDeadEndJumping(2.0D);
-            }
-            for (int x = 0; x < this.width; x++) {
-                for (int y = 0; y < this.height; y++) {
-                    Cell option = cells[x][y];
-                    if (!checkCells.contains(option)) {
-                        option.setDeadEndJumping(Config.DEAD_END_INCENTIVE);
+            if (deadEndCells == null || !deadEndCells.contains(cells[us.getX()][us.getY()])) {
+                for (Cell cell : checkCells) {
+                    cell.setDeadEndJumping(1.0D);
+                }
+                for (int x = 0; x < this.width; x++) {
+                    for (int y = 0; y < this.height; y++) {
+                        Cell option = cells[x][y];
+                        if (!checkCells.contains(option)) {
+                            option.setDeadEndJumping(Config.DEAD_END_INCENTIVE);
+                        }
                     }
                 }
             }
