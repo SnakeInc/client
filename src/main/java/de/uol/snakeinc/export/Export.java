@@ -19,9 +19,11 @@ import java.util.HashMap;
 public class Export {
 
     private Game game;
+    private Gson gson;
 
-    public Export(Game game) {
+    public Export(Game game, Gson gson) {
         this.game = game;
+        this.gson = gson;
     }
 
     /**
@@ -29,7 +31,6 @@ public class Export {
      */
     public void generateFile() {
         log.info("Writing log for " + game.getGameId());
-        Gson gson = new Gson();
 
         JsonObject objects = new JsonObject();
         objects.addProperty("rounds", game.getRound());

@@ -1,5 +1,6 @@
 package de.uol.snakeinc.connection;
 
+import com.google.gson.Gson;
 import de.uol.snakeinc.Config;
 import de.uol.snakeinc.SnakeInc;
 import lombok.extern.log4j.Log4j2;
@@ -35,7 +36,7 @@ public class ConnectionThread extends Thread {
         try {
             //wss://msoll.de/spe_ed?key=
             //url = new URI("wss://msoll.de/spe_ed?key=" + apiKey);
-            url = new URI("wss://yellowphoenix18.de:555/Joost");
+            url = new URI("wss://yellowphoenix18.de:554/Joost");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
