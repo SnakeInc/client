@@ -69,6 +69,9 @@ public class Gui extends Application {
         SnakeInc.setGui(this);
     }
 
+    /**
+     * Closes the Application.
+     */
     public void close() {
         Platform.runLater(() -> {
             this.stage.close();

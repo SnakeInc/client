@@ -51,6 +51,9 @@ public class SnakeInc {
         return SnakeInc.gui != null;
     }
 
+    /**
+     * Closes th Gui and Application.
+     */
     public static void closeGui() {
         if (hasGui()) {
             gui.close();
