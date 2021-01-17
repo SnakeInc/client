@@ -2,5 +2,5 @@
 /InformatiCup.iml
 /target
 /.jqwik-database
-
+/Dockerfile
 /logs/

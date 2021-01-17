@@ -8,7 +8,6 @@ import lombok.Setter;
 
 public class Cell extends PathCell implements DeadCell {
 
-
     //Basic Value.
     @Getter
     private double value;
@@ -61,6 +60,22 @@ public class Cell extends PathCell implements DeadCell {
         deadEndFlooding = 1;
         deadEndJumping = 1;
         hardDeadly = false;
+        tmpDeadly = false;
+        flooded = false;
+    }
+
+    public Cell(Cell cell) {
+        super(cell.getX(), cell.getY());
+        value = cell.getValue();
+        opponentMovementRisk = cell.getOpponentMovementRisk();
+        tmpMoveCalcValue = 1;
+        areaRisk = cell.getAreaRisk();
+        pathHighlight = cell.getPathHighlight();
+        killIncentive = cell.getPathHighlight();
+        deadEndRisk = cell.getDeadEndRisk();
+        deadEndFlooding = cell.getDeadEndFlooding();
+        deadEndJumping = cell.getDeadEndJumping();
+        hardDeadly = cell.isDeadly();
         tmpDeadly = false;
         flooded = false;
     }
@@ -148,7 +163,7 @@ public class Cell extends PathCell implements DeadCell {
             killIncentive *
             pathHighlight *
             deadEndFlooding;
-            //* deadEndJumping;
+        //* deadEndJumping;
     }
 
     /**
@@ -194,5 +209,11 @@ public class Cell extends PathCell implements DeadCell {
     @Override
     public void setFlooded(boolean flooded) {
         this.flooded = flooded;
+    }
+
+    public void setNotDeadly() {
+        value = 1;
+        tmpDeadly = false;
+        hardDeadly = false;
     }
 }
