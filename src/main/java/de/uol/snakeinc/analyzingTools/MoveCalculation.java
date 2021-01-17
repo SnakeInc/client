@@ -194,7 +194,7 @@ public class MoveCalculation {
                 result = evaluateResult(pseudEvaluatedCells, result, cells[xval][yval]);
             }
         }
-        var xy = generateXY(dir, x, y, 1);
+        var xy = generateXY(dir, x, y, speed);
         return result * calculateAction(dir, xy.getX(), xy.getY(), speed, depth + 1);
     }
 
